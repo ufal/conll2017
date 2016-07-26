@@ -2,7 +2,7 @@
 all: proposal.html
 
 %.html: %.md
-	pandoc --from markdown_github --to html --standalone --output $@ $<
+	pandoc --from markdown --to html5 --output $@ $<
 
 .PHONY: clear
 clear:
