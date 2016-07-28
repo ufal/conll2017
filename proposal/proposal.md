@@ -17,7 +17,8 @@ i.e., parsing from plain texts to dependency trees.
 
 Most of the UD 1.4 corpora will be used as training/development/testing
 data for this track (with some exceptions -- Japanese because of the license,
-very small corpora and corpora which cannot be reliably detokenized).
+and corpora which cannot be reliably detokenized, i.e., for which we cannot
+get enough raw texts).
 Note that this means that in the track the testing data **will be known in
 advance** and we have to trust the participants not to take advantage of it.
 
