@@ -35,7 +35,9 @@ The participants will be allowed to use these data during training:
 - Additional raw texts for the languages involved (probably as much as we can provide)
 - Europarl Parallel corpus
 
-No additional data can be used during training. (Note that we do *not* propose
+No additional data can be used during training -- therefore, if the participants
+compute word embeddings, they can use only UD data and the given raw texts.
+(Note that we do *not* propose
 an additional Open track which would allow utilization of additional data and/or
 software.)
 
