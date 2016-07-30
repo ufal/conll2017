@@ -74,19 +74,22 @@ evaluation), with the following differences:
 
 ## Evaluation Metrics
 
-We propose that only one evaluation metrics is used -- either LAS
-F1-score, or [CNC](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf) F1-score.
+We propose that only one evaluation metrics is used -- F1-score under a
+content-word-based evaluation metrics (with
+[CNC](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf) being the initial
+proposal).
 Notably, for a dependency edge to be considered correct:
 
 - the dependent word and the head word must be both correct and tokenized
   correctly (in this respect, all technical roots are equivalent)
 - the dependency relation must be correct
-- for [CNC](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf), dependency
-  relations in the Punct and Func subsets are ignored (see the paper)
+- the content-word-based metrics will probably define which dependency
+  relations are ignored (for example, in [CNC](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf),
+  dependency relations in the Punct and Func subsets are ignored)
 
 We currently do *not* propose to evaluate UAS (we already produce several
 dozens of scores in the Main task for each system; and with UAS, we would have
-two different orderings of participants in every track).
+two different orderings of participants in every track) nor plain LAS.
 
 The evaluation starts by aligning the system-produces tokens to the
 gold standard ones. This process is straightforward for
@@ -96,10 +99,12 @@ for [CoNLL-U words](http://universaldependencies.org/format.html#words-and-token
 being part of multiword-tokens, we use longest common subsequence to perform the
 alignment. We completely ignore sentence breaks during tokenizer evaluation.
 
-### Metric Focused on UD Content Word Dependencies [undecided]
+### Metric Focused on UD Content Word Dependencies
 
-Joakim Nivre suggests the [CNC evaluation metrics](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf).
-Shortly -- it is a modification of LAS, where the dependency relations
+Joakim Nivre suggests the [CNC evaluation metrics](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf)
+as a starting point, but notes that we may have to tweak it a little bit.
+
+The CNC is a modification of LAS, where the dependency relations
 in the Punct and Func subset are ignored. The Punct subset consists of
 `punct` deprel, the Func subset consists of the following deprels:
 
