@@ -32,8 +32,12 @@ The participants will be allowed to use these data during training:
 
 - UD 1.4 corpora with plain texts (either gold standard or automatically generated)
     - Automatically tokenized and POS-tagged variants will be provided
-- Additional raw texts for the languages involved (probably as much as we can provide)
+- additional raw texts for the languages involved (hopefully ~gigaword corpora
+  for many languages)
 - Europarl Parallel corpus
+- for convenience, we will also provide word embeddings, computed from the
+  texts above; however, participants are free to compute their own embeddings
+  if they like
 
 No additional data can be used during training -- therefore, if the participants
 compute word embeddings, they can use only UD data and the given raw texts.
