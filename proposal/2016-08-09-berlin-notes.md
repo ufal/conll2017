@@ -2,7 +2,7 @@
 
 ## Notes from the lunch on Tuesday, Aug. 9, 2016 in Berlin
 
-Present: Jan Hajič, Joakim Nivre, Chris Manning, Dan Zeman, Yoav Goldberg, Sampo Pyysalo, Filip Ginter, Jon Derdari, Fran Tyers, Jenna Kanerva, Tommi Pirinen, Özlem Çetinoğlu, Anssi Yli-Jyrä, with previous contributions by Slav Petrov, Martin Popel, Milan Straka, Paola Merlo
+Present: Jan Hajič, Joakim Nivre, Chris Manning, Dan Zeman, Yoav Goldberg, Sampo Pyysalo, Filip Ginter, Jon Derdari, Fran Tyers, Jenna Kanerva, Tommi Pirinen, Özlem Çetinoğlu, Anssi Yli-Jyrä, with previous contributions by Slav Petrov, Martin Popel, Milan Straka, Paola Merlo, Marie-Catherine H. de Marneffe
 
 These are the basic parameters of the shared task proposal, agreed upon by the majority present:
 
