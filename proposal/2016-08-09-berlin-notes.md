@@ -19,14 +19,14 @@ These are the basic parameters of the shared task proposal, agreed upon by the m
 
 ## Rules, process and technical issues:
 
--- participants will submit one runtime system (capable of parsing any language), as a VM - compliant with CoNLL recommended rules.
--- the system will have to accept the following parameters: directory with input data (the exact structure TBD), language ID, and directory to which output data should go.
--- the system must respond to any language code (NB: surprise language) and produce some output in UD format, for all of the eval text
--- organizers will then run it on the evaluation data, one run per evaluation set, and publish results.
--- input test data will be available as raw text (original or pseudo-untokenized), and also preprocessed by UDPipe for tokenization, lemmatization, UPOS, XPOS and features; participants systems will be allowed to use any of those
--- participants will be explicitly warned not to use any other UD data than those supplied through the CoNLL 2017 ST (due to possible re-splitting, even if minimized)
--- development data will be marked, but there are no restrictions on using them as training as well (e.g. for final retraining)
--- novel techniques such as cross-lingual learning etc. encouraged but not enforced
+- participants will submit one runtime system (capable of parsing any language), as a VM - compliant with CoNLL recommended rules.
+- the system will have to accept the following parameters: directory with input data (the exact structure TBD), language ID, and directory to which output data should go.
+- the system must respond to any language code (NB: surprise language) and produce some output in UD format, for all of the eval text
+- organizers will then run it on the evaluation data, one run per evaluation set, and publish results.
+- input test data will be available as raw text (original or pseudo-untokenized), and also preprocessed by UDPipe for tokenization, lemmatization, UPOS, XPOS and features; participants systems will be allowed to use any of those
+- participants will be explicitly warned not to use any other UD data than those supplied through the CoNLL 2017 ST (due to possible re-splitting, even if minimized)
+- development data will be marked, but there are no restrictions on using them as training as well (e.g. for final retraining)
+- novel techniques such as cross-lingual learning etc. encouraged but not enforced
 
 ## Additional points/remarks:
 
