@@ -1,6 +1,5 @@
-Text of final CoNLL 2017 ST UD proposal
+# Text of final CoNLL 2017 ST UD proposal
 
-# Call text: 
 [Call for proposals](http://www.conll.org/cfprop-sharedtask-2017)
 
 There will soon be a mailing list, with:
