@@ -1,7 +1,7 @@
 # CoNLL 2017 UD Shared Task proposal
 
 Notes from the lunch on Tuesday, Aug. 9, 2016 in Berlin
-Present: Jan Hajič, Joakim Nivre, Chris Manning, Dan Zeman, Yoav Goldberg, Sampo Pyysalo, Filip Ginter, Jon Derdari, Fran Tyers, Jenna Kanerva, Tommi Pirinen, Özlem Çetinoğlu, Anssi Yli-Jyrä (13)
+Present: Jan Hajič, Joakim Nivre, Chris Manning, Dan Zeman, Yoav Goldberg, Sampo Pyysalo, Filip Ginter, Jon Derdari, Fran Tyers, Jenna Kanerva, Tommi Pirinen, Özlem Çetinoğlu, Anssi Yli-Jyrä (13); the proposal also draws on previous discussions with Slav Petrov, Paola Merlo, Martin Popel, Milan Straka and others.
 
 These are the basic parameters of the shared task proposal, agreed upon by the majority present:
 
