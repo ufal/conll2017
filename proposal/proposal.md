@@ -2,6 +2,9 @@
 
 [Call for proposals](http://www.conll.org/cfprop-sharedtask-2017)
 
+NB: this is now obsolete. Please see the berlin notes file to see the newly negotiated setup for the task.
+
+
 For clarity, feasibility and encouragement of participants,
 we propose only a small number of tracks and evaluation metrics
 (even if there are many possibilities).
