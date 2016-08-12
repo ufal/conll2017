@@ -9,5 +9,6 @@ Filip Ginter, Jon Derdari, Fran Tyers, Jenna Kanerva, Tommi Pirinen,
 Özlem Çetinoğlu, Anssi Yli-Jyrä, Slav Petrov, Martin Popel, Milan Straka, 
 Paola Merlo, Marie-Catherine H. de Marneffe
 Add also:
-Reut Tsarfaty, "Miguel Ballesteros" <miguelballesteros1@gmail.com>, "cagri coltekin" <cagri@coltekin.net>, "Lilja Øvrelid" <liljao@ifi.uio.no>
+Reut Tsarfaty, "Miguel Ballesteros" <miguelballesteros1@gmail.com>, "cagri coltekin" <cagri@coltekin.net>, "Lilja Øvrelid" <liljao@ifi.uio.no>, "Giuseppe G. A. Celano" <giuseppegacelano@gmail.com>
+
 
