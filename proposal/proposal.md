@@ -45,12 +45,3 @@ There have been two CoNLL shared tasks in dependency parsing in 2006 and 2007. T
 # Annex: Data format and evaluation details
 TBA
 
-
-## Evaluation Process
-
-We plan to use the [Tira platform](http://www.tira.io/) as suggested in the Call
-for proposals.
-
-Therefore, the participants will **submit the systems**, not parsed data,
-allowing us _not_ to give the testing data beforehand (only after
-the Shared Task is evaluated).
