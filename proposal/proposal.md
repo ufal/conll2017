@@ -2,136 +2,48 @@
 
 [Call for proposals](http://www.conll.org/cfprop-sharedtask-2017)
 
-NB: this is now obsolete. Please see the [Berlin notes](https://github.com/ufal/conll2017/blob/master/proposal/2016-08-09-berlin-notes.md) file to see the newly negotiated setup for the task.
+NB: this is now obsolete. Please see the [Berlin notes](https://github.com/ufal/conll2017/blob/master/proposal/2016-08-09-berlin-notes.md) file to see the newly negotiated setup for the task, and [Proposal.odt](https://github.com/ufal/conll2017/blob/master/proposal/Proposal.odt) for the new draft of the proposal.
 
+(I am now replacing the original text by the current contents of the ODT file. It may be easier to read but it will soon become obsolete, too, as this is ***not*** the master copy of the draft, and it will not be kept up-to-date!)
 
-For clarity, feasibility and encouragement of participants,
-we propose only a small number of tracks and evaluation metrics
-(even if there are many possibilities).
+#Description of the Shared Task
+Learning dependency parsers is a popular sub-task of natural language learning, useful in downstream applications as well as in linguistic research. Besides parsing proper, this task should address two related problems: working with languages for which little or no data is available, and working in a real-world setting, without manually disambiguated POS tags, lemmas etc.
+Participating systems will have to find syntactic dependencies between words, i.e. a parent of each word, and the type (label) of the dependency relation. There will be multiple test sets in various languages but all the data sets will adhere to one common annotation style: Universal Dependencies (UD, http://universaldependencies.org/).
+Participants will be asked to parse raw text where no gold-standard annotation (tokenization, lemmas, morphology) is available. The only exception is sentence boundaries, which will be provided. However, there is an open-source baseline pipeline (https://ufal.mff.cuni.cz/udpipe/) that the participants can run instead of training their own model for e.g. tokenization or tagging. We will even provide variants of the test data that have been automatically tokenized and POS-tagged by UDPipe. We believe that this makes the task reasonably accessible for everyone.
+We do not plan on running separate open and closed tracks. Instead, we want to include every system in a single track, which will be formally closed, but we intend to make the list of permitted resources rather broad; see below for more on the data selection process.
 
+#Data
+The task will only work with resources that are publicly available, royalty-free, under a license that is free at least for non-commercial usage (e.g. CC BY-NC-SA, BY-SA etc.) The right to use the data must not be limited to the shared task, i.e. the data must be available for follow-up research, too.
 
-## Proposed Tracks
+Treebanks
+The main data sets will be taken from the current version of the Universal Dependencies treebanks. Note that this means that the test data will be known in advance and we have to trust the participants not to take advantage of it. We hope to be able to provide for some languages additional test sets that have not been previously released. These sets will not necessarily be from the same domain as the training data for the given language, but they will adhere to the UD annotation guidelines. Gold standard data from these sets will be only made available after the evaluation phase. Finally, there will be one or more surprise language(s), which have not been previously released in UD and for which we will not provide training or development data, except a small sample at the beginning of the evaluation phase. Gold-standard data of the surprise language(s) will be also made available after the shared task.
+A conservative estimate is that we will be able to evaluate the systems on 15-20 languages. We will only include UD treebanks which pass validation tests for the current UD guidelines, and for which we can obtain a test set of at least 10,000 words. There is no upper limit on the test size (the largest test set is currently ~170K). Participants will receive training+development data with gold-standard tokenization, POS tags and dependency relations; for some languages also lemmas and/or morphological features. The size of this data will vary according to availability. For some languages it may be as small as the test data (or even smaller), for others it will be 9× larger then the test data, for the surprise languages it will be close to zero. One part of this data will be formally designated as the development data, but the participants will be free to use it for training of their systems too.
+Raw Data
+We will provide additional raw data for the languages of the shared task, useful e.g. for computation of word embeddings. This data will be taken from CommonCrawl and automatically sorted by a language recognizer. It may not be available for all languages (note that UD contains also some classical languages such as Ancient Greek) but we are confident that we will be able to provide more than 100M words for most languages. For convenience, we will provide a variant of this data pre-processed by UDPipe, and also pre-computed word embedding vectors for those participants who want to use them but do not want to tweak their own setting of the word-to-vector software.
+Parallel Data
+To support multi-lingual and cross-lingual approaches and model transfers, participants are allowed to use data from the OPUS parallel corpus (http://opus.lingfil.uu.se/). We will not redistribute this data; participants are simply referred to the OPUS website.
+Call for Additional Data
+Instead of organizing a separate open track we will encourage the participants to report (by the end of December) additional data they want to use. If the data is relevant to the task and it meets the public availability condition, it will be added to the list of resources available to participants.
 
+#Evaluation of Participating Systems
+All systems will be required to generate valid output in the CoNLL-U format for all test sets. They will know the language of the test set, but they must respond even to unknown language codes (for which there are no training data). The systems will be able to select either raw text as input, or one of the alternatives pre-processed by UDPipe (system description papers should indicate what kind of input data the system uses). Participants may choose to test their system on multiple input alternatives, for example to have their own tokenization compared with the baseline tokenization. On each test set, one system may produce up to one output per input alternative, but it must produce valid output for at least one input alternative. We will publish results of all runs of a system, but only the best run will be used in the main system score.
+The evaluation will focus on dependency relations, i.e. index of the parent node and the label of the relation. POS tags, lemmas and morphological features are not part of the main evaluation metric, although the systems are free to predict them too. On the other hand, tokenization must be included in the metric because the systems cannot access gold-standard tokenization, and tokens are necessary for dependency evaluation.
+The evaluation starts by aligning the system-produced tokens to the gold standard ones; longest common subsequence will be used as matching strategy (see Annex for details). We completely ignore sentence breaks during tokenizer evaluation.
+Once tokens (words) are aligned, we will compute two metrics: LAS (labeled attachment score) and CNC (core-non-core score, a draft is described in http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf but it will be further refined for the shared task). TBD is the main metric that will be used in the main system ranking: the best score of the system for each test set will be taken, and the arithmetic mean of these scores will be the overall score of the system.
+LAS (labeled attachment score) is a standard evaluation metric in dependency parsing: the number of correct relations is divided by the number of nodes, where each node has just one incoming relation, and the relation is correct if 1. the parent node is identified correctly, and 2. the dependency relation type (label) is assigned correctly. (Note that UD uses the notion of language-specific relation subtypes but we will evaluate only the universal part of the label. For instance, if either the system output or the gold standard data have the label “acl:relcl”, we will disregard the “:relcl” part and only check whether “acl” matches.) In our configuration, the LAS will be modified to take tokenization mismatches into account. A relation is correct only if both nodes of the relation match existing gold-standard nodes. Precision P is the number of correct relations divided by the number of system-produced nodes; recall R is the number of correct relations divided by the number of gold-standard nodes. We define LAS as the F1-score = 2PR / (P+R).
+CNC reflects the fact that Universal Dependencies annotation is centered around relations between content words. Relation attaching function words can be seen as a substitute for what is achieved by morphology in other languages. Since we do not evaluate morphological analysis in this task, it makes sense to also look at results without function words and punctuation. Similarly to our extended LAS metric, CNC is computed as F1-score of precision and recall. The difference to LAS is that there is a pre-defined list of core dependency relations, which will be evaluated. Precision P is the number of correct core relations divided by the number of system produced core relations; recall R is the number of correct core relations divided by the number of gold-standard core relations. Again, a relation is not correct if one of the word forms does not match the gold standard, i.e. if there are tokenization errors.
+The evaluation script is not ready at the time of writing this proposal but it will be publicly available by the end of December at the latest.
+We plan to use the Tira platform (http://www.tira.io/) as suggested in the Call for proposals.
+Therefore, the participants will submit the systems, not parsed data, allowing us not to give the testing data beforehand (only after the Shared Task is evaluated).
 
-### Main Track
+#Timeline
+We agree to follow the timeline suggested in the Call. Trial data (not necessarily for all languages) will be available in February 2017, train+dev in March and test data in May. No copyright-related issues have to be solved; the time between now and March will be mostly needed to improve existing datasets and their compliance with the UD guidelines.
 
-The main track is end-to-end parsing of UD corpora,
-i.e., parsing from plain texts to dependency trees.
+#Other Relevant Information
+There have been two CoNLL shared tasks in dependency parsing in 2006 and 2007. The current proposal differs from the previous tasks in several respects. We have treebanks in many languages that share the same annotation style, which makes multi-lingual approaches possible. We propose a new evaluation metric tailored to the content-word-centric UD style. And finally, we evaluate end-to-end parsing with no gold-standard information available to the parsers.
 
-Most of the UD 1.4 corpora will be used as training/development/testing
-data for this track (with some exceptions -- Japanese because of the license,
-and corpora which cannot be reliably detokenized, i.e., for which we cannot
-get enough raw texts).
-Note that this means that in the track the testing data **will be known in
-advance** and we have to trust the participants not to take advantage of it.
-
-As majority of UD corpora do not contain the original plain text, we will
-reconstruct it using unannotated raw texts.
-
-Only systems working for **all the languages** will be accepted (we are
-interested only in multi-lingual systems).
-
-The participants will be allowed to use these data during training:
-
-- UD 1.4 corpora with plain texts (either gold standard or automatically generated)
-    - Automatically tokenized and POS-tagged variants will be provided
-- additional raw texts for the languages involved (hopefully ~gigaword corpora
-  for many languages)
-- Europarl Parallel corpus
-- for convenience, we will also provide word embeddings, computed from the
-  texts above; however, participants are free to compute their own embeddings
-  if they like
-
-No additional data can be used during training -- therefore, if the participants
-compute word embeddings, they can use only UD data and the given raw texts.
-(Note that we do *not* propose
-an additional Open track which would allow utilization of additional data and/or
-software.)
-
-A participating system will be evaluated on every corpora using the evaluation
-metric(s) below, and the final score of the system will be the arithmetic
-mean of the corpora scores (an analogue of macro-accuracy).
-
-
-### Parallel Data Track [if we have the required data]
-
-Very similar to the Main track (same training data, additional resources
-and evaluation), with the following differences:
-
-- The testing data would be previously unreleased parallel corpora in a subset
-  of languages from the Main track. During evaluation, the system will get all the
-  data at the same time (to be able to exploit the fact that the testing data are
-  parallel corpora).
-- Small parallel corpora (either a small part of the corpora discussed above,
-  or small part of Europarl, etc.) would be released as development data.
-
-All systems submitted to the Main track would be evaluated in Parallel data
-track, so that systems in the Main track are evaluated also on unknown test set,
-in addition to known UD testing data.
-
-
-### Surprise Language Track
-
-Similar to the Main track (same training data, additional resources and
-evaluation), with the following differences:
-
-- The testing data will be in previously unreleased languages, unknown to the
-  participants until the evaluation. No development data will be provided.
-
-
-## Evaluation Metrics
-
-We propose that only one evaluation metrics is used -- F1-score under a
-content-word-based evaluation metrics (with
-[CNC](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf) being the initial
-proposal).
-Notably, for a dependency edge to be considered correct:
-
-- the dependent word and the head word must be both correct and tokenized
-  correctly (in this respect, all technical roots are equivalent)
-- the dependency relation must be correct
-- the content-word-based metrics will probably define which dependency
-  relations are ignored (for example, in [CNC](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf),
-  dependency relations in the Punct and Func subsets are ignored)
-
-We currently do *not* propose to evaluate UAS (we already produce several
-dozens of scores in the Main task for each system; and with UAS, we would have
-two different orderings of participants in every track) nor plain LAS.
-
-The evaluation starts by aligning the system-produces tokens to the
-gold standard ones. This process is straightforward for
-[CoNLL-U tokens](http://universaldependencies.org/format.html#words-and-tokens)
-which can be identified by their range in the original plain text;
-for [CoNLL-U words](http://universaldependencies.org/format.html#words-and-tokens)
-being part of multiword-tokens, we use longest common subsequence to perform the
-alignment. We completely ignore sentence breaks during tokenizer evaluation.
-
-### Metric Focused on UD Content Word Dependencies
-
-Joakim Nivre suggests the [CNC evaluation metrics](http://stp.lingfil.uu.se/~nivre/docs/udeval-cl.pdf)
-as a starting point, but notes that we may have to tweak it a little bit.
-
-The CNC is a modification of LAS, where the dependency relations
-in the Punct and Func subset are ignored. The Punct subset consists of
-`punct` deprel, the Func subset consists of the following deprels:
-
-- `aux`
-- `auxpass`
-- `case`
-- `cc`
-- `cop`
-- `det`
-- `mark`
-- `neg`
-
-### Language Variants [undecided]
-
-For some languages, there are multiple corpora in the UD (3 corpora for Czech, English,
-Latin; 2 corpora for 8 languages in UD 1.3).
-
-It is yet undecided whether these corpora will be evaluated separately (whereby
-contributing multiple times to the final score), or only one corpus for each language
-would be kept, or the corpora for a given language will be somehow merged.
+# Annex: Data format and evaluation details
+TBA
 
 
 ## Evaluation Process
