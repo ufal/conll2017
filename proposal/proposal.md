@@ -2,7 +2,7 @@
 
 [Call for proposals](http://www.conll.org/cfprop-sharedtask-2017)
 
-NB: this is now obsolete. Please see the berlin notes file to see the newly negotiated setup for the task.
+NB: this is now obsolete. Please see the [Berlin notes](https://github.com/ufal/conll2017/blob/master/proposal/2016-08-09-berlin-notes.md) file to see the newly negotiated setup for the task.
 
 
 For clarity, feasibility and encouragement of participants,
