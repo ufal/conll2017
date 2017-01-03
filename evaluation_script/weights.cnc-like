@@ -1,0 +1,13 @@
+# Function words from http://universaldependencies.org/u/dep/index.html
+aux   0
+cop   0
+mark  0
+det   0
+clf   0
+case  0
+
+# In the Nivre's paper, there is also auxpass (not in UD 2),
+# neg (not in UD 2) and cc (marked as Coordination in UD 2).
+
+# Punctuation
+punct 0
