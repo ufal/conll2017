@@ -10,6 +10,7 @@
 #
 # Changelog:
 # - [02 Jan 2017] Version 0.9: Initial release
+# - [25 Jan 2017] Version 0.9.1: Fix bug in LCS alignment computation
 
 from __future__ import division
 from __future__ import print_function
@@ -206,7 +207,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                     # Store aligned words
                     s, g = 0, 0
                     while g < gi - gs and s < si - ss:
-                        if lcs[g][s] == 1 + (lcs[g+1][s+1] if g+1 < gi-gs and s+1 < si-ss else 0):
+                        if gold_words[gs + g].columns[FORM] == system_words[ss + s].columns[FORM]:
                             alignment.matched_words.append(AlignmentWord(gold_words[gs+g], system_words[ss+s]))
                             g += 1
                             s += 1
