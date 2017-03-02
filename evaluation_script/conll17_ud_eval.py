@@ -75,9 +75,8 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-import collections
-import re
 import sys
+import unittest
 
 # CoNLL-U column names
 ID, FORM, LEMMA, UPOS, XPOS, FEATS, HEAD, DEPREL, DEPS, MISC = range(10)
@@ -99,7 +98,7 @@ def load_conllu(file):
         def __init__(self, start, end):
             self.start = start
             self.end = end
-    class UDWord(UDSpan):
+    class UDWord:
         def __init__(self, span, columns, is_multiword):
             self.span = span
             self.columns = columns
@@ -154,7 +153,7 @@ def load_conllu(file):
             except:
                 raise UDError("Cannot parse multi-word token ID '{}'".format(columns[ID]))
 
-            for i in range(start, end + 1):
+            for _ in range(start, end + 1):
                 word_line = file.readline().rstrip("\r\n")
                 word_columns = word_line.split("\t")
                 if len(word_columns) != 10:
@@ -202,7 +201,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
         return F1Score(len(gold_spans), len(system_spans), correct)
 
-    def alignment_f1_score(alignment, key_fn, weight_fn = None):
+    def alignment_f1_score(alignment, key_fn, weight_fn=None):
         gold, system, correct = 0, 0, 0
 
         for word in alignment.gold_words:
@@ -242,7 +241,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                 while (gi < len(gold_words) and (gold_words[gi].span.start < multiword_span_end if gold_words[gi].is_multiword
                                                  else gold_words[gi].span.end <= multiword_span_end)) or \
                       (si < len(system_words) and (system_words[si].span.start < multiword_span_end if system_words[si].is_multiword
-                                                 else system_words[si].span.end <= multiword_span_end)):
+                                                   else system_words[si].span.end <= multiword_span_end)):
                     if gi < len(gold_words) and (si >= len(system_words) or
                                                  gold_words[gi].span.start <= system_words[si].span.start):
                         if gold_words[gi].is_multiword and gold_words[gi].span.end > multiword_span_end:
@@ -316,7 +315,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
     return result
 
-if __name__ == "__main__":
+def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("gold_file", type=argparse.FileType("r"),
@@ -363,7 +362,7 @@ if __name__ == "__main__":
         print("Metrics    | Precision |    Recall |  F1 Score")
         print("-----------+-----------+-----------+-----------")
         for metrics in ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"
-                        ] + (["WeightedLAS"] if deprel_weights is not None else []):
+                       ] + (["WeightedLAS"] if deprel_weights is not None else []):
             print("{:11}|{:10.2f} |{:10.2f} |{:10.2f}".format(
                 metrics,
                 100 * evaluation[metrics].precision,
@@ -371,13 +370,14 @@ if __name__ == "__main__":
                 100 * evaluation[metrics].f1
             ))
 
-# Tests
-import unittest
+if __name__ == "__main__":
+    main()
 
+# Tests
 class TestAlignment(unittest.TestCase):
-    def _load_words(self, words):
+    @staticmethod
+    def _load_words(words):
         import io
-        import sys
 
         lines, num_words = [], 0
         for w in words:
