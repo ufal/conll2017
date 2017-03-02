@@ -11,6 +11,65 @@
 # Changelog:
 # - [02 Jan 2017] Version 0.9: Initial release
 # - [25 Jan 2017] Version 0.9.1: Fix bug in LCS alignment computation
+# - [01 Mar 2017] Version 1.0: Add documentation and test
+
+# Command line usage
+# ------------------
+# conll17_ud_eval.py [-v|--verbose] gold_conllu_file [system_conllu_file]
+#
+# - if no system_conllu_file is specified, standard input is used
+# - if no -v is given, only the CoNLL17 UD Shared Task evaluation LAS metrics
+#   is printed
+# - if -v is given, several metrics are printed (as precision, recall, F1 score):
+#   - Tokens: how well do the gold tokens match system tokens
+#   - Sentences: how well do the gold sentences match system sentences
+#   - Words: how well can the gold words be aligned to system words
+#   - UPOS: using aligned words, how well does UPOS match
+#   - XPOS: using aligned words, how well does XPOS match
+#   - Feats: using aligned words, how well does FEATS match
+#   - AllTags: using aligned words, how well does UPOS+XPOS+FEATS match
+#   - Lemmas: using aligned words, how well does LEMMA match
+#   - UAS: using aligned words, how well does HEAD match
+#   - LAS: using aligned words, how well does HEAD+DEPREL(ignoring subtypes) match
+
+# API usage
+# ---------
+# - load_conllu(file)
+#   - loads CoNLL-U file from given file object to an internal representation
+#   - raises UDError exception if the given file cannot be loaded
+# - evaluate(gold_ud, system_ud)
+#   - evaluate the given gold and system CoNLL-U files (loaded with load_conllu)
+#   - raises UDError if the concatenated tokens of gold and system file do not match
+#   - returns a dictionary with the metrics described above, each metrics having
+#     three fields precision, recall and f1
+
+# Description of token matching
+# -----------------------------
+# In order to match tokens of gold file and system file, we consider the text
+# resulting from concatenation of gold tokens and text resulting from
+# concatenation of system tokens. These texts should match -- if they do not,
+# the evaluation fail.
+#
+# If the texts do match, every token is represented as a range in this original
+# text, and tokens are equal only if their range is the same.
+
+# Description of word matching
+# ----------------------------
+# When matching words of gold file and system file, we first match the tokens.
+# The words which are also tokens are matched as tokens, but words in multi-word
+# tokens have to be handled differently.
+#
+# To handle multi-word tokens, we start by finding "multi-word spans".
+# Multi-word span is a span in the original text, which
+# - contains at least one multi-word token
+# - all multi-word tokens in the span (considering both gold and system ones)
+#   are completely inside the span (i.e., they do not "stick out")
+# - the multi-word span is as smallest as possible
+#
+# For every multi-word span, we align the gold and system words completely
+# inside this span using LCS on their FORMs. The words not intersecting
+# (even partially) any multi-word span are then aligned as tokens.
+
 
 from __future__ import division
 from __future__ import print_function
@@ -182,8 +241,8 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                 # Find all words in the multiword span
                 while (gi < len(gold_words) and (gold_words[gi].span.start < multiword_span_end if gold_words[gi].is_multiword
                                                  else gold_words[gi].span.end <= multiword_span_end)) or \
-                        (si < len(system_words) and (system_words[si].span.start < multiword_span_end if system_words[si].is_multiword
-                                                     else system_words[si].span.end <= multiword_span_end)):
+                      (si < len(system_words) and (system_words[si].span.start < multiword_span_end if system_words[si].is_multiword
+                                                 else system_words[si].span.end <= multiword_span_end)):
                     if gi < len(gold_words) and (si >= len(system_words) or
                                                  gold_words[gi].span.start <= system_words[si].span.start):
                         if gold_words[gi].is_multiword and gold_words[gi].span.end > multiword_span_end:
@@ -267,7 +326,7 @@ if __name__ == "__main__":
     parser.add_argument("--weights", "-w", type=argparse.FileType("r"), default=None,
                         metavar="deprel_weights_file",
                         help="Compute WeightedLAS using given weights for Universal Dependency Relations.")
-    parser.add_argument("--verbose", "-v", default=0, action='count',
+    parser.add_argument("--verbose", "-v", default=0, action="count",
                         help="Verbosity level.")
     args = parser.parse_args()
 
@@ -311,3 +370,54 @@ if __name__ == "__main__":
                 100 * evaluation[metrics].recall,
                 100 * evaluation[metrics].f1
             ))
+
+# Tests
+import unittest
+
+class TestAlignment(unittest.TestCase):
+    def _load_words(self, words):
+        import io
+        import sys
+
+        lines, num_words = [], 0
+        for w in words:
+            parts = w.split(" ")
+            if len(parts) == 1:
+                lines.append("{0}\t{1}\t_\t_\t_\t_\t_\t_\t_\t_".format(num_words + 1, parts[0]))
+                num_words += 1
+            else:
+                lines.append("{0}-{1}\t{2}\t_\t_\t_\t_\t_\t_\t_\t_".format(num_words + 1, num_words + len(parts) - 1, parts[0]))
+                for part in parts[1:]:
+                    lines.append("{0}\t{1}\t_\t_\t_\t_\t_\t_\t_\t_".format(num_words + 1, part))
+                    num_words += 1
+        return load_conllu((io.StringIO if sys.version_info >= (3, 0) else io.BytesIO)("\n".join(lines+["\n"])))
+
+    def _test_exception(self, gold, system):
+        self.assertRaises(UDError, evaluate, self._load_words(gold), self._load_words(system))
+
+    def _test_ok(self, gold, system, correct):
+        metrics = evaluate(self._load_words(gold), self._load_words(system))
+        gold_words = sum((max(1, len(word.split(" ")) - 1) for word in gold))
+        system_words = sum((max(1, len(word.split(" ")) - 1) for word in system))
+        self.assertEqual((metrics["Words"].precision, metrics["Words"].recall, metrics["Words"].f1),
+                         (correct / system_words, correct / gold_words, 2 * correct / (gold_words + system_words)))
+
+    def test_exception(self):
+        self._test_exception(["a"], ["b"])
+
+    def test_equal(self):
+        self._test_ok(["a"], ["a"], 1)
+        self._test_ok(["a", "b", "c"], ["a", "b", "c"], 3)
+
+    def test_equal_with_multiword(self):
+        self._test_ok(["abc a b c"], ["a", "b", "c"], 3)
+        self._test_ok(["a", "bc b c", "d"], ["a", "b", "c", "d"], 4)
+        self._test_ok(["abcd a b c d"], ["ab a b", "cd c d"], 4)
+        self._test_ok(["abc a b c", "de d e"], ["a", "bcd b c d", "e"], 5)
+
+    def test_alignment(self):
+        self._test_ok(["abcd"], ["a", "b", "c", "d"], 0)
+        self._test_ok(["abc", "d"], ["a", "b", "c", "d"], 1)
+        self._test_ok(["a", "bc", "d"], ["a", "b", "c", "d"], 2)
+        self._test_ok(["a", "bc b c", "d"], ["a", "b", "cd"], 2)
+        self._test_ok(["abc a B c", "def d E f"], ["ab a b", "cd c d", "ef e f"], 4)
