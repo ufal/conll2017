@@ -322,7 +322,7 @@ if __name__ == "__main__":
     parser.add_argument("gold_file", type=argparse.FileType("r"),
                         help="Name of the file with the gold data.")
     parser.add_argument("system_file", type=argparse.FileType("r"), nargs="?", default=sys.stdin,
-                        help="Name of the file with the gold data.")
+                        help="Name of the file with the predicted data.")
     parser.add_argument("--weights", "-w", type=argparse.FileType("r"), default=None,
                         metavar="deprel_weights_file",
                         help="Compute WeightedLAS using given weights for Universal Dependency Relations.")
@@ -345,7 +345,7 @@ if __name__ == "__main__":
 
             columns = line.rstrip("\r\n").split()
             if len(columns) != 2:
-                raise ValueError("Expected two columns in the UDM weights file on line '{}'".format(line))
+                raise ValueError("Expected two columns in the UD Relations weights file on line '{}'".format(line))
 
             deprel_weights[columns[0]] = float(columns[1])
 
