@@ -5,8 +5,8 @@
 # Compatible with Python 2 and 3, can be used either as a module
 # or a standalone executable.
 #
-# Copyright 2017 Institute of Formal and Applied Linguistics, Faculty of
-# Mathematics and Physics, Charles University in Prague, Czech Republic.
+# Copyright 2017 Institute of Formal and Applied Linguistics (UFAL),
+# Faculty of Mathematics and Physics, Charles University, Czech Republic.
 #
 # Changelog:
 # - [02 Jan 2017] Version 0.9: Initial release
@@ -41,14 +41,14 @@
 #   - evaluate the given gold and system CoNLL-U files (loaded with load_conllu)
 #   - raises UDError if the concatenated tokens of gold and system file do not match
 #   - returns a dictionary with the metrics described above, each metrics having
-#     three fields precision, recall and f1
+#     three fields: precision, recall and f1
 
 # Description of token matching
 # -----------------------------
 # In order to match tokens of gold file and system file, we consider the text
 # resulting from concatenation of gold tokens and text resulting from
 # concatenation of system tokens. These texts should match -- if they do not,
-# the evaluation fail.
+# the evaluation fails.
 #
 # If the texts do match, every token is represented as a range in this original
 # text, and tokens are equal only if their range is the same.
@@ -60,11 +60,11 @@
 # tokens have to be handled differently.
 #
 # To handle multi-word tokens, we start by finding "multi-word spans".
-# Multi-word span is a span in the original text, which
-# - contains at least one multi-word token
+# Multi-word span is a span in the original text such that
+# - it contains at least one multi-word token
 # - all multi-word tokens in the span (considering both gold and system ones)
 #   are completely inside the span (i.e., they do not "stick out")
-# - the multi-word span is as smallest as possible
+# - the multi-word span is as small as possible
 #
 # For every multi-word span, we align the gold and system words completely
 # inside this span using LCS on their FORMs. The words not intersecting
@@ -319,14 +319,14 @@ def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("gold_file", type=argparse.FileType("r"),
-                        help="Name of the file with the gold data.")
+                        help="Name of the CoNLL-U file with the gold data.")
     parser.add_argument("system_file", type=argparse.FileType("r"), nargs="?", default=sys.stdin,
-                        help="Name of the file with the predicted data.")
+                        help="Name of the CoNLL-U file with the predicted data (default=STDIN).")
     parser.add_argument("--weights", "-w", type=argparse.FileType("r"), default=None,
                         metavar="deprel_weights_file",
                         help="Compute WeightedLAS using given weights for Universal Dependency Relations.")
     parser.add_argument("--verbose", "-v", default=0, action="count",
-                        help="Verbosity level.")
+                        help="Print all metrics.")
     args = parser.parse_args()
 
     # Use verbose if weights are supplied
