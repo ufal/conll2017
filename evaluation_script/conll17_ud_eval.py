@@ -15,7 +15,7 @@
 
 # Command line usage
 # ------------------
-# conll17_ud_eval.py [-v|--verbose] gold_conllu_file [system_conllu_file]
+# conll17_ud_eval.py [-v] [-w weights_file] gold_conllu_file [system_conllu_file]
 #
 # - if no system_conllu_file is specified, standard input is used
 # - if no -v is given, only the CoNLL17 UD Shared Task evaluation LAS metrics
@@ -31,6 +31,9 @@
 #   - Lemmas: using aligned words, how well does LEMMA match
 #   - UAS: using aligned words, how well does HEAD match
 #   - LAS: using aligned words, how well does HEAD+DEPREL(ignoring subtypes) match
+# - if weights_file is given (with lines containing deprel-weight pairs),
+#   one more metric is shown:
+#   - WeightedLAS: as LAS, but each deprel (ignoring subtypes) has different weight
 
 # API usage
 # ---------
@@ -201,18 +204,18 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
         return F1Score(len(gold_spans), len(system_spans), correct)
 
-    def alignment_f1_score(alignment, key_fn, weight_fn=None):
+    def alignment_f1_score(alignment, key_fn, weight_fn=lambda w: 1):
         gold, system, correct = 0, 0, 0
 
         for word in alignment.gold_words:
-            gold += weight_fn(word) if weight_fn else 1
+            gold += weight_fn(word)
 
         for word in alignment.system_words:
-            system += weight_fn(word) if weight_fn else 1
+            system += weight_fn(word)
 
         for words in alignment.matched_words:
             if key_fn(words.gold_word) == key_fn(words.system_word):
-                correct += weight_fn(words.gold_word) if weight_fn else 1
+                correct += weight_fn(words.gold_word)
 
         return F1Score(gold, system, correct)
 
@@ -310,10 +313,28 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
     # Add WeightedLAS if weights are given
     if deprel_weights is not None:
         def weighted_las(word):
-            return deprel_weights[word.columns[DEPREL]] if word.columns[DEPREL] in deprel_weights else 1.
+            return deprel_weights.get(word.columns[DEPREL], 1.0)
         result["WeightedLAS"] = alignment_f1_score(alignment, lambda w: (w.columns[HEAD], w.columns[DEPREL]), weighted_las)
 
     return result
+
+def load_deprel_weights(weights_file):
+    if weights_file is None:
+        return None
+
+    deprel_weights = {}
+    for line in weights_file:
+        # Ignore comments and empty lines
+        if line.startswith("#") or not line.strip():
+            continue
+
+        columns = line.rstrip("\r\n").split()
+        if len(columns) != 2:
+            raise ValueError("Expected two columns in the UD Relations weights file on line '{}'".format(line))
+
+        deprel_weights[columns[0]] = float(columns[1])
+
+    return deprel_weights
 
 def main():
     # Parse arguments
@@ -334,19 +355,7 @@ def main():
         args.verbose = 1
 
     # Load weights if requested
-    deprel_weights = args.weights
-    if deprel_weights: # file with weights is given
-        deprel_weights = {}
-        for line in args.weights:
-            # Ignore comments and empty lines
-            if line.startswith("#") or not line.strip():
-                continue
-
-            columns = line.rstrip("\r\n").split()
-            if len(columns) != 2:
-                raise ValueError("Expected two columns in the UD Relations weights file on line '{}'".format(line))
-
-            deprel_weights[columns[0]] = float(columns[1])
+    deprel_weights = load_deprel_weights(args.weights)
 
     # Load CoNLL-U files
     gold_ud = load_conllu(args.gold_file)
@@ -359,15 +368,17 @@ def main():
     if not args.verbose:
         print("LAS F1 Score: {:.2f}".format(100 * evaluation["LAS"].f1))
     else:
+        metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
+        if deprel_weights is not None:
+            metrics.append("WeightedLAS")
         print("Metrics    | Precision |    Recall |  F1 Score")
         print("-----------+-----------+-----------+-----------")
-        for metrics in ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"
-                       ] + (["WeightedLAS"] if deprel_weights is not None else []):
+        for metric in metrics:
             print("{:11}|{:10.2f} |{:10.2f} |{:10.2f}".format(
-                metrics,
-                100 * evaluation[metrics].precision,
-                100 * evaluation[metrics].recall,
-                100 * evaluation[metrics].f1
+                metric,
+                100 * evaluation[metric].precision,
+                100 * evaluation[metric].recall,
+                100 * evaluation[metric].f1
             ))
 
 if __name__ == "__main__":
