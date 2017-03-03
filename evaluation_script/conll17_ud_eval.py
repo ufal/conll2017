@@ -193,9 +193,9 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
     def spans_f1_score(gold_spans, system_spans):
         correct, gi, si = 0, 0, 0
         while gi < len(gold_spans) and si < len(system_spans):
-            if si < len(system_spans) and (gi == len(gold_spans) or system_spans[si].start < gold_spans[gi].start):
+            if system_spans[si].start < gold_spans[gi].start:
                 si += 1
-            elif gi < len(gold_spans) and (si == len(system_spans) or gold_spans[gi].start < system_spans[si].start):
+            elif gold_spans[gi].start < system_spans[si].start:
                 gi += 1
             else:
                 correct += gold_spans[gi].end == system_spans[si].end
