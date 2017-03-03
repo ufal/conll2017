@@ -318,6 +318,24 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
     return result
 
+def load_deprel_weights(weights_file):
+    if weights_file is None:
+        return None
+
+    deprel_weights = {}
+    for line in weights_file:
+        # Ignore comments and empty lines
+        if line.startswith("#") or not line.strip():
+            continue
+
+        columns = line.rstrip("\r\n").split()
+        if len(columns) != 2:
+            raise ValueError("Expected two columns in the UD Relations weights file on line '{}'".format(line))
+
+        deprel_weights[columns[0]] = float(columns[1])
+
+    return deprel_weights
+
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
@@ -337,19 +355,7 @@ def main():
         args.verbose = 1
 
     # Load weights if requested
-    deprel_weights = None
-    if args.weights: # file with weights is given
-        deprel_weights = {}
-        for line in args.weights:
-            # Ignore comments and empty lines
-            if line.startswith("#") or not line.strip():
-                continue
-
-            columns = line.rstrip("\r\n").split()
-            if len(columns) != 2:
-                raise ValueError("Expected two columns in the UD Relations weights file on line '{}'".format(line))
-
-            deprel_weights[columns[0]] = float(columns[1])
+    deprel_weights = load_deprel_weights(args.weights)
 
     # Load CoNLL-U files
     gold_ud = load_conllu(args.gold_file)
