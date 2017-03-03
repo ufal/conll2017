@@ -106,11 +106,8 @@ def load_conllu(file):
             self.span = span
             self.columns = columns
             self.is_multiword = is_multiword
-
             # Ignore language-specific deprel subtypes
-            index = self.columns[DEPREL].find(":")
-            if index >= 0:
-                self.columns[DEPREL] = self.columns[DEPREL][:index]
+            self.columns[DEPREL] = columns[DEPREL].split(':')[0]
 
     ud = UDRepresentation()
 
