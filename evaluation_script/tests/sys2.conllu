@@ -1,0 +1,24 @@
+# sent_id = 1
+# text = Hey, Mr.
+1	Hey	hey	INTJ	UH	_	3	discourse	_	SpaceAfter=No
+2	,	,	PUNCT	,	_	3	punct	_	_
+3	Mr.	Mr.	PROPN	NNP	Number=Sing	0	root	_	_
+
+# sent_id = 2
+# text = Tambourine man, play a song for me
+1	Tambourine	Tambourine	NUM	CD	NumType=Card	2	nummod	_	_
+2	man	man	NOUN	NN	Number=Sing	0	root	_	SpaceAfter=No
+3	,	,	PUNCT	,	_	2	punct	_	_
+4	play	play	VERB	VB	VerbForm=Inf	2	appos	_	_
+5	a	a	DET	DT	Definite=Ind|PronType=Art	6	det	_	_
+6	song	song	NOUN	NN	Number=Sing	4	dobj	_	_
+7	for	for	ADP	IN	_	8	case	_	_
+8	me	I	PRON	PRP	Case=Acc|Number=Sing|Person=1|PronType=Prs	4	nmod	_	_
+
+# sent_id = 3
+# text = I'm not sleepy
+1	I	I	PRON	PRP	Case=Nom|Number=Sing|Person=1|PronType=Prs	4	nsubj	_	SpaceAfter=No
+2	'm	be	VERB	VBP	Mood=Ind|Tense=Pres|VerbForm=Fin	4	cop	_	_
+3	not	not	PART	RB	_	4	neg	_	_
+4	sleepy	sleepy	NOUN	NN	Number=Sing	0	root	_	_
+
