@@ -106,13 +106,16 @@ def load_conllu(file):
             self.span = span
             self.columns = columns
             self.is_multiword = is_multiword
+            self.aligned = 0
+            self.parent = None
+
             # Ignore language-specific deprel subtypes
             self.columns[DEPREL] = columns[DEPREL].split(':')[0]
 
     ud = UDRepresentation()
 
     # Load the CoNLL-U file
-    index, in_sentence = 0, False
+    index, in_sentence, first_word_index = 0, False, 0
     while True:
         line = file.readline()
         if not line:
@@ -127,9 +130,14 @@ def load_conllu(file):
             # Start a new sentence
             ud.sentences.append(UDSpan(index, 0))
             in_sentence = True
+            first_word_index = len(ud.words)
         if not line:
             ud.sentences[-1].end = index
             in_sentence = False
+            for word in ud.words[first_word_index:]:
+                head = int(word.columns[HEAD])
+                if head:
+                    word.parent = ud.words[first_word_index + head - 1]
             continue
 
         # Read next token/word
@@ -226,6 +234,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                 # No multi-word token, align according to spans
                 if (gold_words[gi].span.start, gold_words[gi].span.end) == (system_words[si].span.start, system_words[si].span.end):
                     alignment.matched_words.append(AlignmentWord(gold_words[gi], system_words[si]))
+                    system_words[si].aligned = gold_words[gi]
                     gi += 1
                     si += 1
                 elif gold_words[gi].span.start <= system_words[si].span.start:
@@ -267,6 +276,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                     while g < gi - gs and s < si - ss:
                         if gold_words[gs + g].columns[FORM] == system_words[ss + s].columns[FORM]:
                             alignment.matched_words.append(AlignmentWord(gold_words[gs+g], system_words[ss+s]))
+                            system_words[ss+s].aligned = gold_words[gs+s]
                             g += 1
                             s += 1
                         elif lcs[g][s] == (lcs[g+1][s] if g+1 < gi-gs else 0):
@@ -275,6 +285,12 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                             s += 1
 
         return alignment
+
+    def fill_aligned_system_parents(alignment):
+        for words in alignment.matched_words:
+            sys_word = words.system_word
+            if sys_word.parent is not None:
+                sys_word.parent = sys_word.parent.aligned
 
     # Check that underlying character sequences do match
     if gold_ud.characters != system_ud.characters:
@@ -292,6 +308,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
     # Align words
     alignment = align_words(gold_ud.words, system_ud.words)
+    fill_aligned_system_parents(alignment)
 
     # Compute the F1-scores
     result = {
@@ -303,15 +320,15 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         "Feats": alignment_f1_score(alignment, lambda w: w.columns[FEATS]),
         "AllTags": alignment_f1_score(alignment, lambda w: (w.columns[UPOS], w.columns[XPOS], w.columns[FEATS])),
         "Lemmas": alignment_f1_score(alignment, lambda w: w.columns[LEMMA]),
-        "UAS": alignment_f1_score(alignment, lambda w: w.columns[HEAD]),
-        "LAS": alignment_f1_score(alignment, lambda w: (w.columns[HEAD], w.columns[DEPREL])),
+        "UAS": alignment_f1_score(alignment, lambda w: w.parent),
+        "LAS": alignment_f1_score(alignment, lambda w: (w.parent, w.columns[DEPREL])),
     }
 
     # Add WeightedLAS if weights are given
     if deprel_weights is not None:
         def weighted_las(word):
             return deprel_weights.get(word.columns[DEPREL], 1.0)
-        result["WeightedLAS"] = alignment_f1_score(alignment, lambda w: (w.columns[HEAD], w.columns[DEPREL]), weighted_las)
+        result["WeightedLAS"] = alignment_f1_score(alignment, lambda w: (w.parent, w.columns[DEPREL]), weighted_las)
 
     return result
 
