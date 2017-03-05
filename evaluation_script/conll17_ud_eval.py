@@ -201,6 +201,8 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         def __init__(self, gold_word, system_word):
             self.gold_word = gold_word
             self.system_word = system_word
+            self.gold_parent = None
+            self.system_parent_gold_aligned = None
     class Alignment:
         def __init__(self, gold_words, system_words):
             self.gold_words = gold_words
@@ -210,6 +212,15 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         def append_aligned_words(self, gold_word, system_word):
             self.matched_words.append(AlignmentWord(gold_word, system_word))
             self.matched_words_map[system_word] = gold_word
+        def fill_parents(self):
+            # We represent root parents in both gold and system data by '0'.
+            # For gold data, we represent non-root parent by corresponding gold word.
+            # For system data, we represent non-root parent by either gold word aligned
+            # to parent system nodes, or by None if no gold words is aligned to the parent.
+            for words in self.matched_words:
+                words.gold_parent = words.gold_word.parent if words.gold_word.parent is not None else 0
+                words.system_parent_gold_aligned = self.matched_words_map.get(words.system_word.parent, None) \
+                    if words.system_word.parent is not None else 0
 
     def spans_f1_score(gold_spans, system_spans):
         correct, gi, si = 0, 0, 0
@@ -235,13 +246,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
             system += weight_fn(word)
 
         for words in alignment.matched_words:
-            # We represent root parents in both gold and system data by '0'.
-            # For gold data, we represent non-root parent by corresponding gold word.
-            # For system data, we represent non-root parent by either gold word aligned
-            # to parent system nodes, or by None if no gold words is aligned to the parent.
-            gold_parent = words.gold_word.parent if words.gold_word.parent is not None else 0
-            system_parent = alignment.matched_words_map.get(words.system_word.parent) if words.system_word.parent is not None else 0
-            if key_fn(words.gold_word, gold_parent) == key_fn(words.system_word, system_parent):
+            if key_fn(words.gold_word, words.gold_parent) == key_fn(words.system_word, words.system_parent_gold_aligned):
                 correct += weight_fn(words.gold_word)
 
         return F1Score(gold, system, correct)
@@ -303,6 +308,8 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                             g += 1
                         else:
                             s += 1
+
+        alignment.fill_parents()
 
         return alignment
 
