@@ -248,7 +248,6 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
     def align_words(gold_words, system_words):
         alignment = Alignment(gold_words, system_words)
-        system_to_gold_map = {}
 
         gi, si = 0, 0
         while gi < len(gold_words) and si < len(system_words):
