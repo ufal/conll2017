@@ -10,8 +10,8 @@ other   11   10     9  Similarly for all other attributes (including HEAD, thus 
 sent_id=2
        gold sys1 match note
 tokens   4    3     2  Gold contains "I" + "'m" as two separate tokens, while Sys1 analyzes this as one multiword token.
-words    4    4     4  I think the Sys1 words "I" + "am" match the Gold words "I" + "'m" because they cover the same token span. The correct word alignment is I<->I and am<->'m.
-UPOS     4    4     4  All the matching words have correct UPOS.
+words    4    4     4  However, both gold and sys1 have the same word forms "I" + "am", which are aligned by LCS.
+UPOS     4    4     4  All the aligned words have correct UPOS.
 other    4    4     4  Similarly for all other attributes (including HEAD, thus also UAS and LAS).
 
 TOTAL
