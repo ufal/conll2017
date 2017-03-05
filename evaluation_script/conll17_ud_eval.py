@@ -299,7 +299,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
             index += 1
 
         raise UDError(
-            "The catenation of tokens in gold file and in system file differ!\n" +
+            "The concatenation of tokens in gold file and in system file differ!\n" +
             "First 20 differing characters in gold file: '{}' and system file: '{}'".format(
                 "".join(gold_ud.characters[index:index + 20]),
                 "".join(system_ud.characters[index:index + 20])
