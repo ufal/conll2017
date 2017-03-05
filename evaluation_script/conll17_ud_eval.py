@@ -115,7 +115,7 @@ def load_conllu(file):
     ud = UDRepresentation()
 
     # Load the CoNLL-U file
-    index, in_sentence, first_word_index = 0, False, 0
+    index, sentence_start = 0, None
     while True:
         line = file.readline()
         if not line:
@@ -123,21 +123,22 @@ def load_conllu(file):
         line = line.rstrip("\r\n")
 
         # Handle sentence start boundaries
-        if not in_sentence:
+        if sentence_start is None:
             # Skip comments
             if line.startswith("#"):
                 continue
             # Start a new sentence
             ud.sentences.append(UDSpan(index, 0))
-            in_sentence = True
-            first_word_index = len(ud.words)
+            sentence_start = len(ud.words)
         if not line:
             ud.sentences[-1].end = index
-            in_sentence = False
-            for word in ud.words[first_word_index:]:
+            for word in ud.words[sentence_start:]:
                 head = int(word.columns[HEAD])
+                if head > len(ud.words) - sentence_start:
+                    raise UDError("HEAD '{}' points outside of the sentence".format(word.columns[HEAD]))
                 if head:
-                    word.parent = ud.words[first_word_index + head - 1]
+                    word.parent = ud.words[sentence_start + head - 1]
+            sentence_start = None
             continue
 
         # Read next token/word
@@ -169,9 +170,23 @@ def load_conllu(file):
                 ud.words.append(UDWord(ud.tokens[-1], word_columns, is_multiword=True))
         # Basic tokens/words
         else:
+            try:
+                word_id = int(columns[ID])
+            except:
+                raise UDError("Cannot parse word ID '{}'".format(columns[ID]))
+            if word_id != len(ud.words) - sentence_start + 1:
+                raise UDError("Incorrect word ID '{}' for word '{}', expected '{}'".format(columns[ID], columns[FORM], len(ud.words) - sentence_start + 1))
+
+            try:
+                head_id = int(columns[HEAD])
+            except:
+                raise UDError("Cannot parse HEAD '{}'".format(columns[HEAD]))
+            if head_id < 0:
+                raise UDError("HEAD cannot be negative")
+
             ud.words.append(UDWord(ud.tokens[-1], columns, is_multiword=False))
 
-    if in_sentence:
+    if sentence_start is not None:
         raise UDError("The CoNLL-U file does not end with empty line")
 
     return ud
