@@ -294,6 +294,11 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
             return words[i].span.start >= multiword_span_end
         return words[i].span.end > multiword_span_end
 
+    def extend_end(word, multiword_span_end):
+        if word.is_multiword and word.span.end > multiword_span_end:
+            return word.span.end
+        return multiword_span_end
+
     def find_multiword_span(gold_words, system_words, gi, si):
         multiword_span_end = gold_words[gi].span.end if gold_words[gi].is_multiword else system_words[si].span.end
 
@@ -302,12 +307,10 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
               not beyond_end(system_words, si, multiword_span_end):
             if gi < len(gold_words) and (si >= len(system_words) or
                                          gold_words[gi].span.start <= system_words[si].span.start):
-                if gold_words[gi].is_multiword and gold_words[gi].span.end > multiword_span_end:
-                    multiword_span_end = gold_words[gi].span.end
+                multiword_span_end = extend_end(gold_words[gi], multiword_span_end)
                 gi += 1
             else:
-                if system_words[si].is_multiword and system_words[si].span.end > multiword_span_end:
-                    multiword_span_end = system_words[si].span.end
+                multiword_span_end = extend_end(system_words[si], multiword_span_end)
                 si += 1
         return gi, si
 
