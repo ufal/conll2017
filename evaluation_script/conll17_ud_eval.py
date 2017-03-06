@@ -287,14 +287,19 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
         return Score(gold, system, correct, aligned)
 
+    def beyond_end(words, i, multiword_span_end):
+        if i >= len(words):
+            return True
+        if words[i].is_multiword:
+            return words[i].span.start >= multiword_span_end
+        return words[i].span.end > multiword_span_end
+
     def find_multiword_span(gold_words, system_words, gi, si):
         multiword_span_end = gold_words[gi].span.end if gold_words[gi].is_multiword else system_words[si].span.end
 
         # Find all words in the multiword span
-        while (gi < len(gold_words) and (gold_words[gi].span.start < multiword_span_end if gold_words[gi].is_multiword
-                                         else gold_words[gi].span.end <= multiword_span_end)) or \
-              (si < len(system_words) and (system_words[si].span.start < multiword_span_end if system_words[si].is_multiword
-                                           else system_words[si].span.end <= multiword_span_end)):
+        while not beyond_end(gold_words, gi, multiword_span_end) or \
+              not beyond_end(system_words, si, multiword_span_end):
             if gi < len(gold_words) and (si >= len(system_words) or
                                          gold_words[gi].span.start <= system_words[si].span.start):
                 if gold_words[gi].is_multiword and gold_words[gi].span.end > multiword_span_end:
