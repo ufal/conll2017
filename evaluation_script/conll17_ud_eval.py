@@ -287,6 +287,35 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
         return Score(gold, system, correct, aligned)
 
+    def find_multiword_span(gold_words, system_words, gi, si):
+        multiword_span_end = gold_words[gi].span.end if gold_words[gi].is_multiword else system_words[si].span.end
+
+        # Find all words in the multiword span
+        while (gi < len(gold_words) and (gold_words[gi].span.start < multiword_span_end if gold_words[gi].is_multiword
+                                         else gold_words[gi].span.end <= multiword_span_end)) or \
+              (si < len(system_words) and (system_words[si].span.start < multiword_span_end if system_words[si].is_multiword
+                                           else system_words[si].span.end <= multiword_span_end)):
+            if gi < len(gold_words) and (si >= len(system_words) or
+                                         gold_words[gi].span.start <= system_words[si].span.start):
+                if gold_words[gi].is_multiword and gold_words[gi].span.end > multiword_span_end:
+                    multiword_span_end = gold_words[gi].span.end
+                gi += 1
+            else:
+                if system_words[si].is_multiword and system_words[si].span.end > multiword_span_end:
+                    multiword_span_end = system_words[si].span.end
+                si += 1
+        return gi, si
+
+    def compute_lcs(gold_words, system_words, gi, si, gs, ss):
+        lcs = [[0] * (si - ss) for i in range(gi - gs)]
+        for g in reversed(range(gi - gs)):
+            for s in reversed(range(si - ss)):
+                if gold_words[gs + g].columns[FORM] == system_words[ss + s].columns[FORM]:
+                    lcs[g][s] = 1 + (lcs[g+1][s+1] if g+1 < gi-gs and s+1 < si-ss else 0)
+                lcs[g][s] = max(lcs[g][s], lcs[g+1][s] if g+1 < gi-gs else 0)
+                lcs[g][s] = max(lcs[g][s], lcs[g][s+1] if s+1 < si-ss else 0)
+        return lcs
+
     def align_words(gold_words, system_words):
         alignment = Alignment(gold_words, system_words)
 
@@ -306,32 +335,10 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
             else:
                 # Multi-word token
                 gs, ss = gi, si
-                multiword_span_end = gold_words[gi].span.end if gold_words[gi].is_multiword else system_words[si].span.end
-
-                # Find all words in the multiword span
-                while (gi < len(gold_words) and (gold_words[gi].span.start < multiword_span_end if gold_words[gi].is_multiword
-                                                 else gold_words[gi].span.end <= multiword_span_end)) or \
-                      (si < len(system_words) and (system_words[si].span.start < multiword_span_end if system_words[si].is_multiword
-                                                   else system_words[si].span.end <= multiword_span_end)):
-                    if gi < len(gold_words) and (si >= len(system_words) or
-                                                 gold_words[gi].span.start <= system_words[si].span.start):
-                        if gold_words[gi].is_multiword and gold_words[gi].span.end > multiword_span_end:
-                            multiword_span_end = gold_words[gi].span.end
-                        gi += 1
-                    else:
-                        if system_words[si].is_multiword and system_words[si].span.end > multiword_span_end:
-                            multiword_span_end = system_words[si].span.end
-                        si += 1
+                gi, si = find_multiword_span(gold_words, system_words, gi, si)
 
                 if si > ss and gi > gs:
-                    # LCS on the chosen words
-                    lcs = [[0] * (si - ss) for i in range(gi - gs)]
-                    for g in reversed(range(gi - gs)):
-                        for s in reversed(range(si - ss)):
-                            if gold_words[gs + g].columns[FORM] == system_words[ss + s].columns[FORM]:
-                                lcs[g][s] = 1 + (lcs[g+1][s+1] if g+1 < gi-gs and s+1 < si-ss else 0)
-                            lcs[g][s] = max(lcs[g][s], lcs[g+1][s] if g+1 < gi-gs else 0)
-                            lcs[g][s] = max(lcs[g][s], lcs[g][s+1] if s+1 < si-ss else 0)
+                    lcs = compute_lcs(gold_words, system_words, gi, si, gs, ss)
 
                     # Store aligned words
                     s, g = 0, 0
