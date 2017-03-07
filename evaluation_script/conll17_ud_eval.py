@@ -455,13 +455,13 @@ class TestAlignment(unittest.TestCase):
         for w in words:
             parts = w.split(" ")
             if len(parts) == 1:
-                lines.append("{0}\t{1}\t_\t_\t_\t_\t0\t_\t_\t_".format(num_words + 1, parts[0]))
                 num_words += 1
+                lines.append("{}\t{}\t_\t_\t_\t_\t{}\t_\t_\t_".format(num_words, parts[0], int(num_words>1)))
             else:
-                lines.append("{0}-{1}\t{2}\t_\t_\t_\t_\t_\t_\t_\t_".format(num_words + 1, num_words + len(parts) - 1, parts[0]))
+                lines.append("{}-{}\t{}\t_\t_\t_\t_\t_\t_\t_\t_".format(num_words + 1, num_words + len(parts) - 1, parts[0]))
                 for part in parts[1:]:
-                    lines.append("{0}\t{1}\t_\t_\t_\t_\t0\t_\t_\t_".format(num_words + 1, part))
                     num_words += 1
+                    lines.append("{}\t{}\t_\t_\t_\t_\t{}\t_\t_\t_".format(num_words, part, int(num_words>1)))
         return load_conllu((io.StringIO if sys.version_info >= (3, 0) else io.BytesIO)("\n".join(lines+["\n"])))
 
     def _test_exception(self, gold, system):
