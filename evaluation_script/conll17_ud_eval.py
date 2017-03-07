@@ -177,6 +177,10 @@ def load_conllu(file):
         if "." in columns[ID]:
             continue
 
+        # Delete spaces from FORM
+        # so gold.characters == system.characters even if one of them tokenizes the space.
+        columns[FORM] = ''.join(columns[FORM].split())
+
         # Save token
         ud.characters.extend(columns[FORM])
         ud.tokens.append(UDSpan(index, index + len(columns[FORM])))
