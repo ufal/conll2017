@@ -300,9 +300,21 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         return multiword_span_end
 
     def find_multiword_span(gold_words, system_words, gi, si):
-        multiword_span_end = gold_words[gi].span.end if gold_words[gi].is_multiword else system_words[si].span.end
+        # We know gold_words[gi].is_multiword or system_words[si].is_multiword.
+        # Find the start of the multiword span (gs, ss), so the multiword span is minimal.
+        # Initialize multiword_span_end characters index.
+        multiword_span_end = gold_words[gi].span.end
+        if not gold_words[gi].is_multiword:
+            if gold_words[gi].span.start < system_words[si].span.start:
+                gi += 1
+            multiword_span_end = system_words[si].span.end
+        elif not system_words[si].is_multiword:
+            if system_words[si].span.start < gold_words[gi].span.start:
+                si += 1
+        gs, ss = gi, si
 
-        # Find all words in the multiword span
+        # Find the end of the multiword span
+        # (so both gi and si are pointing to the word following the multiword span end).
         while not beyond_end(gold_words, gi, multiword_span_end) or \
               not beyond_end(system_words, si, multiword_span_end):
             if gi < len(gold_words) and (si >= len(system_words) or
@@ -312,7 +324,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
             else:
                 multiword_span_end = extend_end(system_words[si], multiword_span_end)
                 si += 1
-        return gi, si
+        return gs, ss, gi, si
 
     def compute_lcs(gold_words, system_words, gi, si, gs, ss):
         lcs = [[0] * (si - ss) for i in range(gi - gs)]
@@ -329,21 +341,9 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
         gi, si = 0, 0
         while gi < len(gold_words) and si < len(system_words):
-            if (gold_words[gi].span.start > system_words[si].span.start or not gold_words[gi].is_multiword) and \
-                    (system_words[si].span.start > gold_words[gi].span.start or not system_words[si].is_multiword):
-                # No multi-word token, align according to spans
-                if (gold_words[gi].span.start, gold_words[gi].span.end) == (system_words[si].span.start, system_words[si].span.end):
-                    alignment.append_aligned_words(gold_words[gi], system_words[si])
-                    gi += 1
-                    si += 1
-                elif gold_words[gi].span.start <= system_words[si].span.start:
-                    gi += 1
-                else:
-                    si += 1
-            else:
-                # Multi-word token
-                gs, ss = gi, si
-                gi, si = find_multiword_span(gold_words, system_words, gi, si)
+            if gold_words[gi].is_multiword or system_words[si].is_multiword:
+                # A: Multi-word tokens => align via LCS within the whole "multiword span".
+                gs, ss, gi, si = find_multiword_span(gold_words, system_words, gi, si)
 
                 if si > ss and gi > gs:
                     lcs = compute_lcs(gold_words, system_words, gi, si, gs, ss)
@@ -359,6 +359,16 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                             g += 1
                         else:
                             s += 1
+            else:
+                # B: No multi-word token => align according to spans.
+                if (gold_words[gi].span.start, gold_words[gi].span.end) == (system_words[si].span.start, system_words[si].span.end):
+                    alignment.append_aligned_words(gold_words[gi], system_words[si])
+                    gi += 1
+                    si += 1
+                elif gold_words[gi].span.start <= system_words[si].span.start:
+                    gi += 1
+                else:
+                    si += 1
 
         alignment.fill_parents()
 
