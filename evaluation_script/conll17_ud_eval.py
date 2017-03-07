@@ -20,7 +20,8 @@
 # - if no system_conllu_file is specified, standard input is used
 # - if no -v is given, only the CoNLL17 UD Shared Task evaluation LAS metrics
 #   is printed
-# - if -v is given, several metrics are printed (as precision, recall, F1 score):
+# - if -v is given, several metrics are printed (as precision, recall, F1 score,
+#   and in case the metric is computed on aligned words also accuracy on these):
 #   - Tokens: how well do the gold tokens match system tokens
 #   - Sentences: how well do the gold sentences match system sentences
 #   - Words: how well can the gold words be aligned to system words
@@ -402,17 +403,20 @@ def main():
     if not args.verbose:
         print("LAS F1 Score: {:.2f}".format(100 * evaluation["LAS"].f1))
     else:
-        metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
+        aligned_metrics = ["UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
         if deprel_weights is not None:
             metrics.append("WeightedLAS")
-        print("Metrics    | Precision |    Recall |  F1 Score")
-        print("-----------+-----------+-----------+-----------")
+        metrics = ["Tokens", "Sentences", "Words"] + aligned_metrics
+
+        print("Metrics    | Precision |    Recall |  F1 Score | AligndAcc ")
+        print("-----------+-----------+-----------+-----------+-----------")
         for metric in metrics:
-            print("{:11}|{:10.2f} |{:10.2f} |{:10.2f}".format(
+            print("{:11}|{:10.2f} |{:10.2f} |{:10.2f} |{}".format(
                 metric,
                 100 * evaluation[metric].precision,
                 100 * evaluation[metric].recall,
-                100 * evaluation[metric].f1
+                100 * evaluation[metric].f1,
+                "{:10.2f}".format(100 * evaluation[metric].f1 / (evaluation["Words"].f1 or 1)) if metric in aligned_metrics else ""
             ))
 
 if __name__ == "__main__":
