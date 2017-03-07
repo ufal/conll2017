@@ -2,7 +2,7 @@
 
 # CoNLL 2017 UD Parsing evaluation script.
 #
-# Compatible with Python 2 and 3, can be used either as a module
+# Compatible with Python 2.7 and 3.2+, can be used either as a module
 # or a standalone executable.
 #
 # Copyright 2017 Institute of Formal and Applied Linguistics (UFAL),
@@ -303,14 +303,14 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         # We know gold_words[gi].is_multiword or system_words[si].is_multiword.
         # Find the start of the multiword span (gs, ss), so the multiword span is minimal.
         # Initialize multiword_span_end characters index.
-        multiword_span_end = gold_words[gi].span.end
-        if not gold_words[gi].is_multiword:
-            if gold_words[gi].span.start < system_words[si].span.start:
-                gi += 1
-            multiword_span_end = system_words[si].span.end
-        elif not system_words[si].is_multiword:
-            if system_words[si].span.start < gold_words[gi].span.start:
+        if gold_words[gi].is_multiword:
+            multiword_span_end = gold_words[gi].span.end
+            if not system_words[si].is_multiword and system_words[si].span.start < gold_words[gi].span.start:
                 si += 1
+        else: # if system_words[si].is_multiword
+            multiword_span_end = system_words[si].span.end
+            if not gold_words[gi].is_multiword and gold_words[gi].span.start < system_words[si].span.start:
+                gi += 1
         gs, ss = gi, si
 
         # Find the end of the multiword span
