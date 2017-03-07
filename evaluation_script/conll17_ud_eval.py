@@ -365,7 +365,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
     if deprel_weights is not None:
         def weighted_las(word):
             return deprel_weights.get(word.columns[DEPREL], 1.0)
-        result["WeightedLAS"] = alignment_f1_score(alignment, lambda w: (w.parent, w.columns[DEPREL]), weighted_las)
+        result["WeightedLAS"] = alignment_f1_score(alignment, lambda w, parent: (parent, w.columns[DEPREL]), weighted_las)
 
     return result
 
@@ -420,11 +420,11 @@ def main():
         print("LAS F1 Score: {:.2f}".format(100 * evaluation["LAS"].f1))
     else:
         aligned_metrics = ["UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
+        metrics = ["Tokens", "Sentences", "Words"] + aligned_metrics
         if deprel_weights is not None:
             metrics.append("WeightedLAS")
-        metrics = ["Tokens", "Sentences", "Words"] + aligned_metrics
 
-        print("Metrics    | Precision |    Recall |  F1 Score | AligndAcc ")
+        print("Metrics    | Precision |    Recall |  F1 Score | AligndAcc")
         print("-----------+-----------+-----------+-----------+-----------")
         for metric in metrics:
             print("{:11}|{:10.2f} |{:10.2f} |{:10.2f} |{}".format(
