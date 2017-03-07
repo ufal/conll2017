@@ -180,6 +180,8 @@ def load_conllu(file):
         # Delete spaces from FORM  so gold.characters == system.characters
         # even if one of them tokenizes the space.
         columns[FORM] = columns[FORM].replace(" ", "")
+        if not columns[FORM]:
+            raise UDError("There is an empty FORM in the CoNLL-U file")
 
         # Save token
         ud.characters.extend(columns[FORM])
