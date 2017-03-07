@@ -94,22 +94,33 @@ def load_conllu(file):
     # Internal representation classes
     class UDRepresentation:
         def __init__(self):
+            # Characters of all the tokens in the whole file.
+            # Whitespace between tokens is not included.
             self.characters = []
+            # List of UDSpan instances with start&end indices into `characters`.
             self.tokens = []
+            # List of UDWord instances.
             self.words = []
+            # List of UDSpan instances with start&end indices into `characters`.
             self.sentences = []
     class UDSpan:
         def __init__(self, start, end):
             self.start = start
+            # Note that self.end marks the first position **after the end** of span,
+            # so we can use characters[start:end] or range(start, end).
             self.end = end
     class UDWord:
         def __init__(self, span, columns, is_multiword):
+            # Span of this word (or MWT, see below) within ud_representation.characters.
             self.span = span
+            # 10 columns of the CoNLL-U file: ID, FORM, LEMMA,...
             self.columns = columns
+            # is_multiword==True means that this word is part of a multi-word token.
+            # In that case, self.span marks the span of the whole multi-word token.
             self.is_multiword = is_multiword
+            # Reference to the UDWord instance representing the HEAD (or None if root).
             self.parent = None
-
-            # Ignore language-specific deprel subtypes
+            # Let's ignore language-specific deprel subtypes.
             self.columns[DEPREL] = columns[DEPREL].split(':')[0]
 
     ud = UDRepresentation()
@@ -445,10 +456,11 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Tests
+# Tests, which can be executed with `python -m unittest conll17_ud_eval`.
 class TestAlignment(unittest.TestCase):
     @staticmethod
     def _load_words(words):
+        """Prepare fake CoNLL-U files with fake HEAD to prevent multiple roots errors."""
         import io
 
         lines, num_words = [], 0
