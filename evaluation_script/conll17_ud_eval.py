@@ -209,11 +209,12 @@ def load_conllu(file):
 
 # Evaluate the gold and system treebanks (loaded using load_conllu).
 def evaluate(gold_ud, system_ud, deprel_weights=None):
-    class F1Score:
-        def __init__(self, gold_total, system_total, correct):
+    class Score:
+        def __init__(self, gold_total, system_total, correct, aligned_total=None):
             self.precision = correct / system_total if system_total else 0.0
             self.recall = correct / gold_total if gold_total else 0.0
             self.f1 = 2 * correct / (system_total + gold_total) if system_total + gold_total else 0.0
+            self.aligned_accuracy = correct / aligned_total if aligned_total else aligned_total
     class AlignmentWord:
         def __init__(self, gold_word, system_word):
             self.gold_word = gold_word
@@ -239,7 +240,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                 words.system_parent_gold_aligned = self.matched_words_map.get(words.system_word.parent, None) \
                     if words.system_word.parent is not None else 0
 
-    def spans_f1_score(gold_spans, system_spans):
+    def spans_score(gold_spans, system_spans):
         correct, gi, si = 0, 0, 0
         while gi < len(gold_spans) and si < len(system_spans):
             if system_spans[si].start < gold_spans[gi].start:
@@ -251,10 +252,10 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                 si += 1
                 gi += 1
 
-        return F1Score(len(gold_spans), len(system_spans), correct)
+        return Score(len(gold_spans), len(system_spans), correct)
 
-    def alignment_f1_score(alignment, key_fn, weight_fn=lambda w: 1):
-        gold, system, correct = 0, 0, 0
+    def alignment_score(alignment, key_fn, weight_fn=lambda w: 1):
+        gold, system, aligned, correct = 0, 0, 0, 0
 
         for word in alignment.gold_words:
             gold += weight_fn(word)
@@ -263,10 +264,17 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
             system += weight_fn(word)
 
         for words in alignment.matched_words:
+            aligned += weight_fn(words.gold_word)
+
+        if key_fn is None:
+            # Return score for whole aligned words
+            return Score(gold, system, aligned)
+
+        for words in alignment.matched_words:
             if key_fn(words.gold_word, words.gold_parent) == key_fn(words.system_word, words.system_parent_gold_aligned):
                 correct += weight_fn(words.gold_word)
 
-        return F1Score(gold, system, correct)
+        return Score(gold, system, correct, aligned)
 
     def align_words(gold_words, system_words):
         alignment = Alignment(gold_words, system_words)
@@ -349,23 +357,23 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
     # Compute the F1-scores
     result = {
-        "Tokens": spans_f1_score(gold_ud.tokens, system_ud.tokens),
-        "Sentences": spans_f1_score(gold_ud.sentences, system_ud.sentences),
-        "Words": alignment_f1_score(alignment, lambda w, parent: ""),
-        "UPOS": alignment_f1_score(alignment, lambda w, parent: w.columns[UPOS]),
-        "XPOS": alignment_f1_score(alignment, lambda w, parent: w.columns[XPOS]),
-        "Feats": alignment_f1_score(alignment, lambda w, parent: w.columns[FEATS]),
-        "AllTags": alignment_f1_score(alignment, lambda w, parent: (w.columns[UPOS], w.columns[XPOS], w.columns[FEATS])),
-        "Lemmas": alignment_f1_score(alignment, lambda w, parent: w.columns[LEMMA]),
-        "UAS": alignment_f1_score(alignment, lambda w, parent: parent),
-        "LAS": alignment_f1_score(alignment, lambda w, parent: (parent, w.columns[DEPREL])),
+        "Tokens": spans_score(gold_ud.tokens, system_ud.tokens),
+        "Sentences": spans_score(gold_ud.sentences, system_ud.sentences),
+        "Words": alignment_score(alignment, None),
+        "UPOS": alignment_score(alignment, lambda w, parent: w.columns[UPOS]),
+        "XPOS": alignment_score(alignment, lambda w, parent: w.columns[XPOS]),
+        "Feats": alignment_score(alignment, lambda w, parent: w.columns[FEATS]),
+        "AllTags": alignment_score(alignment, lambda w, parent: (w.columns[UPOS], w.columns[XPOS], w.columns[FEATS])),
+        "Lemmas": alignment_score(alignment, lambda w, parent: w.columns[LEMMA]),
+        "UAS": alignment_score(alignment, lambda w, parent: parent),
+        "LAS": alignment_score(alignment, lambda w, parent: (parent, w.columns[DEPREL])),
     }
 
     # Add WeightedLAS if weights are given
     if deprel_weights is not None:
         def weighted_las(word):
             return deprel_weights.get(word.columns[DEPREL], 1.0)
-        result["WeightedLAS"] = alignment_f1_score(alignment, lambda w, parent: (parent, w.columns[DEPREL]), weighted_las)
+        result["WeightedLAS"] = alignment_score(alignment, lambda w, parent: (parent, w.columns[DEPREL]), weighted_las)
 
     return result
 
@@ -419,8 +427,7 @@ def main():
     if not args.verbose:
         print("LAS F1 Score: {:.2f}".format(100 * evaluation["LAS"].f1))
     else:
-        aligned_metrics = ["UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
-        metrics = ["Tokens", "Sentences", "Words"] + aligned_metrics
+        metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
         if deprel_weights is not None:
             metrics.append("WeightedLAS")
 
@@ -432,7 +439,7 @@ def main():
                 100 * evaluation[metric].precision,
                 100 * evaluation[metric].recall,
                 100 * evaluation[metric].f1,
-                "{:10.2f}".format(100 * evaluation[metric].f1 / (evaluation["Words"].f1 or 1)) if metric in aligned_metrics else ""
+                "{:10.2f}".format(100 * evaluation[metric].aligned_accuracy) if evaluation[metric].aligned_accuracy is not None else ""
             ))
 
 if __name__ == "__main__":
