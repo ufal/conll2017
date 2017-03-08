@@ -13,3 +13,4 @@ script:
   - (cd evaluation_script && python conll17_ud_eval.py -v -w weights.cnc-like tests/gold.conllu tests/sys1.conllu | diff -s tests/sys1-expected.results -)
   - (cd evaluation_script && python conll17_ud_eval.py -v -w weights.cnc-like tests/gold.conllu tests/sys2.conllu | diff -s tests/sys2-expected.results -)
   - (cd evaluation_script && python conll17_ud_eval.py -v -w weights.cnc-like tests/gold.conllu tests/sys-space.conllu | diff -s tests/sys-space-expected.results -)
+  - (cd evaluation_script && python conll17_ud_eval.py -v -w weights.cnc-like tests/case-gold.conllu tests/case-sys.conllu | diff -s tests/case-expected.results -)
