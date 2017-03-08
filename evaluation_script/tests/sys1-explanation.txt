@@ -1,0 +1,22 @@
+The sentence segmentation of Sys1 is correct, so we can unambiguously refer to sent_id=1 and sent_id=2.
+
+sent_id=1
+       gold sys1 match note
+tokens  11   10     9  Sys1 has one tokenization error: "Hey," as one token (and one word). So neither "Hey" nor the comma can be counted as matching.
+words   11   10     9  There are no multiword tokens in the first sentence.
+UPOS    11   10     9  All the matching words have correct UPOS. Note that "Hey,"/INTJ does not match "Hey"/INTJ.
+other   11   10     9  Similarly for all other attributes (including HEAD, thus also UAS and LAS metrics have 9 matchings).
+
+sent_id=2
+       gold sys1 match note
+tokens   4    3     2  Gold contains "I" + "'m" as two separate tokens, while Sys1 analyzes this as one multiword token.
+words    4    4     4  However, both gold and sys1 have the same word forms "I" + "am", which are aligned by LCS.
+UPOS     4    4     4  All the aligned words have correct UPOS.
+other    4    4     4  Similarly for all other attributes (including HEAD, thus also UAS and LAS).
+
+TOTAL
+       gold sys1 match precision recall   F1
+tokens  15   13    11     84.62  73.33  78.57
+words   15   14    13     92.86  86.67  89.66
+UPOS    15   14    13     92.86  86.67  89.66
+other   15   14    13     92.86  86.67  89.66

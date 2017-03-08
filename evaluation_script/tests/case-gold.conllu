@@ -1,0 +1,9 @@
+# text = Příliš žluťoučký kůň úpěl ďábelské ódy.
+1	Příliš	příliš	ADV	Db-------------	_	2	advmod	_	_
+2	žluťoučký	žluťoučký	ADJ	AAMS1----1A----	Animacy=Anim|Case=Nom|Degree=Pos|Gender=Masc|Negative=Pos|Number=Sing	3	amod	_	_
+3	kůň	kůň	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Negative=Pos|Number=Sing	4	nsubj	_	_
+4	úpěl	úpět	VERB	VpYS---XR-AA---	Gender=Masc|Negative=Pos|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
+5	ďábelské	ďábelský	ADJ	AAFP4----1A----	Case=Acc|Degree=Pos|Gender=Fem|Negative=Pos|Number=Plur	6	amod	_	_
+6	ódy	óda	NOUN	NNFP4-----A----	Case=Acc|Gender=Fem|Negative=Pos|Number=Plur	4	dobj	_	SpaceAfter=No
+7	.	.	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No
+
