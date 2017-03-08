@@ -15,9 +15,8 @@
 
 # Command line usage
 # ------------------
-# conll17_ud_eval.py [-v] [-w weights_file] gold_conllu_file [system_conllu_file]
+# conll17_ud_eval.py [-v] [-w weights_file] gold_conllu_file system_conllu_file
 #
-# - if no system_conllu_file is specified, standard input is used
 # - if no -v is given, only the CoNLL17 UD Shared Task evaluation LAS metrics
 #   is printed
 # - if -v is given, several metrics are printed (as precision, recall, F1 score,
@@ -40,6 +39,7 @@
 # ---------
 # - load_conllu(file)
 #   - loads CoNLL-U file from given file object to an internal representation
+#   - we use lower() on the file content, so it should return unicode on Python 2
 #   - raises UDError exception if the given file cannot be loaded
 # - evaluate(gold_ud, system_ud)
 #   - evaluate the given gold and system CoNLL-U files (loaded with load_conllu)
@@ -79,6 +79,7 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
+import io
 import sys
 import unittest
 
@@ -336,7 +337,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         lcs = [[0] * (si - ss) for i in range(gi - gs)]
         for g in reversed(range(gi - gs)):
             for s in reversed(range(si - ss)):
-                if gold_words[gs + g].columns[FORM] == system_words[ss + s].columns[FORM]:
+                if gold_words[gs + g].columns[FORM].lower() == system_words[ss + s].columns[FORM].lower():
                     lcs[g][s] = 1 + (lcs[g+1][s+1] if g+1 < gi-gs and s+1 < si-ss else 0)
                 lcs[g][s] = max(lcs[g][s], lcs[g+1][s] if g+1 < gi-gs else 0)
                 lcs[g][s] = max(lcs[g][s], lcs[g][s+1] if s+1 < si-ss else 0)
@@ -357,7 +358,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                     # Store aligned words
                     s, g = 0, 0
                     while g < gi - gs and s < si - ss:
-                        if gold_words[gs + g].columns[FORM] == system_words[ss + s].columns[FORM]:
+                        if gold_words[gs + g].columns[FORM].lower() == system_words[ss + s].columns[FORM].lower():
                             alignment.append_aligned_words(gold_words[gs+g], system_words[ss+s])
                             g += 1
                             s += 1
@@ -440,16 +441,20 @@ def load_deprel_weights(weights_file):
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("gold_file", type=argparse.FileType("r"),
+    parser.add_argument("gold_file", type=str,
                         help="Name of the CoNLL-U file with the gold data.")
-    parser.add_argument("system_file", type=argparse.FileType("r"), nargs="?", default=sys.stdin,
-                        help="Name of the CoNLL-U file with the predicted data (default=STDIN).")
+    parser.add_argument("system_file", type=str,
+                        help="Name of the CoNLL-U file with the predicted data.")
     parser.add_argument("--weights", "-w", type=argparse.FileType("r"), default=None,
                         metavar="deprel_weights_file",
                         help="Compute WeightedLAS using given weights for Universal Dependency Relations.")
     parser.add_argument("--verbose", "-v", default=0, action="count",
                         help="Print all metrics.")
     args = parser.parse_args()
+
+    # Open input files
+    gold_file = io.open(args.gold_file, mode="r", encoding="utf-8")
+    system_file = io.open(args.system_file, mode="r", encoding="utf-8")
 
     # Use verbose if weights are supplied
     if args.weights is not None and not args.verbose:
@@ -459,8 +464,8 @@ def main():
     deprel_weights = load_deprel_weights(args.weights)
 
     # Load CoNLL-U files
-    gold_ud = load_conllu(args.gold_file)
-    system_ud = load_conllu(args.system_file)
+    gold_ud = load_conllu(gold_file)
+    system_ud = load_conllu(system_file)
 
     # Evaluate
     evaluation = evaluate(gold_ud, system_ud, deprel_weights)
@@ -492,8 +497,6 @@ class TestAlignment(unittest.TestCase):
     @staticmethod
     def _load_words(words):
         """Prepare fake CoNLL-U files with fake HEAD to prevent multiple roots errors."""
-        import io
-
         lines, num_words = [], 0
         for w in words:
             parts = w.split(" ")
@@ -535,6 +538,6 @@ class TestAlignment(unittest.TestCase):
         self._test_ok(["abc", "d"], ["a", "b", "c", "d"], 1)
         self._test_ok(["a", "bc", "d"], ["a", "b", "c", "d"], 2)
         self._test_ok(["a", "bc b c", "d"], ["a", "b", "cd"], 2)
-        self._test_ok(["abc a B c", "def d E f"], ["ab a b", "cd c d", "ef e f"], 4)
+        self._test_ok(["abc a BX c", "def d EX f"], ["ab a b", "cd c d", "ef e f"], 4)
         self._test_ok(["ab a b", "cd bc d"], ["a", "bc", "d"], 2)
-        self._test_ok(["a", "bc b c", "d"], ["ab A B", "cd C a"], 1)
+        self._test_ok(["a", "bc b c", "d"], ["ab AX BX", "cd CX a"], 1)
