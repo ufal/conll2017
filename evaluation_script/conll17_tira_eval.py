@@ -4,9 +4,8 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-import io
 
-from conll17_ud_eval import load_deprel_weights, load_conllu, evaluate
+from conll17_ud_eval import evaluate_wrapper
 
 def main():
     # Parse arguments
@@ -20,19 +19,12 @@ def main():
                         help="Compute WeightedLAS using given weights for Universal Dependency Relations.")
     args = parser.parse_args()
 
-    # Load weights if requested
-    deprel_weights = load_deprel_weights(args.weights)
-
-    # Load CoNLL-U files
-    gold_ud = load_conllu(io.open(args.gold_file, mode="r", encoding="utf-8"))
-    system_ud = load_conllu(io.open(args.system_file, mode="r", encoding="utf-8"))
-
     # Evaluate
-    evaluation = evaluate(gold_ud, system_ud, deprel_weights)
+    evaluation = evaluate_wrapper(args)
 
     # Print the evaluation
     metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
-    if deprel_weights is not None:
+    if args.weights is not None:
         metrics.append("WeightedLAS")
 
     for metric in metrics:
