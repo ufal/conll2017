@@ -4,17 +4,17 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-import sys
+import io
 
 from conll17_ud_eval import load_deprel_weights, load_conllu, evaluate
 
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("gold_file", type=argparse.FileType("r"),
+    parser.add_argument("gold_file", type=str,
                         help="Name of the CoNLL-U file with the gold data.")
-    parser.add_argument("system_file", type=argparse.FileType("r"), nargs="?", default=sys.stdin,
-                        help="Name of the CoNLL-U file with the predicted data (default=STDIN).")
+    parser.add_argument("system_file", type=str,
+                        help="Name of the CoNLL-U file with the predicted data.")
     parser.add_argument("--weights", "-w", type=argparse.FileType("r"), default=None,
                         metavar="deprel_weights_file",
                         help="Compute WeightedLAS using given weights for Universal Dependency Relations.")
@@ -24,8 +24,8 @@ def main():
     deprel_weights = load_deprel_weights(args.weights)
 
     # Load CoNLL-U files
-    gold_ud = load_conllu(args.gold_file)
-    system_ud = load_conllu(args.system_file)
+    gold_ud = load_conllu(io.open(args.gold_file, mode="r", encoding="utf-8"))
+    system_ud = load_conllu(io.open(args.system_file, mode="r", encoding="utf-8"))
 
     # Evaluate
     evaluation = evaluate(gold_ud, system_ud, deprel_weights)
