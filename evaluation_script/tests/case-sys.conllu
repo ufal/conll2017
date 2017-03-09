@@ -1,10 +1,14 @@
-# text = Příliš žluťoučký kůň úpěl ďábelské ódy.
-1-7	Příliš žluťoučký kůň úpěl ďábelské ódy.	_	_	_	_	_	_	_	_
-1	příliš	příliš	ADV	Db-------------	_	2	advmod	_	_
-2	ŽLUŤOUČKÝ	žluťoučký	ADJ	AAMS1----1A----	Animacy=Anim|Case=Nom|Degree=Pos|Gender=Masc|Negative=Pos|Number=Sing	3	amod	_	_
-3	KůŇ	kůň	NOUN	NNMS1-----A----	Animacy=Anim|Case=Nom|Gender=Masc|Negative=Pos|Number=Sing	4	nsubj	_	_
-4	úPĚL	úpět	VERB	VpYS---XR-AA---	Gender=Masc|Negative=Pos|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	0	root	_	_
-5	ĎÁBeLSKÉ	ďábelský	ADJ	AAFP4----1A----	Case=Acc|Degree=Pos|Gender=Fem|Negative=Pos|Number=Plur	6	amod	_	_
-6	ÓdY	óda	NOUN	NNFP4-----A----	Case=Acc|Gender=Fem|Negative=Pos|Number=Plur	4	dobj	_	SpaceAfter=No
-7	.	.	PUNCT	Z:-------------	_	4	punct	_	SpaceAfter=No
+# text = zum Schluß wurde ich Übers Ohr gehauen.
+1-2	zum	_	_	_	_	_	_	_	_
+1	zu	_	ADP	_	_	3	case	_	_
+2	dem	_	DET	_	_	3	det	_	_
+3	Schluß	_	NOUN	_	_	9	nmod	_	_
+4	wurde	_	AUX	_	_	9	aux:pass	_	_
+5	ich	_	PRON	_	_	9	nsubj:pass	_	_
+6-7	Übers	_	_	_	_	_	_	_	_
+6	Über	_	ADP	_	_	8	case	_	_
+7	das	_	DET	_	_	8	det	_	_
+8	Ohr	_	NOUN	_	_	9	nmod	_	_
+9	gehauen	_	VERB	_	_	0	root	_	SpaceAfter=No
+10	.	_	PUNCT	_	_	9	punct	_	_
 
