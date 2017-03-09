@@ -39,7 +39,7 @@
 # ---------
 # - load_conllu(file)
 #   - loads CoNLL-U file from given file object to an internal representation
-#   - we use lower() on the file content, so it should return unicode on Python 2
+#   - the file object should return str on both Python 2 and Python 3
 #   - raises UDError exception if the given file cannot be loaded
 # - evaluate(gold_ud, system_ud)
 #   - evaluate the given gold and system CoNLL-U files (loaded with load_conllu)
@@ -258,6 +258,11 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                 words.system_parent_gold_aligned = self.matched_words_map.get(words.system_word.parent, None) \
                     if words.system_word.parent is not None else 0
 
+    def lower(text):
+        if sys.version_info < (3, 0) and isinstance(text, str):
+            return text.decode("utf-8").lower()
+        return text.lower()
+
     def spans_score(gold_spans, system_spans):
         correct, gi, si = 0, 0, 0
         while gi < len(gold_spans) and si < len(system_spans):
@@ -337,7 +342,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         lcs = [[0] * (si - ss) for i in range(gi - gs)]
         for g in reversed(range(gi - gs)):
             for s in reversed(range(si - ss)):
-                if gold_words[gs + g].columns[FORM].lower() == system_words[ss + s].columns[FORM].lower():
+                if lower(gold_words[gs + g].columns[FORM]) == lower(system_words[ss + s].columns[FORM]):
                     lcs[g][s] = 1 + (lcs[g+1][s+1] if g+1 < gi-gs and s+1 < si-ss else 0)
                 lcs[g][s] = max(lcs[g][s], lcs[g+1][s] if g+1 < gi-gs else 0)
                 lcs[g][s] = max(lcs[g][s], lcs[g][s+1] if s+1 < si-ss else 0)
@@ -358,7 +363,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
                     # Store aligned words
                     s, g = 0, 0
                     while g < gi - gs and s < si - ss:
-                        if gold_words[gs + g].columns[FORM].lower() == system_words[ss + s].columns[FORM].lower():
+                        if lower(gold_words[gs + g].columns[FORM]) == lower(system_words[ss + s].columns[FORM]):
                             alignment.append_aligned_words(gold_words[gs+g], system_words[ss+s])
                             g += 1
                             s += 1
@@ -453,8 +458,8 @@ def main():
     args = parser.parse_args()
 
     # Open input files
-    gold_file = io.open(args.gold_file, mode="r", encoding="utf-8")
-    system_file = io.open(args.system_file, mode="r", encoding="utf-8")
+    gold_file = open(args.gold_file, mode="r", **({"encoding": "utf-8"} if sys.version_info >= (3, 0) else {}))
+    system_file = open(args.system_file, mode="r", **({"encoding": "utf-8"} if sys.version_info >= (3, 0) else {}))
 
     # Use verbose if weights are supplied
     if args.weights is not None and not args.verbose:
