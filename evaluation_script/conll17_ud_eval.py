@@ -11,7 +11,12 @@
 # Changelog:
 # - [02 Jan 2017] Version 0.9: Initial release
 # - [25 Jan 2017] Version 0.9.1: Fix bug in LCS alignment computation
-# - [01 Mar 2017] Version 1.0: Add documentation and test
+# - [10 Mar 2017] Version 1.0: Add documentation and test
+#                              Compare HEADs correctly using aligned words
+#                              Allow evaluation with errorneous spaces in forms
+#                              Compare forms in LCS case insensitively
+#                              Detect cycles and multiple root nodes
+#                              Compute AlignedAccuracy
 
 # Command line usage
 # ------------------
