@@ -448,6 +448,20 @@ def load_deprel_weights(weights_file):
 
     return deprel_weights
 
+def load_conllu_file(path):
+    _file = open(path, mode="r", **({"encoding": "utf-8"} if sys.version_info >= (3, 0) else {}))
+    return load_conllu(_file)
+
+def evaluate_wrapper(args):
+    # Load CoNLL-U files
+    gold_ud = load_conllu_file(args.gold_file)
+    system_ud = load_conllu_file(args.system_file)
+
+    # Load weights if requested
+    deprel_weights = load_deprel_weights(args.weights)
+
+    return evaluate(gold_ud, system_ud, deprel_weights)
+
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
@@ -462,30 +476,19 @@ def main():
                         help="Print all metrics.")
     args = parser.parse_args()
 
-    # Open input files
-    gold_file = open(args.gold_file, mode="r", **({"encoding": "utf-8"} if sys.version_info >= (3, 0) else {}))
-    system_file = open(args.system_file, mode="r", **({"encoding": "utf-8"} if sys.version_info >= (3, 0) else {}))
-
     # Use verbose if weights are supplied
     if args.weights is not None and not args.verbose:
         args.verbose = 1
 
-    # Load weights if requested
-    deprel_weights = load_deprel_weights(args.weights)
-
-    # Load CoNLL-U files
-    gold_ud = load_conllu(gold_file)
-    system_ud = load_conllu(system_file)
-
     # Evaluate
-    evaluation = evaluate(gold_ud, system_ud, deprel_weights)
+    evaluation = evaluate_wrapper(args)
 
     # Print the evaluation
     if not args.verbose:
         print("LAS F1 Score: {:.2f}".format(100 * evaluation["LAS"].f1))
     else:
         metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
-        if deprel_weights is not None:
+        if args.weights is not None:
             metrics.append("WeightedLAS")
 
         print("Metrics    | Precision |    Recall |  F1 Score | AligndAcc")
