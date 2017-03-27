@@ -17,6 +17,7 @@
 #                              Compare forms in LCS case insensitively
 #                              Detect cycles and multiple root nodes
 #                              Compute AlignedAccuracy
+# - [27 Mar 2017] Version 1.1: Add CLAS metrics
 
 # Command line usage
 # ------------------
@@ -36,8 +37,10 @@
 #   - Lemmas: using aligned words, how well does LEMMA match
 #   - UAS: using aligned words, how well does HEAD match
 #   - LAS: using aligned words, how well does HEAD+DEPREL(ignoring subtypes) match
-# - if weights_file is given (with lines containing deprel-weight pairs),
-#   one more metric is shown:
+#   - CLAS: using aligned words, how well does HEAD+DEPREL(ignoring subtypes) match,
+#     ignoring functional words and punctuation (deprels listed in CLAS_weights)
+# - if custom weights_file is given (with lines containing deprel-weight pairs),
+#   one more metric (a generalization of CLAS) is shown:
 #   - WeightedLAS: as LAS, but each deprel (ignoring subtypes) has different weight
 
 # API usage
@@ -90,6 +93,13 @@ import unittest
 
 # CoNLL-U column names
 ID, FORM, LEMMA, UPOS, XPOS, FEATS, HEAD, DEPREL, DEPS, MISC = range(10)
+
+CLAS_weights = {
+    # FUN UD relations
+    'aux': 0.0, 'case': 0.0, 'cc': 0.0, 'clf': 0.0, 'cop': 0.0, 'det': 0.0, 'mark': 0.0,
+    # PUNCT UD relations
+    'punct': 0.0,
+}
 
 # UD Error is used when raising exceptions in this module
 class UDError(Exception):
@@ -408,6 +418,9 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
     # Align words
     alignment = align_words(gold_ud.words, system_ud.words)
 
+    def weighted_las(weights):
+        return (lambda word: weights.get(word.columns[DEPREL], 1.0))
+
     # Compute the F1-scores
     result = {
         "Tokens": spans_score(gold_ud.tokens, system_ud.tokens),
@@ -420,13 +433,12 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
         "Lemmas": alignment_score(alignment, lambda w, parent: w.columns[LEMMA]),
         "UAS": alignment_score(alignment, lambda w, parent: parent),
         "LAS": alignment_score(alignment, lambda w, parent: (parent, w.columns[DEPREL])),
+        "CLAS": alignment_score(alignment, lambda w, parent: (parent, w.columns[DEPREL]), weighted_las(CLAS_weights)),
     }
 
     # Add WeightedLAS if weights are given
     if deprel_weights is not None:
-        def weighted_las(word):
-            return deprel_weights.get(word.columns[DEPREL], 1.0)
-        result["WeightedLAS"] = alignment_score(alignment, lambda w, parent: (parent, w.columns[DEPREL]), weighted_las)
+        result["WeightedLAS"] = alignment_score(alignment, lambda w, parent: (parent, w.columns[DEPREL]), weighted_las(deprel_weights))
 
     return result
 
@@ -487,7 +499,7 @@ def main():
     if not args.verbose:
         print("LAS F1 Score: {:.2f}".format(100 * evaluation["LAS"].f1))
     else:
-        metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
+        metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS", "CLAS"]
         if args.weights is not None:
             metrics.append("WeightedLAS")
 

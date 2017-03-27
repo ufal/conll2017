@@ -22,7 +22,7 @@ def main():
         metadata = json.load(metadata_file)
 
     # Evaluate and compute sum of all treebanks
-    metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS"]
+    metrics = ["Tokens", "Sentences", "Words", "UPOS", "XPOS", "Feats", "AllTags", "Lemmas", "UAS", "LAS", "CLAS"]
     treebanks = 0
     summation = {}
     results = []
