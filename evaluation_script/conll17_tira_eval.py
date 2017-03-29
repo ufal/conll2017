@@ -11,14 +11,13 @@ from conll17_ud_eval import UDError, load_conllu_file, evaluate
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("dataset", type=str, help="Directory name of the input dataset.")
     parser.add_argument("truth", type=str, help="Directory name of the truth dataset.")
     parser.add_argument("system", type=str, help="Directory name of system output.")
     parser.add_argument("output", type=str, help="Directory name of the output directory.")
     args = parser.parse_args()
 
     # Load input dataset metadata.json
-    with open(args.dataset + "/metadata.json","r") as metadata_file:
+    with open(args.truth + "/metadata.json","r") as metadata_file:
         metadata = json.load(metadata_file)
 
     # Evaluate and compute sum of all treebanks
