@@ -5,6 +5,7 @@ from __future__ import print_function
 
 import argparse
 import json
+import sys
 
 from conll17_ud_eval import UDError, load_conllu_file, evaluate
 
@@ -25,6 +26,7 @@ def main():
     treebanks = 0
     summation = {}
     results = []
+    results_las = {}
     for entry in metadata:
         treebanks += 1
 
@@ -74,6 +76,7 @@ def main():
         for metric in metrics:
             results.append((ltcode+"-"+metric+"-F1", "{:.2f}".format(100 * evaluation[metric].f1)))
             summation[metric] = summation.get(metric, 0) + evaluation[metric].f1
+        results_las[ltcode] = evaluation["LAS"].f1
 
     # Compute averages
     for metric in reversed(metrics):
@@ -83,6 +86,15 @@ def main():
     with open(args.output + "/evaluation.prototext", "w") as evaluation:
         for key, value in results:
             print('measure{{\n  key: "{}"\n  value: "{}"\n}}'.format(key, value), file=evaluation)
+
+    # Generate LAS-F1 + Status on stdout, Status on stderr
+    for key, value in results:
+        if not key.endswith("-Status"):
+            continue
+
+        ltcode = key[:-len("-Status")]
+        print("{:13} LAS:{:6.2f} ({})".format(ltcode, results_las.get(ltcode, 0.), value), file=sys.stdout)
+        print("{:13} {}".format(ltcode, value), file=sys.stderr)
 
 
 if __name__ == "__main__":
