@@ -76,8 +76,8 @@ def main():
             summation[metric] = summation.get(metric, 0) + evaluation[metric].f1
 
     # Compute averages
-    for metric in metrics:
-        results.append(("total-"+metric+"-F1", "{:.2f}".format(100 * summation.get(metric, 0) / treebanks)))
+    for metric in reversed(metrics):
+        results.insert(0, ("total-"+metric+"-F1", "{:.2f}".format(100 * summation.get(metric, 0) / treebanks)))
 
     # Generate evaluation.prototext
     with open(args.output + "/evaluation.prototext", "w") as evaluation:
