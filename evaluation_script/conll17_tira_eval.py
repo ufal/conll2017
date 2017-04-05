@@ -93,7 +93,7 @@ def main():
             continue
 
         ltcode = key[:-len("-Status")]
-        print("{:13} LAS:{:6.2f} ({})".format(ltcode, results_las.get(ltcode, 0.), value), file=sys.stdout)
+        print("{:13} LAS:{:6.2f} ({})".format(ltcode, 100 * results_las.get(ltcode, 0.), value), file=sys.stdout)
         print("{:13} {}".format(ltcode, value), file=sys.stderr)
 
 
