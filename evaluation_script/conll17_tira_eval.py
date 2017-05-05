@@ -98,4 +98,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except:
+        print("Internal error (uncaught exception) in the evaluation script.\n" +
+              "Please contact straka@ufal.mff.cuni.cz so that we can fix it together.", file=sys.stderr)
+        exit(1)
