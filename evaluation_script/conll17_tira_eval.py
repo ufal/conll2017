@@ -55,16 +55,17 @@ def main():
             results.append((ltcode+"-Status", "Error: Cannot open generated CoNLL-U file"))
             continue
 
+        # Check for correctness
+        if not system.characters:
+            results.append((ltcode+"-Status", "Error: The system file is empty"))
+            continue
+        if system.characters != gold.characters:
+            results.append((ltcode+"-Status", "Error: The concatenation of tokens in gold file and in system file differ, system file has {} nonspace characters, which is approximately {}% of the gold file".format(len(system.characters), int(100 * len(system.characters) / len(gold.characters)))))
+            continue
+
         # Evaluate
         try:
             evaluation = evaluate(gold, system)
-        except UDError as e:
-            if e.args[0].startswith("The concatenation of tokens in gold file and in system file differ"):
-                results.append((ltcode+"-Status", "Error: The concatenation of tokens in gold file and in system file differ, cannot evaluate"))
-                continue
-            # Should not happen
-            results.append((ltcode+"-Status", "Error: Cannot evaluate generated CoNLL-U file, internal error"))
-            continue
         except:
             # Should not happen
             results.append((ltcode+"-Status", "Error: Cannot evaluate generated CoNLL-U file, internal error"))
