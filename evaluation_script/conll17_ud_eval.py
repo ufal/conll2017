@@ -404,7 +404,8 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
     # Check that underlying character sequences do match
     if gold_ud.characters != system_ud.characters:
         index = 0
-        while gold_ud.characters[index] == system_ud.characters[index]:
+        while index < len(gold_ud.characters) and index < len(system_ud.characters) and \
+                gold_ud.characters[index] == system_ud.characters[index]:
             index += 1
 
         raise UDError(
