@@ -1,0 +1,6 @@
+[
+  {"ltcode": "sys1", "goldfile": "gold.conllu", "outfile": "sys1.conllu"},
+  {"ltcode": "sys2", "goldfile": "gold.conllu", "outfile": "sys2.conllu"},
+  {"ltcode": "sys-space", "goldfile": "gold.conllu", "outfile": "sys-space.conllu"},
+  {"ltcode": "case", "goldfile": "case-gold.conllu", "outfile": "case-sys.conllu"}
+]
