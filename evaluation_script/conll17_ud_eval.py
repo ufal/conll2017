@@ -18,6 +18,9 @@
 #                              Detect cycles and multiple root nodes
 #                              Compute AlignedAccuracy
 # - [27 Mar 2017] Version 1.1: Add CLAS metrics
+# - [11 May 2017] Version 1.2: Do not throw an exception if system file
+#                              characters are a strict prefix of gold
+#                              file characters.
 
 # Command line usage
 # ------------------
