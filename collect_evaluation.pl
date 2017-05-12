@@ -42,7 +42,11 @@ my %cities =
     'UParse'   => 'Edinburgh',
     'MetaRomance' => 'Santiago de Compostela',
     'TRL'      => 'Tokyo',
-    'fbaml'    => 'Palo Alto'
+    'fbaml'    => 'Palo Alto',
+    'ECNU'     => 'Shanghai',
+    'CLCL'     => 'Genève',
+    'Stanford' => 'Stanford',
+    'UT'       => 'Tartu',
 );
 
 
@@ -65,6 +69,12 @@ foreach my $team (@teams)
             {
                 $hash->{team} = $team;
                 $hash->{erun} = $run;
+                # Get the identifier of the evaluated ("input") run.
+                my $irunline = system("grep inputRun $runpath/run.prototext");
+                if ($irunline =~ m/inputRun:\s*"([^"]*)"/) # "
+                {
+                    $hash->{srun} = $1;
+                }
                 push(@results, $hash);
             }
         }
@@ -79,7 +89,7 @@ foreach my $result (@results)
     $i++;
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$cities{$result->{team}}.')'.(' 'x40), 0, 40);
-    printf("%2d. %s\t%s\t%5.2f\n", $i, $name, $result->{erun}, $result->{$metric});
+    printf("%2d. %s\t%s => %s\t%5.2f\n", $i, $name, $result->{srun}, $result->{erun}, $result->{$metric});
 }
 
 
