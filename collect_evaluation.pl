@@ -36,8 +36,11 @@ foreach my $team (@teams)
     }
 }
 @results = sort {$b->{'total-LAS-F1'} <=> $a->{'total-LAS-F1'}} (@results);
+my %teammap;
 foreach my $result (@results)
 {
+    next if (exists($teammap{$result->{team}}));
+    $teammap{$result->{team}}++;
     my $name = substr($result->{team}.(' 'x20), 0, 20);
     printf("%s\t%s\t%5.2f\n", $name, $result->{erun}, $result->{'total-LAS-F1'});
 }
