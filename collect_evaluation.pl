@@ -70,7 +70,7 @@ foreach my $team (@teams)
                 $hash->{team} = $team;
                 $hash->{erun} = $run;
                 # Get the identifier of the evaluated ("input") run.
-                my $irunline = system("grep inputRun $runpath/run.prototext");
+                my $irunline = `grep inputRun $runpath/run.prototext"`;
                 if ($irunline =~ m/inputRun:\s*"([^"]*)"/) # "
                 {
                     $hash->{srun} = $1;
