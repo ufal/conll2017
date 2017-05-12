@@ -102,19 +102,27 @@ foreach my $result (@results)
     if ($metric eq 'total-LAS-F1')
     {
         $tag = ' [OK]';
-        foreach my $key (keys(%{$result}))
+        my @keys = grep {m/-LAS-F1$/} (keys(%{$result}));
+        if (scalar(@keys) < 81)
         {
-            if ($key =~ m/-LAS-F1$/)
+            $tag = ' ['.scalar(@keys).']';
+        }
+        else
+        {
+            foreach my $key (@keys)
             {
-                if ($result->{$key}==0)
+                if ($key =~ m/-LAS-F1$/)
                 {
-                    $tag = ' [!!]';
-                    last;
+                    if ($result->{$key}==0)
+                    {
+                        $tag = ' [!!]';
+                        last;
+                    }
                 }
             }
         }
     }
-    printf("%2d. %s\t%s\t%5.2f\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}.$tag, $result->{srun}, $result->{erun});
+    printf("%2d. %s\t%s\t%5.2f%s\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}, $tag, $result->{srun}, $result->{erun});
 }
 
 
