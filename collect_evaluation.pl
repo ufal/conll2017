@@ -23,30 +23,32 @@ GetOptions
 
 my %cities =
 (
-    'C2L2'     => 'Cornell, Ithaca',
-    'IMS'      => 'Stuttgart',
-    'HIT-SCIR' => 'Harbin',
-    'LATTICE'  => 'Paris',
-    'Koc-University' => 'İstanbul',
-    'Orange-Deskin'  => 'Lannion',
-    'darc'     => 'Tübingen',
-    'TurkuNLP' => 'Turku',
-    'MQuni'    => 'Sydney',
-    'IIT-Kharagpur'  => 'Kharagpur',
-    'conll17-baseline' => 'Praha',
-    'RACAI'    => 'Bucureşti',
-    'LyS-FASTPARSE' => 'A Coruña',
-    'Uppsala'  => 'Uppsala',
-    'ParisNLP' => 'Paris',
-    'Wanghao-ftd-SJTU' => 'Shanghai',
-    'UParse'   => 'Edinburgh',
-    'MetaRomance' => 'Santiago de Compostela',
-    'TRL'      => 'Tokyo',
     'fbaml'    => 'Palo Alto',
-    'ECNU'     => 'Shanghai',
-    'CLCL'     => 'Genève',
     'Stanford' => 'Stanford',
+    'Recurrent-Team' => 'Pittsburgh',
+    'C2L2'     => 'Ithaca',
+    'LyS-FASTPARSE' => 'A Coruña',
+    'MetaRomance' => 'Santiago de Compostela',
+    'UParse'   => 'Edinburgh',
+    'Orange-Deskin' => 'Lannion',
+    'ParisNLP' => 'Paris',
+    'LATTICE'  => 'Paris',
+    'CLCL'     => 'Genève',
+    'IMS'      => 'Stuttgart',
+    'darc'     => 'Tübingen',
+    'conll17-baseline' => 'Praha',
+    'Uppsala'  => 'Uppsala',
+    'TurkuNLP' => 'Turku',
     'UT'       => 'Tartu',
+    'RACAI'    => 'Bucureşti',
+    'Koc-University' => 'İstanbul',
+    'IIT-Kharagpur'  => 'Kharagpur',
+    'HIT-SCIR' => 'Harbin',
+    'Wanghao-ftd-SJTU' => 'Shanghai',
+    'ECNU'     => 'Shanghai',
+    'Mengest'  => 'Shanghai',
+    'TRL'      => 'Tokyo',
+    'MQuni'    => 'Sydney',
 );
 
 
@@ -74,6 +76,12 @@ foreach my $team (@teams)
                 if ($irunline =~ m/inputRun:\s*"([^"]*)"/) # "
                 {
                     $hash->{srun} = $1;
+                    # Get the identifier of the software that generated the input run.
+                    my $swline = `grep softwareId $teampath/$hash->{srun}/run.prototext`;
+                    if ($swline =~ m/softwareId:\s*"([^"]*)"/) # "
+                    {
+                        $hash->{software} = $1;
+                    }
                 }
                 push(@results, $hash);
             }
@@ -89,7 +97,7 @@ foreach my $result (@results)
     $i++;
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$cities{$result->{team}}.')'.(' 'x40), 0, 40);
-    printf("%2d. %s\t%s => %s\t%5.2f\n", $i, $name, $result->{srun}, $result->{erun}, $result->{$metric});
+    printf("%2d. %s\t%s\t%5.2f\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}, $result->{srun}, $result->{erun});
 }
 
 
