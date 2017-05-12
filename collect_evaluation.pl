@@ -72,12 +72,14 @@ foreach my $team (@teams)
 }
 @results = sort {$b->{$metric} <=> $a->{$metric}} (@results);
 my %teammap;
+my $i = 0;
 foreach my $result (@results)
 {
     next if (exists($teammap{$result->{team}}));
+    $i++;
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$cities{$result->{team}}.')'.(' 'x40), 0, 40);
-    printf("%s\t%s\t%5.2f\n", $name, $result->{erun}, $result->{$metric});
+    printf("%2d. %s\t%s\t%5.2f\n", $i, $name, $result->{erun}, $result->{$metric});
 }
 
 
