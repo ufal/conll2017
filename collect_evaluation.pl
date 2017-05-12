@@ -101,7 +101,7 @@ foreach my $result (@results)
     my $tag = '';
     if ($metric eq 'total-LAS-F1')
     {
-        my $tag = ' [OK]';
+        $tag = ' [OK]';
         foreach my $key (keys(%{$result}))
         {
             if ($key =~ m/-LAS-F1$/)
