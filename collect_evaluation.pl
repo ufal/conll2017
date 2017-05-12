@@ -12,6 +12,32 @@ use dzsys; # Dan's library for file system operations
 
 
 
+my %cities =
+(
+    'C2L2'     => 'Cornell, Ithaca',
+    'IMS'      => 'Stuttgart',
+    'HIT-SCIR' => 'Harbin',
+    'LATTICE'  => 'Paris',
+    'Koc-University' => 'İstanbul',
+    'Orange-Deskin'  => 'Lannion',
+    'darc'     => 'Tübingen',
+    'TurkuNLP' => 'Turku',
+    'MQuni'    => 'Sydney',
+    'IIT-Kharagpur'  => 'Kharagpur',
+    'conll17-baseline' => 'Praha',
+    'RACAI'    => 'Bucureşti',
+    'LyS-FASTPARSE' => 'A Coruña',
+    'Uppsala'  => 'Uppsala',
+    'ParisNLP' => 'Paris',
+    'Wanghao-ftd-SJTU' => 'Shanghai',
+    'UParse'   => 'Edinburgh',
+    'MetaRomance' => 'Santiago de Compostela',
+    'TRL'      => 'Tokyo',
+    'fbaml'    => 'Palo Alto'
+);
+
+
+
 # The output of the test runs is mounted in the master VM at this point:
 my $testpath = '/media/conll17-ud-test-2017-05-09';
 my @teams = dzsys::get_subfolders($testpath);
@@ -41,7 +67,7 @@ foreach my $result (@results)
 {
     next if (exists($teammap{$result->{team}}));
     $teammap{$result->{team}}++;
-    my $name = substr($result->{team}.(' 'x20), 0, 20);
+    my $name = substr($result->{team}.' ('.$cities{$result->{team}}.')'.(' 'x40), 0, 40);
     printf("%s\t%s\t%5.2f\n", $name, $result->{erun}, $result->{'total-LAS-F1'});
 }
 
