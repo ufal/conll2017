@@ -97,7 +97,24 @@ foreach my $result (@results)
     $i++;
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$cities{$result->{team}}.')'.(' 'x40), 0, 40);
-    printf("%2d. %s\t%s\t%5.2f\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}, $result->{srun}, $result->{erun});
+    # If we are showing the total metric, also report whether all partial numbers are non-zero.
+    my $tag = '';
+    if ($metric eq 'total-LAS-F1')
+    {
+        my $tag = ' [OK]';
+        foreach my $key (keys(%{$result}))
+        {
+            if ($key =~ m/-LAS-F1$/)
+            {
+                if ($result->{$key}==0)
+                {
+                    $tag = ' [!!]';
+                    last;
+                }
+            }
+        }
+    }
+    printf("%2d. %s\t%s\t%5.2f\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}$tag, $result->{srun}, $result->{erun});
 }
 
 
