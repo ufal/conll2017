@@ -114,7 +114,7 @@ foreach my $result (@results)
             }
         }
     }
-    printf("%2d. %s\t%s\t%5.2f\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}$tag, $result->{srun}, $result->{erun});
+    printf("%2d. %s\t%s\t%5.2f\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}.$tag, $result->{srun}, $result->{erun});
 }
 
 
