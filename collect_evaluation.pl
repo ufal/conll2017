@@ -8,7 +8,16 @@ use open ':utf8';
 binmode(STDIN, ':utf8');
 binmode(STDOUT, ':utf8');
 binmode(STDERR, ':utf8');
+use Getopt::Long;
 use dzsys; # Dan's library for file system operations
+
+
+
+my $metric = 'total-LAS-F1';
+GetOptions
+(
+    'metric=s' => \$metric
+);
 
 
 
@@ -61,14 +70,14 @@ foreach my $team (@teams)
         }
     }
 }
-@results = sort {$b->{'total-LAS-F1'} <=> $a->{'total-LAS-F1'}} (@results);
+@results = sort {$b->{$metric} <=> $a->{$metric}} (@results);
 my %teammap;
 foreach my $result (@results)
 {
     next if (exists($teammap{$result->{team}}));
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$cities{$result->{team}}.')'.(' 'x40), 0, 40);
-    printf("%s\t%s\t%5.2f\n", $name, $result->{erun}, $result->{'total-LAS-F1'});
+    printf("%s\t%s\t%5.2f\n", $name, $result->{erun}, $result->{$metric});
 }
 
 
