@@ -109,9 +109,10 @@ foreach my $result (@results)
     {
         $tag = ' [OK]';
         my @keys = grep {m/-LAS-F1$/} (keys(%{$result}));
-        if (scalar(@keys) < 81)
+        my $n = scalar(@keys)-1; # subtracting the macro average
+        if ($n < 81)
         {
-            $tag = ' ['.scalar(@keys).']';
+            $tag = " [$n]";
         }
         else
         {
