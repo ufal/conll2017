@@ -21,39 +21,39 @@ GetOptions
 
 
 
-my %cities =
+my %teams =
 (
-    'fbaml'      => 'Palo Alto',
-    'Stanford'   => 'Stanford',
-    'Recurrent-Team' => 'Pittsburgh',
-    'C2L2'       => 'Ithaca',
-    'LyS-FASTPARSE' => 'A Coruña',
-    'MetaRomance' => 'Santiago de Compostela',
-    'UParse'     => 'Edinburgh',
-    'Orange-Deskin' => 'Lannion',
-    'ParisNLP'   => 'Paris',
-    'LATTICE'    => 'Paris',
-    'LIMSI-LIPN' => 'Paris',
-    'CLCL'       => 'Genève',
-    'IMS'        => 'Stuttgart',
-    'darc'       => 'Tübingen',
-    'conll17-baseline' => 'Praha',
-    'Uppsala'    => 'Uppsala',
-    'TurkuNLP'   => 'Turku',
-    'UT'         => 'Tartu',
-    'RACAI'      => 'Bucureşti',
-    'Koc-University' => 'İstanbul',
-    'METU'       => 'Ankara',
-    'OpenU-NLP-Lab' => "Ra'anana",
-    'IIT-Kharagpur'  => 'Kharagpur',
-    'HIT-SCIR'   => 'Harbin',
-    'Wenba-NLU'  => 'Wuhan',
-    'Wanghao-ftd-SJTU' => 'Shanghai',
-    'ECNU'       => 'Shanghai',
-    'Mengest'    => 'Shanghai',
-    'NAIST-SATO' => 'Nara',
-    'TRL'        => 'Tokyo',
-    'MQuni'      => 'Sydney',
+    'fbaml'       => {'city' => 'Palo Alto'},
+    'Stanford'    => {'city' => 'Stanford'},
+    'Recurrent-Team' => {'city' => 'Pittsburgh'},
+    'C2L2'        => {'city' => 'Ithaca'},
+    'LyS-FASTPARSE' => {'city' => 'A Coruña'},
+    'MetaRomance' => {'city' => 'Santiago de Compostela'},
+    'UParse'      => {'city' => 'Edinburgh'},
+    'Orange-Deskin' => {'city' => 'Lannion'},
+    'ParisNLP'    => {'city' => 'Paris'},
+    'LATTICE'     => {'city' => 'Paris'},
+    'LIMSI-LIPN'  => {'city' => 'Paris'},
+    'CLCL'        => {'city' => 'Genève'},
+    'IMS'         => {'city' => 'Stuttgart'},
+    'darc'        => {'city' => 'Tübingen'},
+    'conll17-baseline' => {'city' => 'Praha'},
+    'Uppsala'     => {'city' => 'Uppsala'},
+    'TurkuNLP'    => {'city' => 'Turku'},
+    'UT'          => {'city' => 'Tartu'},
+    'RACAI'       => {'city' => 'București'},
+    'Koc-University' => {'city' => 'İstanbul'},
+    'METU'        => {'city' => 'Ankara'},
+    'OpenU-NLP-Lab' => {'city' => "Ra'anana"},
+    'IIT-Kharagpur' => {'city' => 'Kharagpur'},
+    'HIT-SCIR'    => {'city' => 'Harbin'},
+    'Wenba-NLU'   => {'city' => 'Wuhan'},
+    'Wanghao-ftd-SJTU' => {'city' => 'Shanghai'},
+    'ECNU'        => {'city' => 'Shanghai'},
+    'Mengest'     => {'city' => 'Shanghai'},
+    'NAIST-SATO'  => {'city' => 'Nara'},
+    'TRL'         => {'city' => 'Tokyo'},
+    'MQuni'       => {'city' => 'Sydney'},
 );
 
 
@@ -101,7 +101,7 @@ foreach my $result (@results)
     next if (exists($teammap{$result->{team}}));
     $i++;
     $teammap{$result->{team}}++;
-    my $name = substr($result->{team}.' ('.$cities{$result->{team}}.')'.(' 'x40), 0, 40);
+    my $name = substr($result->{team}.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
     # If we are showing the total metric, also report whether all partial numbers are non-zero.
     my $tag = '';
     if ($metric eq 'total-LAS-F1')
