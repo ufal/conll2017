@@ -33,6 +33,7 @@ my %cities =
     'Orange-Deskin' => 'Lannion',
     'ParisNLP' => 'Paris',
     'LATTICE'  => 'Paris',
+    'LIMSI-LIPN' => 'Paris',
     'CLCL'     => 'Genève',
     'IMS'      => 'Stuttgart',
     'darc'     => 'Tübingen',
