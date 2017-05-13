@@ -45,6 +45,7 @@ my %cities =
     'METU'     => 'Ankara',
     'IIT-Kharagpur'  => 'Kharagpur',
     'HIT-SCIR' => 'Harbin',
+    'Wenba-NLU' => 'Wuhan',
     'Wanghao-ftd-SJTU' => 'Shanghai',
     'ECNU'     => 'Shanghai',
     'Mengest'  => 'Shanghai',
