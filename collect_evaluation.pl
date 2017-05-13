@@ -44,6 +44,7 @@ my %cities =
     'RACAI'      => 'Bucureşti',
     'Koc-University' => 'İstanbul',
     'METU'       => 'Ankara',
+    'OpenU-NLP-Lab' => "Ra'anana",
     'IIT-Kharagpur'  => 'Kharagpur',
     'HIT-SCIR'   => 'Harbin',
     'Wenba-NLU'  => 'Wuhan',
