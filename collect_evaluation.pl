@@ -52,6 +52,7 @@ my %teams =
     'ECNU'        => {'city' => 'Shanghai'},
     'Mengest'     => {'city' => 'Shanghai'},
     'NAIST-SATO'  => {'city' => 'Nara'},
+    'naistCL'     => {'city' => 'Nara'},
     'TRL'         => {'city' => 'Tokyo'},
     'MQuni'       => {'city' => 'Sydney'},
 );
