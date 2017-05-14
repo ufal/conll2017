@@ -35,7 +35,7 @@ my %teams =
     'LATTICE'     => {'city' => 'Paris'},
     'LIMSI-LIPN'  => {'city' => 'Paris'},
     'CLCL'        => {'city' => 'Genève'},
-    'IMS'         => {'city' => 'Stuttgart'},
+    'IMS'         => {'city' => 'Stuttgart', 'primary' => 'software2'},
     'darc'        => {'city' => 'Tübingen'},
     'conll17-baseline' => {'city' => 'Praha'},
     'Uppsala'     => {'city' => 'Uppsala'},
@@ -54,7 +54,7 @@ my %teams =
     'NAIST-SATO'  => {'city' => 'Nara'},
     'naistCL'     => {'city' => 'Nara'},
     'TRL'         => {'city' => 'Tokyo'},
-    'MQuni'       => {'city' => 'Sydney'},
+    'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2'},
 );
 
 
