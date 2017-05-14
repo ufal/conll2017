@@ -106,7 +106,7 @@ my $i = 0;
 foreach my $result (@results)
 {
     ###!!! Temporarily turn off checking for multiple systems of one team. Show all results.
-    next if (0 && exists($teammap{$result->{team}}));
+    next if (1 && exists($teammap{$result->{team}}));
     $i++;
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
