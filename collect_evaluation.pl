@@ -27,7 +27,7 @@ my %teams =
     'Stanford'    => {'city' => 'Stanford'},
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
     'C2L2'        => {'city' => 'Ithaca'},
-    'LyS-FASTPARSE' => {'city' => 'A Coruña'},
+    'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5'},
     'MetaRomance' => {'city' => 'Santiago de Compostela'},
     'UParse'      => {'city' => 'Edinburgh'},
     'Orange-Deskin' => {'city' => 'Lannion'},
