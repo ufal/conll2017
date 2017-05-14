@@ -24,6 +24,7 @@ GetOptions
 my %teams =
 (
     'fbaml'       => {'city' => 'Palo Alto'},
+    'fbaml2'      => {'city' => 'Palo Alto'},
     'Stanford'    => {'city' => 'Stanford'},
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
     'C2L2'        => {'city' => 'Ithaca'},
@@ -35,6 +36,7 @@ my %teams =
     'LATTICE'     => {'city' => 'Paris'},
     'LIMSI-LIPN'  => {'city' => 'Paris'},
     'CLCL'        => {'city' => 'Genève'},
+    'CLCL2'       => {'city' => 'Genève'},
     'IMS'         => {'city' => 'Stuttgart', 'primary' => 'software2'},
     'darc'        => {'city' => 'Tübingen'},
     'conll17-baseline' => {'city' => 'Praha'},
