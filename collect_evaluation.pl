@@ -45,7 +45,7 @@ my %teams =
     'Koc-University' => {'city' => 'İstanbul'},
     'METU'        => {'city' => 'Ankara'},
     'OpenU-NLP-Lab' => {'city' => "Ra'anana"},
-    'IIT-Kharagpur' => {'city' => 'Kharagpur'},
+    'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3'},
     'HIT-SCIR'    => {'city' => 'Harbin'},
     'Wenba-NLU'   => {'city' => 'Wuhan'},
     'Wanghao-ftd-SJTU' => {'city' => 'Shanghai'},
@@ -99,7 +99,8 @@ my %teammap;
 my $i = 0;
 foreach my $result (@results)
 {
-    next if (exists($teammap{$result->{team}}));
+    ###!!! Temporarily turn off checking for multiple systems of one team. Show all results.
+    next if (0 && exists($teammap{$result->{team}}));
     $i++;
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
