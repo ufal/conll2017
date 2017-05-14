@@ -87,6 +87,10 @@ foreach my $team (@teams)
                     if ($swline =~ m/softwareId:\s*"([^"]*)"/) # "
                     {
                         $hash->{software} = $1;
+                        if ($teams{$team}{primary} eq $hash->{software})
+                        {
+                            $hash->{software} .= '-P';
+                        }
                     }
                 }
                 push(@results, $hash);
