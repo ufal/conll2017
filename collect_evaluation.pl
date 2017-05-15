@@ -50,7 +50,7 @@ my %teams =
     'UParse'      => {'city' => 'Edinburgh'},
     'Orange-Deskin' => {'city' => 'Lannion'},
     'ParisNLP'    => {'city' => 'Paris'},
-    'LATTICE'     => {'city' => 'Paris'},
+    'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
     'LIMSI-LIPN'  => {'city' => 'Paris'},
     'CLCL'        => {'city' => 'Genève'},
     'CLCL2'       => {'city' => 'Genève'},
