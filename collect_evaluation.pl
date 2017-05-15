@@ -278,7 +278,7 @@ sub combine_runs
     {
         my @keys = sort(keys(%{$erun}));
         my @sets = map {my $x = $_; $x =~ s/-LAS-F1$//; $x} (grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (@keys));
-        my %from_here = ('erun' => $erun, 'sets' => []);
+        my %from_here = ('erun' => $erun->{erun}, 'sets' => []);
         push(@what_from_where, \%from_here);
         foreach my $set (@sets)
         {
