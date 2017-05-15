@@ -56,7 +56,9 @@ my %teams =
                                                                                    '2017-05-15-11-59-45', '2017-05-15-11-48-22', '2017-05-15-10-24-34',
                                                                                    '2017-05-15-00-29-33', '2017-05-14-23-18-36', '2017-05-14-12-15-56',
                                                                                    '2017-05-11-09-45-24', # next is CLCL2
-                                                                                   '2017-05-15-18-00-38']},
+                                                                                   '2017-05-15-18-00-38', '2017-05-15-16-25-50', '2017-05-15-12-23-01',
+                                                                                   '2017-05-15-11-56-31', '2017-05-15-11-17-14', '2017-05-15-10-49-17',
+                                                                                   '2017-05-15-09-07-48', '2017-05-14-22-33-29', '2017-05-14-20-47-03']},
     'CLCL2'       => {'city' => 'Genève'},
         # CLCL has only software2.
         #   2017-05-15-17-08-20 => 2017-05-15-17-18-57 ... only Indonesian
@@ -70,7 +72,15 @@ my %teams =
         #   2017-05-14-12-15-56 => 2017-05-15-22-00-58 ... 8 files (ar, bg, ca, cs_cac, cs_cltt, cu, da, de)
         #   2017-05-11-09-45-24 => 2017-05-15-21-56-07 ... 3 files (ar_pud, ar, bg)
         # CLCL2 has only software1.
-        #   2017-05-15-18-00-38 => 2017-05-15-18-14-51 ... 1 file  (en)
+        #   2017-05-15-18-00-38 => 2017-05-15-18-14-51 ... 1 file   (en)
+        #   2017-05-15-16-25-50 => 2017-05-15-17-25-10 ... 1 file   (cs)
+        #   2017-05-15-12-23-01 => 2017-05-15-13-01-41 ... 14 files (ro, ru_syntagrus, ru, sk, sl_sst, sl, sv_lines, sv, tr, ug, uk, ur, vi, zh)
+        #   2017-05-15-11-56-31 => 2017-05-15-12-19-58 ... 8 files  (lv, nl_lassysmall, nl, no_bokmaal, no_nynorsk, pl, pt_br, pt)
+        #   2017-05-15-11-17-14 => 2017-05-15-11-51-37 ... 2 files  (la_ittb, la_proiel)
+        #   2017-05-15-10-49-17 => 2017-05-15-11-13-08 ... 2 files  (hr, hu)
+        #   2017-05-15-09-07-48 => 2017-05-15-09-30-03 ... 1 file   (ar)
+        #   2017-05-14-22-33-29 => 2017-05-15-08-50-05 ... 10 files (bg, cs_cac, cs_cltt, cu, da, de, el, en_lines, en_partut, et)
+        #   2017-05-14-20-47-03 => 2017-05-14-22-16-54 ... 14 files (ar_pud, cs_pud, de_pud, en_pud, es_pud, fi_pud, fr_pud, hi_pud, it_pud, ja_pud, pt_pud, ru_pud, sv_pud, tr_pud)
     'IMS'         => {'city' => 'Stuttgart', 'primary' => 'software2', 'takeruns' => ['2017-05-14-18-34-01', '2017-05-14-00-31-18', '2017-05-12-05-46-00']},
         # * From the run software2 2017-05-14-18-34-01: la
         # * From the run software2 2017-05-14-00-31-18: ar, ar_pud, cu, en, et, fr, fr_partut, fr_pud, fr_sequoia, got, grc_proiel, he, ja, ja_pud, la_ittb, la_proiel, nl_lassysmall, sl_sst, vi, zh
