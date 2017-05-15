@@ -44,7 +44,11 @@ my %teams =
     'LIMSI-LIPN'  => {'city' => 'Paris'},
     'CLCL'        => {'city' => 'Genève'},
     'CLCL2'       => {'city' => 'Genève'},
-    'IMS'         => {'city' => 'Stuttgart', 'primary' => 'software2'},
+    'IMS'         => {'city' => 'Stuttgart', 'primary' => 'software2', 'takeruns' => ['2017-05-14-18-34-01', '2017-05-14-00-31-18', '2017-05-12-05-46-00']},
+        # * From the run software2 2017-05-14-18-34-01: la
+        # * From the run software2 2017-05-14-00-31-18: ar, ar_pud, cu, en, et, fr, fr_partut, fr_pud, fr_sequoia, got, grc_proiel, he, ja, ja_pud, la_ittb, la_proiel, nl_lassysmall, sl_sst, vi, zh
+        # * From the run software2 2017-05-12-05-46-00: all the rest
+        # In other words, take the oldest run (2017-05-12-05-46-00), and then for any test sets with outputs from the two later runs, use those numbers instead.
     'darc'        => {'city' => 'Tübingen'},
     'conll17-baseline' => {'city' => 'Praha'},
     'UFAL-UDPipe-1-2'  => {'city' => 'Praha'},
@@ -126,6 +130,26 @@ for (my $i = 0; $i <= $#results; $i++)
         }
     }
 }
+# Create a map from system run ids to corresponding evaluation runs.
+my %srun2erun;
+foreach my $result (@results)
+{
+    my $srun = $result->{srun};
+    # There may be multiple evaluation runs of the same system runs. Take the first, discard the others.
+    unless (exists($srun2erun{$srun}))
+    {
+        $srun2erun{$srun} = $result;
+    }
+}
+# Combine runs where applicable.
+foreach my $team (keys(%teams))
+{
+    if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) > 1)
+    {
+        my $combination = combine_runs($teams{$team}{takeruns});
+        push(@results, $combination);
+    }
+}
 # Print the results.
 @results = sort {$b->{$metric} <=> $a->{$metric}} (@results);
 my %teammap;
@@ -203,4 +227,74 @@ sub read_prototext
     }
     close(FILE);
     return \%hash;
+}
+
+
+
+#------------------------------------------------------------------------------
+# Combines evaluations of multiple system runs and creates a new virtual
+# evaluation run.
+#------------------------------------------------------------------------------
+sub combine_runs
+{
+    my $srunids = shift; # ref to list of system run ids
+    if (scalar(@{$srunids}) < 2)
+    {
+        print STDERR ("Warning: Attempting to combine less than 2 runs. Will do nothing.\n");
+        return;
+    }
+    # Find evaluation runs that correspond to the system runs.
+    my @eruns;
+    foreach my $srun (@{$srunids})
+    {
+        if (exists($srun2erun{$srun}))
+        {
+            push(@eruns, $srun2erun{$srun});
+        }
+        else
+        {
+            print STDERR ("Warning: No evaluation run for system run $srun.\n");
+        }
+    }
+    return unless (scalar(@eruns) > 1);
+    # Combine the evaluations.
+    ###!!! Note that we currently do not check that the combined runs belong to the same software.
+    ###!!! In fact we will even combine runs from different teams (actually different VMs of one team).
+    my %combination =
+    (
+        'team'     => $eruns[0]{team},
+        'software' => $eruns[0]{software},
+        'srun'     => join('+', @{$srunids}),
+        'erun'     => join('+', map {$_->{erun}} (@eruns))
+    );
+    my %sum;
+    foreach my $erun (@eruns)
+    {
+        my @keys = keys(%{$erun});
+        my @sets = map {s/-LAS-F1$//; $_} (grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (@keys));
+        foreach my $set (@sets)
+        {
+            if ((!exists($combination{"$set-LAS-F1"}) || $combination{"$set-LAS-F1"} == 0) && exists($erun->{"$set-LAS-F1"}) && $erun->{"$set->LAS-F1"} > 0)
+            {
+                # Copy all values pertaining to $set to the combined evaluation.
+                foreach my $key (@keys)
+                {
+                    if ($key =~ m/^$set-(.+)$/)
+                    {
+                        my $m = $1;
+                        $combination{$key} = $erun->{$key};
+                        $sum{$m} += $erun->{$key};
+                    }
+                }
+            }
+        }
+    }
+    # Recompute the macro average scores.
+    my $nsets = scalar(grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (keys(%combination)));
+    die if ($nsets < 1);
+    foreach my $key (keys(%sum))
+    {
+        $combination{"total-$key"} = $sum{$key}/$nsets;
+    }
+    return \%combination;
 }
