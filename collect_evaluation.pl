@@ -14,9 +14,11 @@ use dzsys; # Dan's library for file system operations
 
 
 my $metric = 'total-LAS-F1';
+my $allresults = 0; # display multiple results per team
 GetOptions
 (
-    'metric=s' => \$metric
+    'metric=s' => \$metric,
+    'allresults' => \$allresults
 );
 
 
@@ -105,8 +107,7 @@ my %teammap;
 my $i = 0;
 foreach my $result (@results)
 {
-    ###!!! Temporarily turn off checking for multiple systems of one team. Show all results.
-    next if (1 && exists($teammap{$result->{team}}));
+    next if (!$allresults && exists($teammap{$result->{team}}));
     $i++;
     $teammap{$result->{team}}++;
     my $name = substr($result->{team}.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
