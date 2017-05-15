@@ -92,7 +92,7 @@ my %teams =
     'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28']}, # evaluator run: 2017-05-15-07-22-05
     'TurkuNLP'    => {'city' => 'Turku'},
     'UT'          => {'city' => 'Tartu'},
-    'RACAI'       => {'city' => 'București'},
+    'RACAI'       => {'city' => 'București', 'primary' => 'software1', 'takeruns' => ['2017-05-15-10-36-29', '2017-05-14-21-47-35']},
     'Koc-University' => {'city' => 'İstanbul'},
     'METU'        => {'city' => 'Ankara'},
     'OpenU-NLP-Lab' => {'city' => "Ra'anana", 'primary' => 'software6', 'takeruns' => ['2017-05-14-23-13-45', '2017-05-14-16-57-08', '2017-05-13-01-48-49']},
