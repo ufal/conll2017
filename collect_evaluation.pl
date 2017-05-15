@@ -52,8 +52,22 @@ my %teams =
     'ParisNLP'    => {'city' => 'Paris'},
     'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
     'LIMSI-LIPN'  => {'city' => 'Paris'},
-    'CLCL'        => {'city' => 'Genève'},
+    'CLCL'        => {'city' => 'Genève', 'primary' => 'software2', 'takeruns' => ['2017-05-15-17-08-20', '2017-05-15-12-58-58', '2017-05-15-12-41-38',
+                                                                                   '2017-05-15-11-59-45', '2017-05-15-11-48-22', '2017-05-15-10-24-34',
+                                                                                   '2017-05-15-00-29-33', '2017-05-14-23-18-36', '2017-05-14-12-15-56',
+                                                                                   '2017-05-11-09-45-24']},
     'CLCL2'       => {'city' => 'Genève'},
+        # CLCL has only software2.
+        #   2017-05-15-17-08-20 => 2017-05-15-17-18-57 ... only Indonesian
+        #   2017-05-15-12-58-58 => 2017-05-15-14-17-50 ... 3 files (fi, hi, la); some others invalid
+        #   2017-05-15-12-41-38 => 2017-05-15-12-54-24 ... 4 files (it, ja, ko, kk); some others invalid
+        #   2017-05-15-11-59-45 => 2017-05-15-12-38-24 ... 9 files (fr_sequoia, fr, ga, gl_treegal, gl, got, grc_proiel, grc, he)
+        #   2017-05-15-11-48-22 => 2017-05-15-11-58-06 ... 1 file  (fr_partut)
+        #   2017-05-15-10-24-34 => 2017-05-15-10-55-40 ... 1 file  (fr)
+        #   2017-05-15-00-29-33 => 2017-05-15-10-02-48 ... 17 files (ar, bg, ca, cs_cac, cs_cltt, cu, da, de, el, en_lines, en_partut, es_ancora, es, et, eu, fa, fi_ftb)
+        #   2017-05-14-23-18-36 => 2017-05-15-00-19-42 ... 4 files (bxr, hsb, kmr, sme)
+        #   2017-05-14-12-15-56 => 2017-05-15-22-00-58 ... 8 files (ar, bg, ca, cs_cac, cs_cltt, cu, da, de)
+        #   2017-05-11-09-45-24 => 2017-05-15-21-56-07 ... 3 files (ar_pud, ar, bg)
     'IMS'         => {'city' => 'Stuttgart', 'primary' => 'software2', 'takeruns' => ['2017-05-14-18-34-01', '2017-05-14-00-31-18', '2017-05-12-05-46-00']},
         # * From the run software2 2017-05-14-18-34-01: la
         # * From the run software2 2017-05-14-00-31-18: ar, ar_pud, cu, en, et, fr, fr_partut, fr_pud, fr_sequoia, got, grc_proiel, he, ja, ja_pud, la_ittb, la_proiel, nl_lassysmall, sl_sst, vi, zh
