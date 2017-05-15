@@ -273,17 +273,19 @@ sub combine_runs
         'erun'     => join('+', map {$_->{erun}} (@eruns))
     );
     my %sum;
+    my @what_from_where; # statistics for debugging
     foreach my $erun (@eruns)
     {
         my @keys = sort(keys(%{$erun}));
         my @sets = map {my $x = $_; $x =~ s/-LAS-F1$//; $x} (grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (@keys));
-        #print STDERR ("Run $erun->{erun}, ", scalar(@keys), " keys, ", scalar(@sets), " sets.\n");
+        my %from_here = ('erun' => $erun, 'sets' => []);
+        push(@what_from_where, \%from_here);
         foreach my $set (@sets)
         {
             if ((!exists($combination{"$set-LAS-F1"}) || $combination{"$set-LAS-F1"} == 0) && exists($erun->{"$set-LAS-F1"}) && $erun->{"$set-LAS-F1"} > 0)
             {
+                push(@{$from_here{sets}}, $set);
                 # Copy all values pertaining to $set to the combined evaluation.
-                #print STDERR ("$set ");
                 foreach my $key (@keys)
                 {
                     if ($key =~ m/^$set-(.+)$/)
@@ -296,8 +298,10 @@ sub combine_runs
                 }
             }
         }
-        #print STDERR ("\n");
+        $from_here{nsets} = scalar(@{$from_here{sets}});
+        $from_here{jsets} = join(', ', @{$from_here{sets}});
     }
+    print STDERR ("\tTaking ", join('; ', map {"$_->{nsets} files from $_->{erun} ($_->{jsets})"} (@what_from_where)), "\n");
     # Recompute the macro average scores.
     my $nsets = scalar(grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (keys(%combination)));
     die if ($nsets < 1);
