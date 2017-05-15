@@ -29,8 +29,17 @@ GetOptions
 # In any case, the primary system must be defined. We shall not just take the best-scoring one.
 my %teams =
 (
-    'fbaml'       => {'city' => 'Palo Alto'},
+    'fbaml'       => {'city' => 'Palo Alto', 'primary' => 'software1', 'takeruns' => ['2017-05-12-02-00-55', '2017-05-15-02-50-42', '2017-05-15-07-30-20', '2017-05-15-11-45-54', '2017-05-13-14-34-43']},
     'fbaml2'      => {'city' => 'Palo Alto'},
+        # fbaml (software1)
+        #   11 OK files (before grc_proiel but without the files that Martin backed up) srun 2017-05-12-02-00-55 / erun 2017-05-14-23-44-14
+        #   ... missing evaluation of the run merged by Martin.
+        #   1 OK file (grc_proiel) srun 2017-05-15-02-50-42 / erun 2017-05-15-07-23-25
+        #   1 OK file (la_proiel) srun 2017-05-15-07-30-20 / erun 2017-05-15-11-35-57
+        #   17 OK files srun 2017-05-15-11-45-54 / erun 2017-05-15-17-54-49
+        # fbaml2 (software1)
+        #   27 OK files srun 2017-05-13-14-34-43 / erun 2017-05-15-00-24-54; another erun of the same srun is 2017-05-15-01-29-27
+        #   That is all from fbaml2. One older run ended without output and one newer run has not ended yet (4 hours after deadline).
     'Stanford'    => {'city' => 'Stanford'},
     'UALING'      => {'city' => 'Tucson'},
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
