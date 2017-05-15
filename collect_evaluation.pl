@@ -55,7 +55,8 @@ my %teams =
     'CLCL'        => {'city' => 'Genève', 'primary' => 'software2', 'takeruns' => ['2017-05-15-17-08-20', '2017-05-15-12-58-58', '2017-05-15-12-41-38',
                                                                                    '2017-05-15-11-59-45', '2017-05-15-11-48-22', '2017-05-15-10-24-34',
                                                                                    '2017-05-15-00-29-33', '2017-05-14-23-18-36', '2017-05-14-12-15-56',
-                                                                                   '2017-05-11-09-45-24']},
+                                                                                   '2017-05-11-09-45-24', # next is CLCL2
+                                                                                   '2017-05-15-18-00-38']},
     'CLCL2'       => {'city' => 'Genève'},
         # CLCL has only software2.
         #   2017-05-15-17-08-20 => 2017-05-15-17-18-57 ... only Indonesian
@@ -68,6 +69,8 @@ my %teams =
         #   2017-05-14-23-18-36 => 2017-05-15-00-19-42 ... 4 files (bxr, hsb, kmr, sme)
         #   2017-05-14-12-15-56 => 2017-05-15-22-00-58 ... 8 files (ar, bg, ca, cs_cac, cs_cltt, cu, da, de)
         #   2017-05-11-09-45-24 => 2017-05-15-21-56-07 ... 3 files (ar_pud, ar, bg)
+        # CLCL2 has only software1.
+        #   2017-05-15-18-00-38 => 2017-05-15-18-14-51 ... 1 file  (en)
     'IMS'         => {'city' => 'Stuttgart', 'primary' => 'software2', 'takeruns' => ['2017-05-14-18-34-01', '2017-05-14-00-31-18', '2017-05-12-05-46-00']},
         # * From the run software2 2017-05-14-18-34-01: la
         # * From the run software2 2017-05-14-00-31-18: ar, ar_pud, cu, en, et, fr, fr_partut, fr_pud, fr_sequoia, got, grc_proiel, he, ja, ja_pud, la_ittb, la_proiel, nl_lassysmall, sl_sst, vi, zh
