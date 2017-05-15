@@ -152,7 +152,7 @@ foreach my $result (@results)
         }
     }
     my $final = '     ';
-    if (exists($teams{takeruns}) && scalar(@{$teams{takeruns}})==1 && $result->{srun} eq $teams{takeruns}[0])
+    if (exists($teams{$result->{team}}{takeruns}) && scalar(@{$teams{$result->{team}}{takeruns}})==1 && $result->{srun} eq $teams{$result->{team}}{takeruns}[0])
     {
         $final = 'Fin: ';
     }
