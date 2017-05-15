@@ -103,10 +103,6 @@ foreach my $team (@teams)
                     if ($swline =~ m/softwareId:\s*"([^"]*)"/) # "
                     {
                         $hash->{software} = $1;
-                        if ($teams{$team}{primary} eq $hash->{software})
-                        {
-                            $hash->{software} .= '-P';
-                        }
                     }
                 }
                 push(@results, $hash);
@@ -118,9 +114,16 @@ foreach my $team (@teams)
 for (my $i = 0; $i <= $#results; $i++)
 {
     my $team = $results[$i]{team};
-    if (exists($teams{$team}{primary}) && $results[$i]{software} ne $teams{$team}{primary})
+    if (exists($teams{$team}{primary}))
     {
-        splice(@results, $i--, 1);
+        if ($results[$i]{software} eq $teams{$team}{primary})
+        {
+            $results[$i]{software} .= '-P';
+        }
+        else
+        {
+            splice(@results, $i--, 1);
+        }
     }
 }
 # Print the results.
