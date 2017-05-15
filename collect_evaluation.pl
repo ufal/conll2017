@@ -40,6 +40,7 @@ my %teams =
         # fbaml2 (software1)
         #   27 OK files srun 2017-05-13-14-34-43 / erun 2017-05-15-00-24-54; another erun of the same srun is 2017-05-15-01-29-27
         #   That is all from fbaml2. One older run ended without output and one newer run has not ended yet (4 hours after deadline).
+        #   ... software1, 2017-05-15-02-27-31, 15:41:32 ... will not be included
     'Stanford'    => {'city' => 'Stanford'},
     'UALING'      => {'city' => 'Tucson'},
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
@@ -70,7 +71,7 @@ my %teams =
     'OpenU-NLP-Lab' => {'city' => "Ra'anana", 'primary' => 'software6', 'takeruns' => ['2017-05-14-23-13-45', '2017-05-14-16-57-08', '2017-05-13-01-48-49']},
         # Evaluator runs 2017-05-14-23-37-48, 2017-05-14-22-37-03, 2017-05-13-14-58-39.
     'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3', 'takeruns' => ['2017-05-13-17-01-25']},
-    'HIT-SCIR'    => {'city' => 'Harbin'},
+    'HIT-SCIR'    => {'city' => 'Harbin', 'primary' => 'software4', 'takeruns' => ['2017-05-10-17-38-36']}, # evaluator run: 2017-05-11-04-53-11
     'Wenba-NLU'   => {'city' => 'Wuhan'},
     'Wanghao-ftd-SJTU' => {'city' => 'Shanghai'},
     'ECNU'        => {'city' => 'Shanghai'},
