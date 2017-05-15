@@ -34,8 +34,8 @@ my %teams =
     'Stanford'    => {'city' => 'Stanford'},
     'UALING'      => {'city' => 'Tucson'},
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
-    'C2L2'        => {'city' => 'Ithaca', 'primary' => 'software5', 'takeruns' => ['2017-05-12-09-27-46']}, # evaluator run: 2017-05-12-17-36-03
-    'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5'},
+    'C2L2'          => {'city' => 'Ithaca', 'primary' => 'software5', 'takeruns' => ['2017-05-12-09-27-46']}, # evaluator run: 2017-05-12-17-36-03
+    'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5', 'takeruns' => ['2017-05-13-02-21-56']}, # evaluator run: 2017-05-14-10-10-24
     'MetaRomance' => {'city' => 'Santiago de Compostela'},
     'UParse'      => {'city' => 'Edinburgh'},
     'Orange-Deskin' => {'city' => 'Lannion'},
@@ -55,7 +55,7 @@ my %teams =
     'Koc-University' => {'city' => 'İstanbul'},
     'METU'        => {'city' => 'Ankara'},
     'OpenU-NLP-Lab' => {'city' => "Ra'anana"},
-    'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3'},
+    'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3', 'takeruns' => ['2017-05-13-17-01-25']},
     'HIT-SCIR'    => {'city' => 'Harbin'},
     'Wenba-NLU'   => {'city' => 'Wuhan'},
     'Wanghao-ftd-SJTU' => {'city' => 'Shanghai'},
@@ -64,7 +64,7 @@ my %teams =
     'NAIST-SATO'  => {'city' => 'Nara'},
     'naistCL'     => {'city' => 'Nara'},
     'TRL'         => {'city' => 'Tokyo'},
-    'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2'},
+    'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2', 'takeruns' => ['2017-05-09-20-35-48']} # evaluator run: 2017-05-10-05-14-53
 );
 # Some teams have multiple virtual machines.
 my %secondary =
