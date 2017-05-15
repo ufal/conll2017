@@ -114,6 +114,16 @@ foreach my $team (@teams)
         }
     }
 }
+# If we know what is the primary system of a team, remove results of other systems.
+for (my $i = 0; $i <= $#results; $i++)
+{
+    my $team = $results[$i]{team};
+    if (exists($teams{$team}{primary}) && $results[$i]{software} ne $teams{$team}{primary})
+    {
+        splice(@results, $i--, 1);
+    }
+}
+# Print the results.
 @results = sort {$b->{$metric} <=> $a->{$metric}} (@results);
 my %teammap;
 my $i = 0;
