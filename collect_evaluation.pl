@@ -58,7 +58,8 @@ my %teams =
     'RACAI'       => {'city' => 'București'},
     'Koc-University' => {'city' => 'İstanbul'},
     'METU'        => {'city' => 'Ankara'},
-    'OpenU-NLP-Lab' => {'city' => "Ra'anana"},
+    'OpenU-NLP-Lab' => {'city' => "Ra'anana", 'primary' => 'software6', 'takeruns' => ['2017-05-14-23-13-45', '2017-05-14-16-57-08', '2017-05-13-01-48-49']},
+        # Evaluator runs 2017-05-14-23-37-48, 2017-05-14-22-37-03, 2017-05-13-14-58-39.
     'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3', 'takeruns' => ['2017-05-13-17-01-25']},
     'HIT-SCIR'    => {'city' => 'Harbin'},
     'Wenba-NLU'   => {'city' => 'Wuhan'},
