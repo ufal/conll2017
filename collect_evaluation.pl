@@ -30,7 +30,7 @@ my %teams =
     'Stanford'    => {'city' => 'Stanford'},
     'UALING'      => {'city' => 'Tucson'},
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
-    'C2L2'        => {'city' => 'Ithaca'},
+    'C2L2'        => {'city' => 'Ithaca', 'primary' => 'software5'},
     'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5'},
     'MetaRomance' => {'city' => 'Santiago de Compostela'},
     'UParse'      => {'city' => 'Edinburgh'},
