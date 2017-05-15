@@ -193,7 +193,10 @@ foreach my $result (@results)
     {
         $final = 'Fin: ';
     }
-    printf("%2d. %s\t%s\t%5.2f%s\t%s%s => %s\n", $i, $name, $result->{software}, $result->{$metric}, $tag, $final, $result->{srun}, $result->{erun});
+    my $runs = "$result->{srun} => $result->{erun}";
+    # Truncate long lists of combined runs.
+    $runs = substr($runs, 0, 50).'...' if (length($runs) > 50);
+    printf("%2d. %s\t%s\t%5.2f%s\t%s%s\n", $i, $name, $result->{software}, $result->{$metric}, $tag, $final, $runs);
 }
 
 
@@ -257,6 +260,8 @@ sub combine_runs
         }
     }
     return unless (scalar(@eruns) > 1);
+    print STDERR ("Combining sruns: ", join(' + ', @{$srunids}), " ($eruns[0]{team})\n");
+    print STDERR ("Combining eruns: ", join(' + ', map {$_->{erun}} (@eruns)), " ($eruns[0]{team})\n");
     # Combine the evaluations.
     ###!!! Note that we currently do not check that the combined runs belong to the same software.
     ###!!! In fact we will even combine runs from different teams (actually different VMs of one team).
@@ -270,24 +275,28 @@ sub combine_runs
     my %sum;
     foreach my $erun (@eruns)
     {
-        my @keys = keys(%{$erun});
-        my @sets = map {s/-LAS-F1$//; $_} (grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (@keys));
+        my @keys = sort(keys(%{$erun}));
+        my @sets = map {my $x = $_; $x =~ s/-LAS-F1$//; $x} (grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (@keys));
+        #print STDERR ("Run $erun->{erun}, ", scalar(@keys), " keys, ", scalar(@sets), " sets.\n");
         foreach my $set (@sets)
         {
-            if ((!exists($combination{"$set-LAS-F1"}) || $combination{"$set-LAS-F1"} == 0) && exists($erun->{"$set-LAS-F1"}) && $erun->{"$set->LAS-F1"} > 0)
+            if ((!exists($combination{"$set-LAS-F1"}) || $combination{"$set-LAS-F1"} == 0) && exists($erun->{"$set-LAS-F1"}) && $erun->{"$set-LAS-F1"} > 0)
             {
                 # Copy all values pertaining to $set to the combined evaluation.
+                #print STDERR ("$set ");
                 foreach my $key (@keys)
                 {
                     if ($key =~ m/^$set-(.+)$/)
                     {
                         my $m = $1;
+                        #print STDERR ("COPY $key ");
                         $combination{$key} = $erun->{$key};
                         $sum{$m} += $erun->{$key};
                     }
                 }
             }
         }
+        #print STDERR ("\n");
     }
     # Recompute the macro average scores.
     my $nsets = scalar(grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (keys(%combination)));
