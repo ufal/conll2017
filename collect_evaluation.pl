@@ -62,6 +62,12 @@ my %teams =
     'TRL'         => {'city' => 'Tokyo'},
     'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2'},
 );
+# Some teams have multiple virtual machines.
+my %secondary =
+(
+    'fbaml2' => 'fbaml',
+    'CLCL2'  => 'CLCL'
+);
 
 
 
@@ -109,9 +115,11 @@ my %teammap;
 my $i = 0;
 foreach my $result (@results)
 {
-    next if (!$allresults && exists($teammap{$result->{team}}));
+    my $uniqueteam = $result->{team};
+    $uniqueteam = $secondary{$uniqueteam} if (exists($secondary{$uniqueteam}));
+    next if (!$allresults && exists($teammap{$uniqueteam}));
     $i++;
-    $teammap{$result->{team}}++;
+    $teammap{$uniqueteam}++;
     my $name = substr($result->{team}.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
     # If we are showing the total metric, also report whether all partial numbers are non-zero.
     my $tag = '';
