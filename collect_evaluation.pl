@@ -89,7 +89,7 @@ my %teams =
     'darc'        => {'city' => 'Tübingen'},
     'conll17-baseline' => {'city' => 'Praha'},
     'UFAL-UDPipe-1-2'  => {'city' => 'Praha'},
-    'Uppsala'     => {'city' => 'Uppsala'},
+    'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28']}, # evaluator run: 2017-05-15-07-22-05
     'TurkuNLP'    => {'city' => 'Turku'},
     'UT'          => {'city' => 'Tartu'},
     'RACAI'       => {'city' => 'București'},
