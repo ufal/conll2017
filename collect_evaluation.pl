@@ -23,6 +23,10 @@ GetOptions
 
 
 
+# If takeruns is present, it is the sequence of system runs (not evaluation runs) that should be combined.
+# Otherwise, we should take the last complete run (all files have nonzero scores) of the primary system.
+# If no run is complete and no combination is defined, should we take the best-scoring run of the primary system?
+# In any case, the primary system must be defined. We shall not just take the best-scoring one.
 my %teams =
 (
     'fbaml'       => {'city' => 'Palo Alto'},
@@ -30,7 +34,7 @@ my %teams =
     'Stanford'    => {'city' => 'Stanford'},
     'UALING'      => {'city' => 'Tucson'},
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
-    'C2L2'        => {'city' => 'Ithaca', 'primary' => 'software5'},
+    'C2L2'        => {'city' => 'Ithaca', 'primary' => 'software5', 'takeruns' => ['2017-05-12-09-27-46']}, # evaluator run: 2017-05-12-17-36-03
     'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5'},
     'MetaRomance' => {'city' => 'Santiago de Compostela'},
     'UParse'      => {'city' => 'Edinburgh'},
@@ -147,7 +151,12 @@ foreach my $result (@results)
             }
         }
     }
-    printf("%2d. %s\t%s\t%5.2f%s\t%s => %s\n", $i, $name, $result->{software}, $result->{$metric}, $tag, $result->{srun}, $result->{erun});
+    my $final = '     ';
+    if (exists($teams{takeruns}) && scalar(@{$teams{takeruns}})==1 && $result->{srun} eq $teams{takeruns}[0])
+    {
+        $final = 'Fin: ';
+    }
+    printf("%2d. %s\t%s\t%5.2f%s\t%s%s => %s\n", $i, $name, $result->{software}, $result->{$metric}, $tag, $final, $result->{srun}, $result->{erun});
 }
 
 
