@@ -92,8 +92,8 @@ my %teams =
     'conll17-baseline' => {'city' => 'Praha', 'primary' => 'software2', 'takeruns' => ['2017-05-15-09-35-05']}, # evaluator run: 2017-05-15-10-42-39
     'UFAL-UDPipe-1-2'  => {'city' => 'Praha'},
     'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28']}, # evaluator run: 2017-05-15-07-22-05
-    'TurkuNLP'    => {'city' => 'Turku'},
-    'UT'          => {'city' => 'Tartu', 'primary' => 'software1', 'takeruns' => ['2017-05-15-01-44-30', '2017-05-14-17-15-26', '2017-05-12-14-58-40']},
+    'TurkuNLP'    => {'city' => 'Turku',   'primary' => 'software1', 'takeruns' => ['2017-05-14-02-33-45']}, # evaluator run: 2017-05-14-08-32-00
+    'UT'          => {'city' => 'Tartu',   'primary' => 'software1', 'takeruns' => ['2017-05-15-01-44-30', '2017-05-14-17-15-26', '2017-05-12-14-58-40']},
         # 2017-05-15-01-44-30 => 2017-05-15-11-24-20: 20 files (en_lines, en_pud, gl, got, grc, hi_pud, hi, hr, hu, id, ja_pud, ja, ko, la_ittb, la, lv, nl_lassysmall, nl, ro, ru_pud)
         # 2017-05-14-17-15-26 => 2017-05-14-19-09-04: 1 file   (bg)
         # 2017-05-12-14-58-40 => 2017-05-14-16-03-28: 8 files  (bg, cu, da, el, en_lines, et, eu, fi)
