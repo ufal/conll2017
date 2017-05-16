@@ -110,7 +110,11 @@ my %teams =
     'ECNU'        => {'city' => 'Shanghai', 'primary' => 'software1', 'takeruns' => ['2017-05-13-17-22-09']}, # evaluator run: 2017-05-14-09-39-04
         # 2017-05-13-17-22-09 => 2017-05-14-09-39-04: 36 files (bxr, cu, da, el, en_lines, en_pud, et, eu, fi_pud, gl, got, hi_pud, hr, hsb, hu, id, ja_pud, ja, ko, la_ittb, la, lv, nl_lassysmall, nl, pl, ru_pud, sk, sl_sst, sl, sme, sv_lines, sv_pud, ug, ur, vi, zh)
         # The previous run do not seem to contribute any extra files.
-    'Mengest'     => {'city' => 'Shanghai'},
+    'Mengest'     => {'city' => 'Shanghai', 'primary' => 'software1', 'takeruns' => ['2017-05-15-12-26-00', '2017-05-15-11-48-07', '2017-05-15-09-38-56', '2017-05-15-06-39-45']},
+        # 2017-05-15-12-26-00 => 2017-05-15-12-31-23: 5 files  (ga, gl_treegal, hu, la, tr)
+        # 2017-05-15-11-48-07 => 2017-05-15-12-01-21: 4 files  (bxr, hsb, kmr, sme)
+        # 2017-05-15-09-38-56 => 2017-05-15-10-42-03: 43 files (ca, cs_cac, cs_cltt, cs_pud, cs, de_pud, de, el, es_ancora, es_pud, es, fa, ga, gl_treegal, gl, got, hr, id, it_pud, it, la_ittb, la_proiel, la, lv, no_bokmaal, no_nynorsk, pl, pt_br, pt_pud, pt, ro, ru_pud, ru_syntagrus, ru, sk, sl_sst, sl, sv_lines, sv_pud, sv, uk, ur, zh)
+        # 2017-05-15-06-39-45 => 2017-05-15-07-16-05: 32 files (ar_pud, ar, bg, cu, da, en_lines, en_partut, en_pud, en, et, eu, fi_ftb, fi_pud, fi, fr_partut, fr_pud, fr_sequoia, fr, grc_proiel, grc, he, hi_pud, hi, hu, ja_pud, ja, ko, nl_lassysmall, nl, tr_pud, tr, vi)
     'NAIST-SATO'  => {'city' => 'Nara'},
     'naistCL'     => {'city' => 'Nara'},
     'TRL'         => {'city' => 'Tokyo'},
