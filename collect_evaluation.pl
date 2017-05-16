@@ -52,7 +52,7 @@ my %teams =
     'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5', 'takeruns' => ['2017-05-13-02-21-56']}, # evaluator run: 2017-05-14-10-10-24
     'MetaRomance' => {'city' => 'Santiago de Compostela', 'primary' => 'software1', 'takeruns' => ['2017-05-12-10-34-18']}, # evaluator run: 2017-05-12-11-14-57},
     'UParse'      => {'city' => 'Edinburgh', 'primary' => 'software1', 'takeruns' => ['2017-05-12-22-37-39']}, # evaluator run: 2017-05-13-01-27-31
-    'Orange-Deskin' => {'city' => 'Lannion', 'primary' => 'software1', 'takeruns' => ['2017-05-10-12-02-22']}, # evaluator run: 2017-05-10-15-33-39
+    'Orange-Deskin' => {'city' => 'Lannion', 'primary' => 'software1', 'takeruns' => ['2017-05-10-12-02-22'], 'printname' => 'Orange – Deskiñ'}, # evaluator run: 2017-05-10-15-33-39
     'ParisNLP'    => {'city' => 'Paris', 'primary' => 'software1', 'takeruns' => ['2017-05-15-02-05-49']}, # evaluator run: 2017-05-15-13-53-08
     'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
     'LIMSI-LIPN'  => {'city' => 'Paris', 'primary' => 'software2', 'takeruns' => ['2017-05-13-16-28-36']}, # evaluator run: 2017-05-14-03-47-23
@@ -91,8 +91,8 @@ my %teams =
         # * From the run software2 2017-05-12-05-46-00: all the rest
         # In other words, take the oldest run (2017-05-12-05-46-00), and then for any test sets with outputs from the two later runs, use those numbers instead.
     'darc'          => {'city' => 'Tübingen', 'primary' => 'software1', 'takeruns' => ['2017-05-09-19-56-24']}, # evaluator run: 2017-05-09-21-54-48
-    'conll17-baseline' => {'city' => 'Praha', 'primary' => 'software2', 'takeruns' => ['2017-05-15-09-35-05']}, # evaluator run: 2017-05-15-10-42-39
-    'UFAL-UDPipe-1-2'  => {'city' => 'Praha', 'primary' => 'software1', 'takeruns' => ['2017-05-15-09-58-56']}, # evaluator run: 2017-05-15-12-16-30
+    'conll17-baseline' => {'city' => 'Praha', 'primary' => 'software2', 'takeruns' => ['2017-05-15-09-35-05'], 'printname' => 'BASELINE UDPipe 1.1'}, # evaluator run: 2017-05-15-10-42-39
+    'UFAL-UDPipe-1-2'  => {'city' => 'Praha', 'primary' => 'software1', 'takeruns' => ['2017-05-15-09-58-56'], 'printname' => 'ÚFAL – UDPipe 1.2'}, # evaluator run: 2017-05-15-12-16-30
     'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28']}, # evaluator run: 2017-05-15-07-22-05
     'TurkuNLP'    => {'city' => 'Turku',   'primary' => 'software1', 'takeruns' => ['2017-05-14-02-33-45']}, # evaluator run: 2017-05-14-08-32-00
     'UT'          => {'city' => 'Tartu',   'primary' => 'software1', 'takeruns' => ['2017-05-15-01-44-30', '2017-05-14-17-15-26', '2017-05-12-14-58-40']},
@@ -100,11 +100,11 @@ my %teams =
         # 2017-05-14-17-15-26 => 2017-05-14-19-09-04: 1 file   (bg)
         # 2017-05-12-14-58-40 => 2017-05-14-16-03-28: 8 files  (bg, cu, da, el, en_lines, et, eu, fi)
     'RACAI'       => {'city' => 'București', 'primary' => 'software1', 'takeruns' => ['2017-05-15-10-36-29', '2017-05-14-21-47-35']},
-    'Koc-University' => {'city' => 'İstanbul', 'primary' => 'software3', 'takeruns' => ['2017-05-11-18-53-35']}, # evaluator run: 2017-05-11-23-16-25
+    'Koc-University' => {'city' => 'İstanbul', 'primary' => 'software3', 'takeruns' => ['2017-05-11-18-53-35'], 'printname' => 'Koç University'}, # evaluator run: 2017-05-11-23-16-25
     'METU'           => {'city' => 'Ankara',   'primary' => 'software2', 'takeruns' => ['2017-05-14-08-05-06']}, # evaluator run: 2017-05-14-09-38-40
-    'OpenU-NLP-Lab'  => {'city' => "Ra'anana", 'primary' => 'software6', 'takeruns' => ['2017-05-14-23-13-45', '2017-05-14-16-57-08', '2017-05-13-01-48-49']},
+    'OpenU-NLP-Lab'  => {'city' => "Ra'anana", 'primary' => 'software6', 'takeruns' => ['2017-05-14-23-13-45', '2017-05-14-16-57-08', '2017-05-13-01-48-49'], 'printname' => 'OpenU NLP Lab'},
         # Evaluator runs 2017-05-14-23-37-48, 2017-05-14-22-37-03, 2017-05-13-14-58-39.
-    'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3', 'takeruns' => ['2017-05-13-17-01-25']},
+    'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3', 'takeruns' => ['2017-05-13-17-01-25'], 'printname' => 'IIT Kharagpur'},
     'HIT-SCIR'    => {'city' => 'Harbin', 'primary' => 'software4', 'takeruns' => ['2017-05-10-17-38-36']}, # evaluator run: 2017-05-11-04-53-11
     'Wenba-NLU'   => {'city' => 'Wuhan',  'primary' => 'software1', 'takeruns' => ['2017-05-13-01-44-52']}, # evaluator run: 2017-05-14-06-53-39
     'Wanghao-ftd-SJTU' => {'city' => 'Shanghai', 'primary' => 'software2', 'takeruns' => ['2017-05-14-12-32-00']}, # evaluator run: 2017-05-14-13-21-51
@@ -116,7 +116,7 @@ my %teams =
         # 2017-05-15-11-48-07 => 2017-05-15-12-01-21: 4 files  (bxr, hsb, kmr, sme)
         # 2017-05-15-09-38-56 => 2017-05-15-10-42-03: 43 files (ca, cs_cac, cs_cltt, cs_pud, cs, de_pud, de, el, es_ancora, es_pud, es, fa, ga, gl_treegal, gl, got, hr, id, it_pud, it, la_ittb, la_proiel, la, lv, no_bokmaal, no_nynorsk, pl, pt_br, pt_pud, pt, ro, ru_pud, ru_syntagrus, ru, sk, sl_sst, sl, sv_lines, sv_pud, sv, uk, ur, zh)
         # 2017-05-15-06-39-45 => 2017-05-15-07-16-05: 32 files (ar_pud, ar, bg, cu, da, en_lines, en_partut, en_pud, en, et, eu, fi_ftb, fi_pud, fi, fr_partut, fr_pud, fr_sequoia, fr, grc_proiel, grc, he, hi_pud, hi, hu, ja_pud, ja, ko, nl_lassysmall, nl, tr_pud, tr, vi)
-    'NAIST-SATO'  => {'city' => 'Nara',   'primary' => 'software1', 'takeruns' => ['2017-05-15-08-05-20']}, # evaluator run: 2017-05-15-11-48-44
+    'NAIST-SATO'  => {'city' => 'Nara',   'primary' => 'software1', 'takeruns' => ['2017-05-15-08-05-20'], 'printname' => 'NAIST SATO'}, # evaluator run: 2017-05-15-11-48-44
     'naistCL'     => {'city' => 'Nara',   'primary' => 'software1', 'takeruns' => ['2017-05-14-05-33-50']}, # evaluator run: 2017-05-14-07-31-46
     'TRL'         => {'city' => 'Tokyo',  'primary' => 'software1', 'takeruns' => ['2017-05-15-13-31-13']}, # evaluator run: 2017-05-15-13-44-26
     'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2', 'takeruns' => ['2017-05-09-20-35-48']}  # evaluator run: 2017-05-10-05-14-53
@@ -237,7 +237,8 @@ foreach my $result (@results)
     next if (!$allresults && exists($teammap{$uniqueteam}));
     $i++;
     $teammap{$uniqueteam}++;
-    my $name = substr($result->{team}.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
+    my $name = exists($result->{printname}) ? $result->{printname} : $result->{team};
+    $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
     # If we are showing the total metric, also report whether all partial numbers are non-zero.
     my $tag = '';
     if ($metric eq 'total-LAS-F1')
