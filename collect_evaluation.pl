@@ -189,7 +189,7 @@ foreach my $team (keys(%teams))
 # If we know what is the single final run of a team, remove results of other runs.
 foreach my $team (keys(%teams))
 {
-    if (exists($teams{$team}{primary}))
+    if (exists($teams{$team}{primary}) && !$teams{$team}{withdraw})
     {
         my $primary = $teams{$team}{primary};
         my $lookforrun;
