@@ -175,22 +175,39 @@ foreach my $team (keys(%teams))
 }
 # If we know what is the primary system of a team, remove results of other systems.
 # If we know what is the single final run of a team, remove results of other runs.
-for (my $i = 0; $i <= $#results; $i++)
+foreach my $team (keys(%teams))
 {
-    my $team = $results[$i]{team};
     if (exists($teams{$team}{primary}))
     {
-        if ($results[$i]{software} eq $teams{$team}{primary})
+        my $primary = $teams{$team}{primary};
+        my $lookforrun;
+        if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1)
         {
-            $results[$i]{software} .= '-P';
-            if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1 && $results[$i]{srun} ne $teams{$team}{takeruns}[0])
+            $lookforrun = $teams{$team}{takeruns}[0];
+        }
+        my $found = 0;
+        for (my $i = 0; $i <= $#results; $i++)
+        {
+            next unless ($results[$i]{team} eq $team);
+            if ($results[$i]{software} eq $primary)
+            {
+                if (defined($lookforrun) && $results[$i]{srun} ne $lookforrun)
+                {
+                    splice(@results, $i--, 1);
+                    next;
+                }
+                $results[$i]{software} .= '-P';
+                $found = 1;
+            }
+            else
             {
                 splice(@results, $i--, 1);
+                next;
             }
         }
-        else
+        if (!$found)
         {
-            splice(@results, $i--, 1);
+            die("Team $team: primary software is defined but no final run was found");
         }
     }
 }
