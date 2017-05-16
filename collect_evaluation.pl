@@ -51,7 +51,7 @@ my %teams =
     'Orange-Deskin' => {'city' => 'Lannion'},
     'ParisNLP'    => {'city' => 'Paris'},
     #'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
-    'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-07-48-18', '2017-05-11-02-27-54']}, # evaluator run: 2017-05-15-20-28-49
+    'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-06-35-50', '2017-05-11-02-27-54']}, # evaluator run: 2017-05-15-20-28-49
     'LIMSI-LIPN'  => {'city' => 'Paris'},
     'CLCL'        => {'city' => 'Genève', 'primary' => 'software2', 'takeruns' => ['2017-05-15-17-08-20', '2017-05-15-12-58-58', '2017-05-15-12-41-38',
                                                                                    '2017-05-15-11-59-45', '2017-05-15-11-48-22', '2017-05-15-10-24-34',
@@ -340,7 +340,7 @@ sub combine_runs
         $from_here{nsets} = scalar(@{$from_here{sets}});
         $from_here{jsets} = join(', ', @{$from_here{sets}});
     }
-    print STDERR ("\tTaking ", join('; ', map {"$_->{nsets} files from $_->{erun} ($_->{jsets})"} (@what_from_where)), "\n");
+    print STDERR ("\tTaking ", join('; ', map {"$_->{nsets} files from $_->{erun} ($_->{jsets})"} (@what_from_where)), "\n\n");
     # Recompute the macro average scores.
     my $nsets = scalar(grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (keys(%combination)));
     die if ($nsets < 1);
