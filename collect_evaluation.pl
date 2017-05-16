@@ -51,7 +51,7 @@ my %teams =
     'MetaRomance' => {'city' => 'Santiago de Compostela', 'primary' => 'software1', 'takeruns' => ['2017-05-12-10-34-18']}, # evaluator run: 2017-05-12-11-14-57},
     'UParse'      => {'city' => 'Edinburgh'},
     'Orange-Deskin' => {'city' => 'Lannion'},
-    'ParisNLP'    => {'city' => 'Paris'},
+    'ParisNLP'    => {'city' => 'Paris', 'primary' => 'software1', 'takeruns' => ['2017-05-15-02-05-49']}, # evaluator run: 2017-05-15-13-53-08
     'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
     #'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-06-35-50', '2017-05-11-02-27-54']},
     'LIMSI-LIPN'  => {'city' => 'Paris'},
