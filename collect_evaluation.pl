@@ -49,7 +49,7 @@ my %teams =
     'C2L2'          => {'city' => 'Ithaca', 'primary' => 'software5', 'takeruns' => ['2017-05-12-09-27-46']}, # evaluator run: 2017-05-12-17-36-03
     'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5', 'takeruns' => ['2017-05-13-02-21-56']}, # evaluator run: 2017-05-14-10-10-24
     'MetaRomance' => {'city' => 'Santiago de Compostela', 'primary' => 'software1', 'takeruns' => ['2017-05-12-10-34-18']}, # evaluator run: 2017-05-12-11-14-57},
-    'UParse'      => {'city' => 'Edinburgh'},
+    'UParse'      => {'city' => 'Edinburgh', 'primary' => 'software1', 'takeruns' => ['2017-05-12-22-37-39']}, # evaluator run: 2017-05-13-01-27-31
     'Orange-Deskin' => {'city' => 'Lannion', 'primary' => 'software1', 'takeruns' => ['2017-05-10-12-02-22']}, # evaluator run: 2017-05-10-15-33-39
     'ParisNLP'    => {'city' => 'Paris', 'primary' => 'software1', 'takeruns' => ['2017-05-15-02-05-49']}, # evaluator run: 2017-05-15-13-53-08
     'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
