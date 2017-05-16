@@ -117,8 +117,8 @@ my %teams =
         # 2017-05-15-06-39-45 => 2017-05-15-07-16-05: 32 files (ar_pud, ar, bg, cu, da, en_lines, en_partut, en_pud, en, et, eu, fi_ftb, fi_pud, fi, fr_partut, fr_pud, fr_sequoia, fr, grc_proiel, grc, he, hi_pud, hi, hu, ja_pud, ja, ko, nl_lassysmall, nl, tr_pud, tr, vi)
     'NAIST-SATO'  => {'city' => 'Nara'},
     'naistCL'     => {'city' => 'Nara'},
-    'TRL'         => {'city' => 'Tokyo'},
-    'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2', 'takeruns' => ['2017-05-09-20-35-48']} # evaluator run: 2017-05-10-05-14-53
+    'TRL'         => {'city' => 'Tokyo',  'primary' => 'software1', 'takeruns' => ['2017-05-15-13-31-13']}, # evaluator run: 2017-05-15-13-44-26
+    'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2', 'takeruns' => ['2017-05-09-20-35-48']}  # evaluator run: 2017-05-10-05-14-53
 );
 # Some teams have multiple virtual machines.
 my %secondary =
