@@ -237,7 +237,7 @@ foreach my $result (@results)
     next if (!$allresults && exists($teammap{$uniqueteam}));
     $i++;
     $teammap{$uniqueteam}++;
-    my $name = exists($result->{printname}) ? $result->{printname} : $result->{team};
+    my $name = exists($teams{$uniqueteam}{printname}) ? $teams{$uniqueteam}{printname} : $uniqueteam;
     $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
     # If we are showing the total metric, also report whether all partial numbers are non-zero.
     my $tag = '';
