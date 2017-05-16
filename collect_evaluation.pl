@@ -100,7 +100,7 @@ my %teams =
         # 2017-05-12-14-58-40 => 2017-05-14-16-03-28: 8 files  (bg, cu, da, el, en_lines, et, eu, fi)
     'RACAI'       => {'city' => 'București', 'primary' => 'software1', 'takeruns' => ['2017-05-15-10-36-29', '2017-05-14-21-47-35']},
     'Koc-University' => {'city' => 'İstanbul'},
-    'METU'        => {'city' => 'Ankara'},
+    'METU'          => {'city' => 'Ankara', 'primary' => 'software2', 'takeruns' => ['2017-05-14-08-05-06']}, # evalutor run: 2017-05-14-09-38-40
     'OpenU-NLP-Lab' => {'city' => "Ra'anana", 'primary' => 'software6', 'takeruns' => ['2017-05-14-23-13-45', '2017-05-14-16-57-08', '2017-05-13-01-48-49']},
         # Evaluator runs 2017-05-14-23-37-48, 2017-05-14-22-37-03, 2017-05-13-14-58-39.
     'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3', 'takeruns' => ['2017-05-13-17-01-25']},
