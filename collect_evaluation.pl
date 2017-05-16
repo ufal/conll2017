@@ -153,22 +153,6 @@ foreach my $team (@teams)
         }
     }
 }
-# If we know what is the primary system of a team, remove results of other systems.
-for (my $i = 0; $i <= $#results; $i++)
-{
-    my $team = $results[$i]{team};
-    if (exists($teams{$team}{primary}))
-    {
-        if ($results[$i]{software} eq $teams{$team}{primary})
-        {
-            $results[$i]{software} .= '-P';
-        }
-        else
-        {
-            splice(@results, $i--, 1);
-        }
-    }
-}
 # Create a map from system run ids to corresponding evaluation runs.
 my %srun2erun;
 foreach my $result (@results)
@@ -187,6 +171,22 @@ foreach my $team (keys(%teams))
     {
         my $combination = combine_runs($teams{$team}{takeruns});
         push(@results, $combination);
+    }
+}
+# If we know what is the primary system of a team, remove results of other systems.
+for (my $i = 0; $i <= $#results; $i++)
+{
+    my $team = $results[$i]{team};
+    if (exists($teams{$team}{primary}))
+    {
+        if ($results[$i]{software} eq $teams{$team}{primary})
+        {
+            $results[$i]{software} .= '-P';
+        }
+        else
+        {
+            splice(@results, $i--, 1);
+        }
     }
 }
 # Print the results.
