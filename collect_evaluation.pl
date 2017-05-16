@@ -89,7 +89,7 @@ my %teams =
         # * From the run software2 2017-05-12-05-46-00: all the rest
         # In other words, take the oldest run (2017-05-12-05-46-00), and then for any test sets with outputs from the two later runs, use those numbers instead.
     'darc'        => {'city' => 'Tübingen'},
-    'conll17-baseline' => {'city' => 'Praha'},
+    'conll17-baseline' => {'city' => 'Praha', 'primary' => 'software2', 'takeruns' => ['2017-05-15-09-35-05']}, # evaluator run: 2017-05-15-10-42-39
     'UFAL-UDPipe-1-2'  => {'city' => 'Praha'},
     'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28']}, # evaluator run: 2017-05-15-07-22-05
     'TurkuNLP'    => {'city' => 'Turku'},
