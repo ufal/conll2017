@@ -174,6 +174,7 @@ foreach my $team (keys(%teams))
     }
 }
 # If we know what is the primary system of a team, remove results of other systems.
+# If we know what is the single final run of a team, remove results of other runs.
 for (my $i = 0; $i <= $#results; $i++)
 {
     my $team = $results[$i]{team};
@@ -182,6 +183,10 @@ for (my $i = 0; $i <= $#results; $i++)
         if ($results[$i]{software} eq $teams{$team}{primary})
         {
             $results[$i]{software} .= '-P';
+            if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1 && $results[$i]{srun} ne $teams{$team}{takeruns}[0])
+            {
+                splice(@results, $i--, 1);
+            }
         }
         else
         {
