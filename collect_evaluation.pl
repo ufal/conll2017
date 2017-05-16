@@ -41,8 +41,8 @@ my %teams =
         #   27 OK files srun 2017-05-13-14-34-43 / erun 2017-05-15-00-24-54; another erun of the same srun is 2017-05-15-01-29-27
         #   That is all from fbaml2. One older run ended without output and one newer run has not ended yet (4 hours after deadline).
         #   ... software1, 2017-05-15-02-27-31, 15:41:32 ... will not be included
-    'Stanford'    => {'city' => 'Stanford'},
-    'UALING'      => {'city' => 'Tucson', 'primary' => 'software1', 'takeruns' => ['2017-05-15-06-10-21']}, # evaluator run: 2017-05-15-06-34-39
+    'Stanford'    => {'city' => 'Stanford', 'primary' => 'software1', 'takeruns' => ['2017-05-14-10-36-20']}, # evaluator run: 2017-05-15-02-58-52
+    'UALING'      => {'city' => 'Tucson',   'primary' => 'software1', 'takeruns' => ['2017-05-15-06-10-21']}, # evaluator run: 2017-05-15-06-34-39
     'Recurrent-Team' => {'city' => 'Pittsburgh', 'primary' => 'software3', 'withdraw' => 1},
         # software3: 2017-05-15-07-05-06 => 2017-05-15-08-26-06: 8 files  (la_ittb, la_proiel, la, nl_lassysmall, nl, sv_lines, sv_pud, sv)
         # software2: 2017-05-15-02-40-39 => 2017-05-15-05-40-35: 23 files (ar_pud, ar, bg, ca, cu, da, de_pud, de, el, et, eu, fa, ga, got, hr, id, kk, sk, sl_sst, sl, uk, vi, zh)
