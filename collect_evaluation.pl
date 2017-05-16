@@ -106,7 +106,7 @@ my %teams =
     'IIT-Kharagpur' => {'city' => 'Kharagpur', 'primary' => 'software3', 'takeruns' => ['2017-05-13-17-01-25']},
     'HIT-SCIR'    => {'city' => 'Harbin', 'primary' => 'software4', 'takeruns' => ['2017-05-10-17-38-36']}, # evaluator run: 2017-05-11-04-53-11
     'Wenba-NLU'   => {'city' => 'Wuhan',  'primary' => 'software1', 'takeruns' => ['2017-05-13-01-44-52']}, # evaluator run: 2017-05-14-06-53-39
-    'Wanghao-ftd-SJTU' => {'city' => 'Shanghai'},
+    'Wanghao-ftd-SJTU' => {'city' => 'Shanghai', 'primary' => 'software2', 'takeruns' => ['2017-05-14-12-32-00']}, # evaluator run: 2017-05-14-13-21-51
     'ECNU'        => {'city' => 'Shanghai', 'primary' => 'software1', 'takeruns' => ['2017-05-13-17-22-09']}, # evaluator run: 2017-05-14-09-39-04
         # 2017-05-13-17-22-09 => 2017-05-14-09-39-04: 36 files (bxr, cu, da, el, en_lines, en_pud, et, eu, fi_pud, gl, got, hi_pud, hr, hsb, hu, id, ja_pud, ja, ko, la_ittb, la, lv, nl_lassysmall, nl, pl, ru_pud, sk, sl_sst, sl, sme, sv_lines, sv_pud, ug, ur, vi, zh)
         # The previous run do not seem to contribute any extra files.
