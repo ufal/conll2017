@@ -42,7 +42,7 @@ my %teams =
         #   That is all from fbaml2. One older run ended without output and one newer run has not ended yet (4 hours after deadline).
         #   ... software1, 2017-05-15-02-27-31, 15:41:32 ... will not be included
     'Stanford'    => {'city' => 'Stanford'},
-    'UALING'      => {'city' => 'Tucson', 'primary' => 'software1', 'takeruns' => ['2017-05-15-07-08-08']}, # evaluator run: 2017-05-15-07-22-08
+    'UALING'      => {'city' => 'Tucson', 'primary' => 'software1', 'takeruns' => ['2017-05-15-06-10-21']}, # evaluator run: 2017-05-15-06-34-39
     'Recurrent-Team' => {'city' => 'Pittsburgh'},
     'C2L2'          => {'city' => 'Ithaca', 'primary' => 'software5', 'takeruns' => ['2017-05-12-09-27-46']}, # evaluator run: 2017-05-12-17-36-03
     'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5', 'takeruns' => ['2017-05-13-02-21-56']}, # evaluator run: 2017-05-14-10-10-24
