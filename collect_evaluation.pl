@@ -50,7 +50,8 @@ my %teams =
     'UParse'      => {'city' => 'Edinburgh'},
     'Orange-Deskin' => {'city' => 'Lannion'},
     'ParisNLP'    => {'city' => 'Paris'},
-    'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
+    #'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
+    'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-07-48-18', '2017-05-11-02-27-54']}, # evaluator run: 2017-05-15-20-28-49
     'LIMSI-LIPN'  => {'city' => 'Paris'},
     'CLCL'        => {'city' => 'Genève', 'primary' => 'software2', 'takeruns' => ['2017-05-15-17-08-20', '2017-05-15-12-58-58', '2017-05-15-12-41-38',
                                                                                    '2017-05-15-11-59-45', '2017-05-15-11-48-22', '2017-05-15-10-24-34',
