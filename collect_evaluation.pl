@@ -43,7 +43,9 @@ my %teams =
         #   ... software1, 2017-05-15-02-27-31, 15:41:32 ... will not be included
     'Stanford'    => {'city' => 'Stanford'},
     'UALING'      => {'city' => 'Tucson', 'primary' => 'software1', 'takeruns' => ['2017-05-15-06-10-21']}, # evaluator run: 2017-05-15-06-34-39
-    'Recurrent-Team' => {'city' => 'Pittsburgh'},
+    'Recurrent-Team' => {'city' => 'Pittsburgh', 'primary' => 'software3', 'takeruns' => ['2017-05-15-07-05-06', '2017-05-15-02-40-39']},
+        # software3: 2017-05-15-07-05-06 => 2017-05-15-08-26-06: 8 files  (la_ittb, la_proiel, la, nl_lassysmall, nl, sv_lines, sv_pud, sv)
+        # software2: 2017-05-15-02-40-39 => 2017-05-15-05-40-35: 23 files (ar_pud, ar, bg, ca, cu, da, de_pud, de, el, et, eu, fa, ga, got, hr, id, kk, sk, sl_sst, sl, uk, vi, zh)
     'C2L2'          => {'city' => 'Ithaca', 'primary' => 'software5', 'takeruns' => ['2017-05-12-09-27-46']}, # evaluator run: 2017-05-12-17-36-03
     'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5', 'takeruns' => ['2017-05-13-02-21-56']}, # evaluator run: 2017-05-14-10-10-24
     'MetaRomance' => {'city' => 'Santiago de Compostela'},
