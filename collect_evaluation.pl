@@ -298,7 +298,11 @@ sub combine_runs
             print STDERR ("Warning: No evaluation run for system run $srun.\n");
         }
     }
-    return unless (scalar(@eruns) > 1);
+    if (scalar(@eruns) <= 1)
+    {
+        print STDERR ("Warning: Found only ", scalar(@eruns), " evaluation runs for the ", scalar(@{$srunids}), " system runs to be combined. Giving up.\n\n");
+        return;
+    }
     print STDERR ("Combining sruns: ", join(' + ', @{$srunids}), " ($eruns[0]{team})\n");
     print STDERR ("Combining eruns: ", join(' + ', map {$_->{erun}} (@eruns)), " ($eruns[0]{team})\n");
     # Combine the evaluations.
