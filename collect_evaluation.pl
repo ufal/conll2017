@@ -48,7 +48,7 @@ my %teams =
         # software2: 2017-05-15-02-40-39 => 2017-05-15-05-40-35: 23 files (ar_pud, ar, bg, ca, cu, da, de_pud, de, el, et, eu, fa, ga, got, hr, id, kk, sk, sl_sst, sl, uk, vi, zh)
     'C2L2'          => {'city' => 'Ithaca', 'primary' => 'software5', 'takeruns' => ['2017-05-12-09-27-46']}, # evaluator run: 2017-05-12-17-36-03
     'LyS-FASTPARSE' => {'city' => 'A Coruña', 'primary' => 'software5', 'takeruns' => ['2017-05-13-02-21-56']}, # evaluator run: 2017-05-14-10-10-24
-    'MetaRomance' => {'city' => 'Santiago de Compostela'},
+    'MetaRomance' => {'city' => 'Santiago de Compostela', 'primary' => 'software1', 'takeruns' => ['2017-05-12-10-34-18']}, # evaluator run: 2017-05-12-11-14-57},
     'UParse'      => {'city' => 'Edinburgh'},
     'Orange-Deskin' => {'city' => 'Lannion'},
     'ParisNLP'    => {'city' => 'Paris'},
