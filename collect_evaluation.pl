@@ -371,7 +371,9 @@ sub combine_runs
     }
     print STDERR ("\tTaking ", join('; ', map {"$_->{nsets} files from $_->{erun} ($_->{jsets})"} (@what_from_where)), "\n\n");
     # Recompute the macro average scores.
-    my $nsets = scalar(grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (keys(%combination)));
+    # We cannot take the number of sets from scalar(grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (keys(%combination)));
+    # If the system failed to produce some of the outputs, we would be averaging only the good outputs!
+    my $nsets = 81; ###!!! THIS MAY FAIL IF WE USE THIS SCRIPT FOR ANOTHER TASK IN THE FUTURE.
     die if ($nsets < 1);
     foreach my $key (keys(%sum))
     {
