@@ -114,7 +114,7 @@ my %teams =
         # 2017-05-15-11-48-07 => 2017-05-15-12-01-21: 4 files  (bxr, hsb, kmr, sme)
         # 2017-05-15-09-38-56 => 2017-05-15-10-42-03: 43 files (ca, cs_cac, cs_cltt, cs_pud, cs, de_pud, de, el, es_ancora, es_pud, es, fa, ga, gl_treegal, gl, got, hr, id, it_pud, it, la_ittb, la_proiel, la, lv, no_bokmaal, no_nynorsk, pl, pt_br, pt_pud, pt, ro, ru_pud, ru_syntagrus, ru, sk, sl_sst, sl, sv_lines, sv_pud, sv, uk, ur, zh)
         # 2017-05-15-06-39-45 => 2017-05-15-07-16-05: 32 files (ar_pud, ar, bg, cu, da, en_lines, en_partut, en_pud, en, et, eu, fi_ftb, fi_pud, fi, fr_partut, fr_pud, fr_sequoia, fr, grc_proiel, grc, he, hi_pud, hi, hu, ja_pud, ja, ko, nl_lassysmall, nl, tr_pud, tr, vi)
-    'NAIST-SATO'  => {'city' => 'Nara'},
+    'NAIST-SATO'  => {'city' => 'Nara',   'primary' => 'software1', 'takeruns' => ['2017-05-15-08-05-20']}, # evaluator run: 2017-05-15-11-48-44
     'naistCL'     => {'city' => 'Nara',   'primary' => 'software1', 'takeruns' => ['2017-05-14-05-33-50']}, # evaluator run: 2017-05-14-07-31-46
     'TRL'         => {'city' => 'Tokyo',  'primary' => 'software1', 'takeruns' => ['2017-05-15-13-31-13']}, # evaluator run: 2017-05-15-13-44-26
     'MQuni'       => {'city' => 'Sydney', 'primary' => 'software2', 'takeruns' => ['2017-05-09-20-35-48']}  # evaluator run: 2017-05-10-05-14-53
