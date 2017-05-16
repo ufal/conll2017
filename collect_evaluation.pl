@@ -29,7 +29,9 @@ GetOptions
 # In any case, the primary system must be defined. We shall not just take the best-scoring one.
 my %teams =
 (
-    'fbaml'       => {'city' => 'Palo Alto', 'primary' => 'software1', 'takeruns' => ['2017-05-12-02-00-55', '2017-05-15-02-50-42', '2017-05-15-07-30-20', '2017-05-15-11-45-54', '2017-05-13-14-34-43']},
+    'fbaml'       => {'city' => 'Palo Alto', 'primary' => 'software1', 'takeruns' => ['2017-05-12-02-00-55', '2017-05-15-02-50-42', '2017-05-15-07-30-20',
+                                                                                      '2017-05-15-11-45-54', '2017-05-13-14-34-43', '2017-05-15-20-23-04',
+                                                                                      '2017-05-15-18-00-23']},
     'fbaml2'      => {'city' => 'Palo Alto'},
         # fbaml (software1)
         #   11 OK files (before grc_proiel but without the files that Martin backed up) srun 2017-05-12-02-00-55 / erun 2017-05-14-23-44-14
