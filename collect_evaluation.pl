@@ -272,8 +272,8 @@ foreach my $result (@results)
     }
     my $runs = "$result->{srun} => $result->{erun}";
     # Truncate long lists of combined runs.
-    $runs = substr($runs, 0, 50).'...' if (length($runs) > 50);
-    printf("%2d. %s\t%s\t%5.2f%s\t%s%s\n", $i, $name, $result->{software}, $result->{$metric}, $tag, $final, $runs);
+    $runs = $final.substr($runs, 0, 50).'...' if (length($runs) > 50); ###!!! currently not shown in the table!
+    printf("%2d. %s\t%s\t%5.2f%s\n", $i, $name, $result->{software}, $result->{$metric}, $tag);
 }
 
 
