@@ -129,7 +129,9 @@ my %secondary =
 
 
 # The output of the test runs is mounted in the master VM at this point:
-my $testpath = '/media/conll17-ud-test-2017-05-09';
+my $testpath_tira = '/media/conll17-ud-test-2017-05-09';
+my $testpath_ufal = '/net/work/people/zeman/unidep/conll2017-test-runs/conll17-ud-test-2017-05-09';
+my $testpath = (-f $tespath_tira) ? $testpath_tira : $testpath_ufal;
 my @teams = dzsys::get_subfolders($testpath);
 my @results;
 foreach my $team (@teams)
