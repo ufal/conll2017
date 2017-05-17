@@ -196,54 +196,7 @@ elsif ($metric eq 'surtreebanks-LAS-F1')
     add_average('surtreebanks-LAS-F1', 'LAS-F1', \@surtbk, \@results);
 }
 # Print the results.
-@results = sort {$b->{$metric} <=> $a->{$metric}} (@results);
-my %teammap;
-my $i = 0;
-foreach my $result (@results)
-{
-    my $uniqueteam = $result->{team};
-    $uniqueteam = $secondary{$uniqueteam} if (exists($secondary{$uniqueteam}));
-    next if (!$allresults && exists($teammap{$uniqueteam}));
-    $i++;
-    $teammap{$uniqueteam}++;
-    my $name = exists($teams{$uniqueteam}{printname}) ? $teams{$uniqueteam}{printname} : $uniqueteam;
-    $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
-    # If we are showing the total metric, also report whether all partial numbers are non-zero.
-    my $tag = '';
-    if ($metric eq 'total-LAS-F1')
-    {
-        $tag = ' [OK]';
-        my @keys = grep {m/-LAS-F1$/} (keys(%{$result}));
-        my $n = scalar(@keys)-1; # subtracting the macro average
-        if ($n < 81)
-        {
-            $tag = " [$n]";
-        }
-        else
-        {
-            foreach my $key (@keys)
-            {
-                if ($key =~ m/-LAS-F1$/)
-                {
-                    if ($result->{$key}==0)
-                    {
-                        $tag = ' [!!]';
-                        last;
-                    }
-                }
-            }
-        }
-    }
-    my $final = '     ';
-    if (exists($teams{$result->{team}}{takeruns}) && scalar(@{$teams{$result->{team}}{takeruns}})==1 && $result->{srun} eq $teams{$result->{team}}{takeruns}[0])
-    {
-        $final = 'Fin: ';
-    }
-    my $runs = "$result->{srun} => $result->{erun}";
-    # Truncate long lists of combined runs.
-    $runs = $final.substr($runs, 0, 50).'...' if (length($runs) > 50); ###!!! currently not shown in the table!
-    printf("%2d. %s\t%s\t%5.2f%s\n", $i, $name, $result->{software}, $result->{$metric}, $tag);
-}
+print_table($metric, @results);
 
 
 
@@ -490,5 +443,64 @@ sub add_average
             $sum += $run->{$key};
         }
         $run->{$tgtname} = $sum/$n;
+    }
+}
+
+
+
+#------------------------------------------------------------------------------
+# Prints the table of results of individual systems sorted by selected metric.
+#------------------------------------------------------------------------------
+sub print_table
+{
+    ###!!! Reads the global hash %secondary (mapping between primary and secondary virtual machine of two teams).
+    my $metric = shift;
+    my @results = sort {$b->{$metric} <=> $a->{$metric}} (@_);
+    my %teammap;
+    my $i = 0;
+    foreach my $result (@results)
+    {
+        my $uniqueteam = $result->{team};
+        $uniqueteam = $secondary{$uniqueteam} if (exists($secondary{$uniqueteam}));
+        next if (!$allresults && exists($teammap{$uniqueteam}));
+        $i++;
+        $teammap{$uniqueteam}++;
+        my $name = exists($teams{$uniqueteam}{printname}) ? $teams{$uniqueteam}{printname} : $uniqueteam;
+        $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
+        # If we are showing the total metric, also report whether all partial numbers are non-zero.
+        my $tag = '';
+        if ($metric eq 'total-LAS-F1')
+        {
+            $tag = ' [OK]';
+            my @keys = grep {m/-LAS-F1$/} (keys(%{$result}));
+            my $n = scalar(@keys)-1; # subtracting the macro average
+            if ($n < 81)
+            {
+                $tag = " [$n]";
+            }
+            else
+            {
+                foreach my $key (@keys)
+                {
+                    if ($key =~ m/-LAS-F1$/)
+                    {
+                        if ($result->{$key}==0)
+                        {
+                            $tag = ' [!!]';
+                            last;
+                        }
+                    }
+                }
+            }
+        }
+        my $final = '     ';
+        if (exists($teams{$result->{team}}{takeruns}) && scalar(@{$teams{$result->{team}}{takeruns}})==1 && $result->{srun} eq $teams{$result->{team}}{takeruns}[0])
+        {
+            $final = 'Fin: ';
+        }
+        my $runs = "$result->{srun} => $result->{erun}";
+        # Truncate long lists of combined runs.
+        $runs = $final.substr($runs, 0, 50).'...' if (length($runs) > 50); ###!!! currently not shown in the table!
+        printf("%2d. %s\t%s\t%5.2f%s\n", $i, $name, $result->{software}, $result->{$metric}, $tag);
     }
 }
