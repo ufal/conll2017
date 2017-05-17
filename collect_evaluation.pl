@@ -434,34 +434,16 @@ sub remove_secondary_runs
                 {
                     die("Team '$team': did not find any runs of the primary system '$primary'");
                 }
-                my $lookforrun;
-                if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1)
+                if (exists($teams{$team}{takeruns}))
                 {
-                    $lookforrun = $teams{$team}{takeruns}[0];
-                }
-                my $found = 0;
-                for (my $i = 0; $i <= $#results; $i++)
-                {
-                    next unless ($results[$i]{team} eq $team);
-                    if ($results[$i]{software} eq $primary)
+                    # Remove all runs of the system except the one marked as final (it is not necessarily the last one time-wise).
+                    my $lookforrun = join('+', @{$teams{$team}{takeruns}});
+                    @results = grep {$_->{team} ne $team || $_->{srun} eq $lookforrun} (@results);
+                    # Sanity check: if we defined the run we want to take, we assumed it would exist.
+                    if (!grep {$_->{team} eq $team && $_->{srun} eq $lookforrun} (@results))
                     {
-                        if (defined($lookforrun) && $results[$i]{srun} ne $lookforrun)
-                        {
-                            splice(@results, $i--, 1);
-                            next;
-                        }
-                        $results[$i]{software} .= '-P';
-                        $found = 1;
+                        die("Team '$team', primary system '$primary': did not find requested final run '$lookforrun'");
                     }
-                    else
-                    {
-                        splice(@results, $i--, 1);
-                        next;
-                    }
-                }
-                if (!$found)
-                {
-                    die("Team $team: primary software is defined but no final run was found");
                 }
             }
         }
