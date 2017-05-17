@@ -160,48 +160,13 @@ foreach my $team (keys(%teams))
 {
     if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) > 1)
     {
-        my $combination = combine_runs($teams{$team}{takeruns});
+        my $combination = combine_runs($teams{$team}{takeruns}, \%srun2erun);
         push(@results, $combination);
     }
 }
 # If we know what is the primary system of a team, remove results of other systems.
 # If we know what is the single final run of a team, remove results of other runs.
-foreach my $team (keys(%teams))
-{
-    if (exists($teams{$team}{primary}) && !$teams{$team}{withdraw})
-    {
-        my $primary = $teams{$team}{primary};
-        my $lookforrun;
-        if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1)
-        {
-            $lookforrun = $teams{$team}{takeruns}[0];
-        }
-        my $found = 0;
-        for (my $i = 0; $i <= $#results; $i++)
-        {
-            next unless ($results[$i]{team} eq $team);
-            if ($results[$i]{software} eq $primary)
-            {
-                if (defined($lookforrun) && $results[$i]{srun} ne $lookforrun)
-                {
-                    splice(@results, $i--, 1);
-                    next;
-                }
-                $results[$i]{software} .= '-P';
-                $found = 1;
-            }
-            else
-            {
-                splice(@results, $i--, 1);
-                next;
-            }
-        }
-        if (!$found)
-        {
-            die("Team $team: primary software is defined but no final run was found");
-        }
-    }
-}
+@results = remove_secondary_runs(@results);
 # Adding averages should happen after combining runs because at present the combining code looks at all LAS-F1 entries that are not 'total-LAS-F1'
 # (in the future they should rather look into the @alltbk list).
 # Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
@@ -362,6 +327,7 @@ sub read_prototext
 sub combine_runs
 {
     my $srunids = shift; # ref to list of system run ids
+    my $srun2erun = shift; # ref to hash of system-run-to-evaluation-run mapping
     if (scalar(@{$srunids}) < 2)
     {
         print STDERR ("Warning: Attempting to combine less than 2 runs. Will do nothing.\n");
@@ -371,9 +337,9 @@ sub combine_runs
     my @eruns;
     foreach my $srun (@{$srunids})
     {
-        if (exists($srun2erun{$srun}))
+        if (exists($srun2erun->{$srun}))
         {
-            push(@eruns, $srun2erun{$srun});
+            push(@eruns, $srun2erun->{$srun});
         }
         else
         {
@@ -437,6 +403,55 @@ sub combine_runs
         $combination{"total-$key"} = $sum{$key}/$nsets;
     }
     return \%combination;
+}
+
+
+
+#------------------------------------------------------------------------------
+# If we know what is the primary system of a team, remove results of other systems.
+# If we know what is the single final run of a team, remove results of other runs.
+#------------------------------------------------------------------------------
+sub remove_secondary_runs
+{
+    # This function reads the global hash %teams.
+    my @results = @_;
+    foreach my $team (keys(%teams))
+    {
+        if (exists($teams{$team}{primary}) && !$teams{$team}{withdraw})
+        {
+            my $primary = $teams{$team}{primary};
+            my $lookforrun;
+            if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1)
+            {
+                $lookforrun = $teams{$team}{takeruns}[0];
+            }
+            my $found = 0;
+            for (my $i = 0; $i <= $#results; $i++)
+            {
+                next unless ($results[$i]{team} eq $team);
+                if ($results[$i]{software} eq $primary)
+                {
+                    if (defined($lookforrun) && $results[$i]{srun} ne $lookforrun)
+                    {
+                        splice(@results, $i--, 1);
+                        next;
+                    }
+                    $results[$i]{software} .= '-P';
+                    $found = 1;
+                }
+                else
+                {
+                    splice(@results, $i--, 1);
+                    next;
+                }
+            }
+            if (!$found)
+            {
+                die("Team $team: primary software is defined but no final run was found");
+            }
+        }
+    }
+    return @results;
 }
 
 
