@@ -172,27 +172,27 @@ foreach my $team (keys(%teams))
 # Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
 if ($metric eq 'alltreebanks-LAS-F1')
 {
-    print('Macro-average of all ', scalar(@alltbk), ' treebanks: ', join(', ', @alltbk), "\n");
+    print('Macro-average LAS of all ', scalar(@alltbk), ' treebanks: ', join(', ', @alltbk), "\n");
     add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
 }
 elsif ($metric eq 'bigtreebanks-LAS-F1')
 {
-    print('Macro-average of the ', scalar(@bigtbk), ' big treebanks: ', join(', ', @bigtbk), "\n");
+    print('Macro-average LAS of the ', scalar(@bigtbk), ' big treebanks: ', join(', ', @bigtbk), "\n");
     add_average('bigtreebanks-LAS-F1', 'LAS-F1', \@bigtbk, \@results);
 }
 elsif ($metric eq 'smalltreebanks-LAS-F1')
 {
-    print('Macro-average of the ', scalar(@smltbk), ' small treebanks: ', join(', ', @smltbk), "\n");
+    print('Macro-average LAS of the ', scalar(@smltbk), ' small treebanks: ', join(', ', @smltbk), "\n");
     add_average('smalltreebanks-LAS-F1', 'LAS-F1', \@smltbk, \@results);
 }
 elsif ($metric eq 'pudtreebanks-LAS-F1')
 {
-    print('Macro-average of the ', scalar(@pudtbk), ' PUD treebanks (additional parallel test sets): ', join(', ', @pudtbk), "\n");
+    print('Macro-average LAS of the ', scalar(@pudtbk), ' PUD treebanks (additional parallel test sets): ', join(', ', @pudtbk), "\n");
     add_average('pudtreebanks-LAS-F1', 'LAS-F1', \@pudtbk, \@results);
 }
 elsif ($metric eq 'surtreebanks-LAS-F1')
 {
-    print('Macro-average of the ', scalar(@surtbk), ' surprise language treebanks: ', join(', ', @surtbk), "\n");
+    print('Macro-average LAS of the ', scalar(@surtbk), ' surprise language treebanks: ', join(', ', @surtbk), "\n");
     add_average('surtreebanks-LAS-F1', 'LAS-F1', \@surtbk, \@results);
 }
 # Print the results.
