@@ -464,6 +464,7 @@ sub remove_secondary_runs
                     die("Team $team: primary software is defined but no final run was found");
                 }
             }
+        }
     }
     return @results;
 }
