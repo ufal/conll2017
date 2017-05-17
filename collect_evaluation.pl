@@ -196,7 +196,21 @@ elsif ($metric eq 'surtreebanks-LAS-F1')
     add_average('surtreebanks-LAS-F1', 'LAS-F1', \@surtbk, \@results);
 }
 # Print the results.
-print_table($metric, @results);
+if ($metric eq 'pertreebank-LAS-F1')
+{
+    print("## Per treebank LAS\n\n\n\n");
+    foreach my $treebank (sort(@alltbk))
+    {
+        print("### $treebank\n\n");
+        print("<pre>\n");
+        print_table("$treebank-LAS-F1", @results);
+        print("</pre>\n\n\n\n");
+    }
+}
+else
+{
+    print_table($metric, @results);
+}
 
 
 
