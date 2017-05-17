@@ -168,6 +168,15 @@ foreach my $team (@teams)
         }
     }
 }
+my @bigtbk = qw(ar bg ca cs cs_cac cs_cltt cu da de el en en_lines en_partut es es_ancora et eu fa fi fi_ftb fr fr_sequoia gl got grc grc_proiel
+                he hi hu id it ja ko la_ittb la_proiel lv nl nl_lassysmall no_bokmaal no_nynorsk pl pt pt_br ro ru ru_syntagrus sk sl
+                sv sv_lines tr ur vi zh);
+my @smltbk = qw(fr_partut ga gl_treegal kk la sl_sst ug uk);
+my @pudtbk = qw(ar_pud cs_pud de_pud en_pud es_pud fi_pud fr_pud hi_pud it_pud ja_pud pt_pud ru_pud sv_pud tr_pud);
+my @surtbk = qw(bxr hsb kmr sme);
+my @alltbk = (@bigtbk, @smltbk, @pudtbk, @surtbk);
+# Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
+add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
 # Create a map from system run ids to corresponding evaluation runs.
 my %srun2erun;
 foreach my $result (@results)
@@ -393,4 +402,41 @@ sub combine_runs
         $combination{"total-$key"} = $sum{$key}/$nsets;
     }
     return \%combination;
+}
+
+
+
+#------------------------------------------------------------------------------
+# For every run in a list, computes a given average score and adds it to the
+# hash of scores of the run.
+#------------------------------------------------------------------------------
+sub add_average
+{
+    # Name of the average metric to be added, e.g. "Surprise-languages-LAS-F1".
+    my $tgtname = shift;
+    # Name of metric to average, e.g. "LAS-F1".
+    my $srcname = shift;
+    # Reference to list of treebanks to include, e.g. ['bxr', 'hsb', 'kmr', 'sme'].
+    my $treebanks = shift;
+    # Reference to list of runs to process.
+    my $runs = shift;
+    my $n = scalar(@{$treebanks});
+    die ("Cannot average over zero treebanks") if ($n==0);
+    # Hash the selected treebank codes for quick lookup.
+    my %htbks;
+    foreach my $treebank (@{$treebanks})
+    {
+        die ("Duplicate treebank code '$treebank' would skew the average") if (exists($htbks{$treebank}));
+        $htbks{$treebank}++;
+    }
+    foreach my $run (@{$runs})
+    {
+        my @selection = grep {m/^([^-]+)-(.+)$/; exists($htbks{$1}) && $2 eq $srcname} (keys(%{$run}));
+        my $sum = 0;
+        foreach my $key (@selection)
+        {
+            $sum += $run->{$key};
+        }
+        $run->{$tgtname} = $sum/$n;
+    }
 }
