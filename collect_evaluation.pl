@@ -417,39 +417,53 @@ sub remove_secondary_runs
     my @results = @_;
     foreach my $team (keys(%teams))
     {
-        if (exists($teams{$team}{primary}) && !$teams{$team}{withdraw})
+        if ($teams{$team}{withdraw})
         {
-            my $primary = $teams{$team}{primary};
-            my $lookforrun;
-            if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1)
+            # Remove all runs of all systems of the team.
+            @results = grep {$_->{team} ne $team} (@results);
+        }
+        else
+        {
+            if (exists($teams{$team}{primary}))
             {
-                $lookforrun = $teams{$team}{takeruns}[0];
-            }
-            my $found = 0;
-            for (my $i = 0; $i <= $#results; $i++)
-            {
-                next unless ($results[$i]{team} eq $team);
-                if ($results[$i]{software} eq $primary)
+                my $primary = $teams{$team}{primary};
+                # Remove all runs of secondary systems of this team.
+                @results = grep {$_->{team} ne $team || $_->{software} eq $primary} (@results);
+                # Sanity check: there must be at least one run of the primary system.
+                if (!grep {$_->{team} eq $team && $_->{software} eq $primary} (@results))
                 {
-                    if (defined($lookforrun) && $results[$i]{srun} ne $lookforrun)
+                    die("Team '$team': did not find any runs of the primary system '$primary'");
+                }
+                my $lookforrun;
+                if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) == 1)
+                {
+                    $lookforrun = $teams{$team}{takeruns}[0];
+                }
+                my $found = 0;
+                for (my $i = 0; $i <= $#results; $i++)
+                {
+                    next unless ($results[$i]{team} eq $team);
+                    if ($results[$i]{software} eq $primary)
+                    {
+                        if (defined($lookforrun) && $results[$i]{srun} ne $lookforrun)
+                        {
+                            splice(@results, $i--, 1);
+                            next;
+                        }
+                        $results[$i]{software} .= '-P';
+                        $found = 1;
+                    }
+                    else
                     {
                         splice(@results, $i--, 1);
                         next;
                     }
-                    $results[$i]{software} .= '-P';
-                    $found = 1;
                 }
-                else
+                if (!$found)
                 {
-                    splice(@results, $i--, 1);
-                    next;
+                    die("Team $team: primary software is defined but no final run was found");
                 }
             }
-            if (!$found)
-            {
-                die("Team $team: primary software is defined but no final run was found");
-            }
-        }
     }
     return @results;
 }
