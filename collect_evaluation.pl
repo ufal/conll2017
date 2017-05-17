@@ -143,40 +143,7 @@ my %secondary =
 my $testpath_tira = '/media/conll17-ud-test-2017-05-09';
 my $testpath_ufal = '/net/work/people/zeman/unidep/conll2017-test-runs/conll17-ud-test-2017-05-09';
 my $testpath = (-f $tespath_tira) ? $testpath_tira : $testpath_ufal;
-my @teams = dzsys::get_subfolders($testpath);
-my @results;
-foreach my $team (@teams)
-{
-    next if ($teams{$team}{withdraw});
-    my $teampath = "$testpath/$team";
-    my @runs = dzsys::get_subfolders($teampath);
-    foreach my $run (@runs)
-    {
-        my $runpath = "$teampath/$run";
-        if (-f "$runpath/output/evaluation.prototext")
-        {
-            my $hash = read_prototext("$runpath/output/evaluation.prototext");
-            if ($hash->{'total-LAS-F1'} > 0)
-            {
-                $hash->{team} = $team;
-                $hash->{erun} = $run;
-                # Get the identifier of the evaluated ("input") run.
-                my $irunline = `grep inputRun $runpath/run.prototext`;
-                if ($irunline =~ m/inputRun:\s*"([^"]*)"/) # "
-                {
-                    $hash->{srun} = $1;
-                    # Get the identifier of the software that generated the input run.
-                    my $swline = `grep softwareId $teampath/$hash->{srun}/run.prototext`;
-                    if ($swline =~ m/softwareId:\s*"([^"]*)"/) # "
-                    {
-                        $hash->{software} = $1;
-                    }
-                }
-                push(@results, $hash);
-            }
-        }
-    }
-}
+my @results = read_runs($testpath);
 # Create a map from system run ids to corresponding evaluation runs.
 my %srun2erun;
 foreach my $result (@results)
@@ -306,6 +273,51 @@ foreach my $result (@results)
     # Truncate long lists of combined runs.
     $runs = $final.substr($runs, 0, 50).'...' if (length($runs) > 50); ###!!! currently not shown in the table!
     printf("%2d. %s\t%s\t%5.2f%s\n", $i, $name, $result->{software}, $result->{$metric}, $tag);
+}
+
+
+
+#------------------------------------------------------------------------------
+# Reads output of evaluation runs from a specified folder.
+#------------------------------------------------------------------------------
+sub read_runs
+{
+    my $testpath = shift;
+    my @teams = dzsys::get_subfolders($testpath);
+    my @results;
+    foreach my $team (@teams)
+    {
+        next if ($teams{$team}{withdraw});
+        my $teampath = "$testpath/$team";
+        my @runs = dzsys::get_subfolders($teampath);
+        foreach my $run (@runs)
+        {
+            my $runpath = "$teampath/$run";
+            if (-f "$runpath/output/evaluation.prototext")
+            {
+                my $hash = read_prototext("$runpath/output/evaluation.prototext");
+                if ($hash->{'total-LAS-F1'} > 0)
+                {
+                    $hash->{team} = $team;
+                    $hash->{erun} = $run;
+                    # Get the identifier of the evaluated ("input") run.
+                    my $irunline = `grep inputRun $runpath/run.prototext`;
+                    if ($irunline =~ m/inputRun:\s*"([^"]*)"/) # "
+                    {
+                        $hash->{srun} = $1;
+                        # Get the identifier of the software that generated the input run.
+                        my $swline = `grep softwareId $teampath/$hash->{srun}/run.prototext`;
+                        if ($swline =~ m/softwareId:\s*"([^"]*)"/) # "
+                        {
+                            $hash->{software} = $1;
+                        }
+                    }
+                    push(@results, $hash);
+                }
+            }
+        }
+    }
+    return @results;
 }
 
 
