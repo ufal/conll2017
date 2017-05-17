@@ -23,6 +23,15 @@ GetOptions
 
 
 
+my @bigtbk = qw(ar bg ca cs cs_cac cs_cltt cu da de el en en_lines en_partut es es_ancora et eu fa fi fi_ftb fr fr_sequoia gl got grc grc_proiel
+                he hi hr hu id it ja ko la_ittb la_proiel lv nl nl_lassysmall no_bokmaal no_nynorsk pl pt pt_br ro ru ru_syntagrus sk sl
+                sv sv_lines tr ur vi zh);
+my @smltbk = qw(fr_partut ga gl_treegal kk la sl_sst ug uk);
+my @pudtbk = qw(ar_pud cs_pud de_pud en_pud es_pud fi_pud fr_pud hi_pud it_pud ja_pud pt_pud ru_pud sv_pud tr_pud);
+my @surtbk = qw(bxr hsb kmr sme);
+my @alltbk = (@bigtbk, @smltbk, @pudtbk, @surtbk);
+# Sanity check: There are 81 treebanks in total.
+die('Expected 81 treebanks, found '.scalar(@alltbk)) if (scalar(@alltbk) != 81);
 # If takeruns is present, it is the sequence of system runs (not evaluation runs) that should be combined.
 # Otherwise, we should take the last complete run (all files have nonzero scores) of the primary system.
 # If no run is complete and no combination is defined, should we take the best-scoring run of the primary system?
@@ -168,15 +177,6 @@ foreach my $team (@teams)
         }
     }
 }
-my @bigtbk = qw(ar bg ca cs cs_cac cs_cltt cu da de el en en_lines en_partut es es_ancora et eu fa fi fi_ftb fr fr_sequoia gl got grc grc_proiel
-                he hi hu id it ja ko la_ittb la_proiel lv nl nl_lassysmall no_bokmaal no_nynorsk pl pt pt_br ro ru ru_syntagrus sk sl
-                sv sv_lines tr ur vi zh);
-my @smltbk = qw(fr_partut ga gl_treegal kk la sl_sst ug uk);
-my @pudtbk = qw(ar_pud cs_pud de_pud en_pud es_pud fi_pud fr_pud hi_pud it_pud ja_pud pt_pud ru_pud sv_pud tr_pud);
-my @surtbk = qw(bxr hsb kmr sme);
-my @alltbk = (@bigtbk, @smltbk, @pudtbk, @surtbk);
-# Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
-add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
 # Create a map from system run ids to corresponding evaluation runs.
 my %srun2erun;
 foreach my $result (@results)
@@ -235,6 +235,10 @@ foreach my $team (keys(%teams))
         }
     }
 }
+# Adding averages should happen after combining runs because at present the combining code looks at all LAS-F1 entries that are not 'total-LAS-F1'
+# (in the future they should rather look into the @alltbk list).
+# Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
+add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
 # Print the results.
 @results = sort {$b->{$metric} <=> $a->{$metric}} (@results);
 my %teammap;
