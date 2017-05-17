@@ -238,7 +238,26 @@ foreach my $team (keys(%teams))
 # Adding averages should happen after combining runs because at present the combining code looks at all LAS-F1 entries that are not 'total-LAS-F1'
 # (in the future they should rather look into the @alltbk list).
 # Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
-add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
+if ($metric eq 'alltreebanks-LAS-F1')
+{
+    add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
+}
+elsif ($metric eq 'bigtreebanks-LAS-F1')
+{
+    add_average('bigtreebanks-LAS-F1', 'LAS-F1', \@bigtbk, \@results);
+}
+elsif ($metric eq 'smalltreebanks-LAS-F1')
+{
+    add_average('smalltreebanks-LAS-F1', 'LAS-F1', \@smltbk, \@results);
+}
+elsif ($metric eq 'pudtreebanks-LAS-F1')
+{
+    add_average('pudtreebanks-LAS-F1', 'LAS-F1', \@pudtbk, \@results);
+}
+elsif ($metric eq 'surtreebanks-LAS-F1')
+{
+    add_average('surtreebanks-LAS-F1', 'LAS-F1', \@surtbk, \@results);
+}
 # Print the results.
 @results = sort {$b->{$metric} <=> $a->{$metric}} (@results);
 my %teammap;
