@@ -469,6 +469,15 @@ sub copy_erun_files
         {
             my $srcrunpath = "$srcpath/$erun->{team}/$partrun";
             my $tgtrunpath = "$tgtpath/$erun->{team}/$partrun";
+            ###!!! The CLCL2 and fbaml2 virtual machines are secondary for the CLCL and fbaml teams. Watch for confused paths.
+            if (!-d $srcrunpath)
+            {
+                $srcrunpath = "$srcpath/$erun->{team}2/$partrun";
+                if (!-d $srcrunpath)
+                {
+                    die("Cannot find $srcrunpath");
+                }
+            }
             system("mkdir -p $tgtrunpath/output");
             die("Cannot create $tgtrunpath/output") if (!-d "$tgtrunpath/output");
             system("cp $srcrunpath/run.prototext $tgtrunpath");
