@@ -15,10 +15,12 @@ use dzsys; # Dan's library for file system operations
 
 my $metric = 'total-LAS-F1';
 my $allresults = 0; # display multiple results per team
+my $copy_filtered_eruns = 0;
 GetOptions
 (
     'metric=s' => \$metric,
-    'allresults' => \$allresults
+    'allresults' => \$allresults,
+    'copy' => \$copy_filtered_eruns
 );
 
 
@@ -167,6 +169,10 @@ foreach my $team (keys(%teams))
 # If we know what is the primary system of a team, remove results of other systems.
 # If we know what is the single final run of a team, remove results of other runs.
 @results = remove_secondary_runs(@results);
+if ($copy_filtered_eruns)
+{
+    copy_erun_files($testpath, '/net/work/people/zeman/unidep/conll2017-test-runs/filtered-eruns', @results);
+}
 # Adding averages should happen after combining runs because at present the combining code looks at all LAS-F1 entries that are not 'total-LAS-F1'
 # (in the future they should rather look into the @alltbk list).
 # Print the results.
@@ -440,6 +446,36 @@ sub remove_secondary_runs
         }
     }
     return @results;
+}
+
+
+
+#------------------------------------------------------------------------------
+# Copies the important files used as input for this script to a new folder.
+# This way we can filter primary final runs, then copy them for processing
+# offline, without having to carry all the heavy-weight CoNLL-U outputs of
+# system runs.
+#------------------------------------------------------------------------------
+sub copy_erun_files
+{
+    my $srcpath = shift;
+    my $tgtpath = shift;
+    my @eruns = @_;
+    foreach my $erun (@eruns)
+    {
+        my $srcrunpath = "$srcpath/$erun->{team}/$erun->{erun}";
+        my $tgtrunpath = "$tgtpath/$erun->{team}/$erun->{erun}";
+        if (!-d $tgtrunpath)
+        {
+            mkdir($tgtrunpath) or die("Cannot create $tgtrunpath: $!");
+        }
+        if (!-d "$tgtrunpath/output")
+        {
+            mkdir("$tgtrunpath/output") or die("Cannot create $tgtrunpath/output: $!");
+        }
+        system("cp $srcrunpath/run.prototext $tgtrunpath");
+        system("cp $srcrunpath/output/evaluation.prototext $tgtrunpath/output");
+    }
 }
 
 
