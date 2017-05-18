@@ -144,7 +144,8 @@ my %secondary =
 # The output of the test runs is mounted in the master VM at this point:
 my $testpath_tira = '/media/conll17-ud-test-2017-05-09';
 my $testpath_ufal = '/net/work/people/zeman/unidep/conll2017-test-runs/conll17-ud-test-2017-05-09';
-my $testpath = (-f $tespath_tira) ? $testpath_tira : $testpath_ufal;
+my $testpath_dan  = 'C:/Users/Dan/Documents/Lingvistika/Projekty/universal-dependencies/conll2017-test-runs/filtered-eruns';
+my $testpath = (-d $tespath_tira) ? $testpath_tira : (-d $testpath_ufal) ? $testpath_ufal : $testpath_dan;
 my @results = read_runs($testpath);
 # Create a map from system run ids to corresponding evaluation runs.
 my %srun2erun;
@@ -263,15 +264,34 @@ sub read_runs
                     $hash->{team} = $team;
                     $hash->{erun} = $run;
                     # Get the identifier of the evaluated ("input") run.
-                    my $irunline = `grep inputRun $runpath/run.prototext`;
+                    my $irunline;
+                    open(RUN, "$runpath/run.prototext") or die("Cannot read $runpath/run.prototext: $!");
+                    while(<RUN>)
+                    {
+                        if (m/inputRun/)
+                        {
+                            $irunline = $_;
+                            last;
+                        }
+                    }
+                    close(RUN);
                     if ($irunline =~ m/inputRun:\s*"([^"]*)"/) # "
                     {
                         $hash->{srun} = $1;
                         # Get the identifier of the software that generated the input run.
-                        my $swline = `grep softwareId $teampath/$hash->{srun}/run.prototext`;
-                        if ($swline =~ m/softwareId:\s*"([^"]*)"/) # "
+                        # If we work offline with the filtered erun data, assume that it is the primary software
+                        # (because we do not have a copy of the srun and cannot look at the software id).
+                        if (-f "$teampath/$hash->{srun}/run.prototext")
                         {
-                            $hash->{software} = $1;
+                            my $swline = `grep softwareId $teampath/$hash->{srun}/run.prototext`;
+                            if ($swline =~ m/softwareId:\s*"([^"]*)"/) # "
+                            {
+                                $hash->{software} = $1;
+                            }
+                        }
+                        elsif (exists($teams{$team}{primary}))
+                        {
+                            $hash->{software} = $teams{$team}{primary};
                         }
                     }
                     push(@results, $hash);
