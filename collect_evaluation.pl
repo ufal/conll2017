@@ -207,10 +207,11 @@ else
         print('Macro-average LAS of all ', scalar(@alltbk), ' treebanks: ', join(', ', @alltbk), "\n");
         add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
     }
-    elsif ($metric eq 'bigtreebanks-LAS-F1')
+    elsif ($metric =~ m/^bigtreebanks-(LAS-F1|UAS-F1)$/)
     {
-        print('Macro-average LAS of the ', scalar(@bigtbk), ' big treebanks: ', join(', ', @bigtbk), "\n");
-        add_average('bigtreebanks-LAS-F1', 'LAS-F1', \@bigtbk, \@results);
+        my $coremetric = $1;
+        print("Macro-average $coremetric of the ", scalar(@bigtbk), ' big treebanks: ', join(', ', @bigtbk), "\n");
+        add_average("bigtreebanks-$coremetric", $coremetric, \@bigtbk, \@results);
     }
     elsif ($metric eq 'smalltreebanks-LAS-F1')
     {
