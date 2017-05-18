@@ -476,11 +476,6 @@ sub add_average
             $sum += $run->{$key};
         }
         $run->{$tgtname} = $sum/$n;
-        ###!!! DEBUG:
-        if ($tgtname eq 'bigtreebanks-UAS-F1')
-        {
-            die("$run->{team} bigtreebanks-UAS-F1 = $run->{$tgtname}");
-        }
     }
 }
 
