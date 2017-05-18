@@ -185,9 +185,9 @@ if ($metric =~ m/^pertreebank-(LAS-F1|UAS-F1)$/)
     my $pudexpl = "Macro-average $coremetric of the ".scalar(@pudtbk)." PUD treebanks (additional parallel test sets): ".join(', ', @pudtbk).'. '.
         "These are languages for which there exists at least one big training treebank. ".
         "However, these test sets have been produced separately and their domain may differ.";
-    my @smallexpl = "Macro-average $coremetric of the ".scalar(@smltbk)." small treebanks: ".join(', ', @smltbk).'. '.
+    my $smallexpl = "Macro-average $coremetric of the ".scalar(@smltbk)." small treebanks: ".join(', ', @smltbk).'. '.
         "These treebanks lack development data and some of them have very little training data (especially Uyghur and Kazakh).";
-    my @surexpl = "Macro-average $coremetric of the ".scalar(@surtbk)." surprise language treebanks: ".join(', ', @surtbk).'.';
+    my $surexpl = "Macro-average $coremetric of the ".scalar(@surtbk)." surprise language treebanks: ".join(', ', @surtbk).'.';
     print_table_markdown("## All treebanks", "alltreebanks-$coremetric", @results);
     print_table_markdown("## Big treebanks only\n\n$bigexpl", "$bigtreebanks-$coremetric", @results);
     print_table_markdown("## PUD treebanks only\n\n$pudexpl", "$pudtreebanks-$coremetric", @results);
