@@ -189,10 +189,10 @@ if ($metric =~ m/^pertreebank-(LAS-F1|UAS-F1)$/)
         "These treebanks lack development data and some of them have very little training data (especially Uyghur and Kazakh).";
     my $surexpl = "Macro-average $coremetric of the ".scalar(@surtbk)." surprise language treebanks: ".join(', ', @surtbk).'.';
     print_table_markdown("## All treebanks", "alltreebanks-$coremetric", @results);
-    print_table_markdown("## Big treebanks only\n\n$bigexpl", "$bigtreebanks-$coremetric", @results);
-    print_table_markdown("## PUD treebanks only\n\n$pudexpl", "$pudtreebanks-$coremetric", @results);
+    print_table_markdown("## Big treebanks only\n\n$bigexpl", "bigtreebanks-$coremetric", @results);
+    print_table_markdown("## PUD treebanks only\n\n$pudexpl", "pudtreebanks-$coremetric", @results);
     print_table_markdown("## Small treebanks only\n\n$smallexpl", "smalltreebanks-$coremetric", @results);
-    print_table_markdown("## Surprise languages only\n\n$surexpl", "$surtreebanks-$coremetric", @results);
+    print_table_markdown("## Surprise languages only\n\n$surexpl", "surtreebanks-$coremetric", @results);
     print("## Per treebank $coremetric\n\n\n\n");
     foreach my $treebank (sort(@alltbk))
     {
