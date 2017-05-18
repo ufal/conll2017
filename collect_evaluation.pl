@@ -186,7 +186,7 @@ if ($metric =~ m/^pertreebank-(CLAS-F1|LAS-F1|UAS-F1|Sentences-F1|Words-F1|Token
     add_average("smalltreebanks-$coremetric", $coremetric, \@smltbk, \@results);
     add_average("pudtreebanks-$coremetric", $coremetric, \@pudtbk, \@results);
     add_average("surtreebanks-$coremetric", $coremetric, \@surtbk, \@results);
-    my $bigexpl = "Macro-average $coremetric of the ".scalar(@alltbk)." big treebanks: ".join(', ', @alltbk).'. '.
+    my $bigexpl = "Macro-average $coremetric of the ".scalar(@bigtbk)." big treebanks: ".join(', ', @bigtbk).'. '.
         "These are the treebanks that have development data available, hence these results should be comparable ".
         "to the performance of the systems on the development data.";
     my $pudexpl = "Macro-average $coremetric of the ".scalar(@pudtbk)." PUD treebanks (additional parallel test sets): ".join(', ', @pudtbk).'. '.
