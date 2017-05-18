@@ -178,7 +178,7 @@ if ($copy_filtered_eruns)
 # (in the future they should rather look into the @alltbk list).
 # Print the results.
 # Print them in MarkDown if the long, per-treebank breakdown is requested.
-if ($metric =~ m/^pertreebank-(CLAS-F1|LAS-F1|UAS-F1|Sentences-F1|Words-F1|Tokens-F1)$/)
+if ($metric =~ m/^pertreebank-(CLAS-F1|LAS-F1|UAS-F1|UPOS-F1|XPOS-F1|Feats-F1|AllTags-F1|Lemmas-F1|Sentences-F1|Words-F1|Tokens-F1)$/)
 {
     my $coremetric = $1;
     add_average("alltreebanks-$coremetric", $coremetric, \@alltbk, \@results);
