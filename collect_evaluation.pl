@@ -463,12 +463,17 @@ sub copy_erun_files
     my @eruns = @_;
     foreach my $erun (@eruns)
     {
-        my $srcrunpath = "$srcpath/$erun->{team}/$erun->{erun}";
-        my $tgtrunpath = "$tgtpath/$erun->{team}/$erun->{erun}";
-        system("mkdir -p $tgtrunpath/output");
-        die("Cannot create $tgtrunpath/output") if (!-d "$tgtrunpath/output");
-        system("cp $srcrunpath/run.prototext $tgtrunpath");
-        system("cp $srcrunpath/output/evaluation.prototext $tgtrunpath/output");
+        # It can be a combined erun that does not exist in the source path!
+        my @partruns = split(/\+/, $erun->{erun});
+        foreach my $partrun (@partruns)
+        {
+            my $srcrunpath = "$srcpath/$erun->{team}/$partrun";
+            my $tgtrunpath = "$tgtpath/$erun->{team}/$partrun";
+            system("mkdir -p $tgtrunpath/output");
+            die("Cannot create $tgtrunpath/output") if (!-d "$tgtrunpath/output");
+            system("cp $srcrunpath/run.prototext $tgtrunpath");
+            system("cp $srcrunpath/output/evaluation.prototext $tgtrunpath/output");
+        }
     }
 }
 
