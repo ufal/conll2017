@@ -169,46 +169,64 @@ foreach my $team (keys(%teams))
 @results = remove_secondary_runs(@results);
 # Adding averages should happen after combining runs because at present the combining code looks at all LAS-F1 entries that are not 'total-LAS-F1'
 # (in the future they should rather look into the @alltbk list).
-# Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
-if ($metric eq 'alltreebanks-LAS-F1')
-{
-    print('Macro-average LAS of all ', scalar(@alltbk), ' treebanks: ', join(', ', @alltbk), "\n");
-    add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
-}
-elsif ($metric eq 'bigtreebanks-LAS-F1')
-{
-    print('Macro-average LAS of the ', scalar(@bigtbk), ' big treebanks: ', join(', ', @bigtbk), "\n");
-    add_average('bigtreebanks-LAS-F1', 'LAS-F1', \@bigtbk, \@results);
-}
-elsif ($metric eq 'smalltreebanks-LAS-F1')
-{
-    print('Macro-average LAS of the ', scalar(@smltbk), ' small treebanks: ', join(', ', @smltbk), "\n");
-    add_average('smalltreebanks-LAS-F1', 'LAS-F1', \@smltbk, \@results);
-}
-elsif ($metric eq 'pudtreebanks-LAS-F1')
-{
-    print('Macro-average LAS of the ', scalar(@pudtbk), ' PUD treebanks (additional parallel test sets): ', join(', ', @pudtbk), "\n");
-    add_average('pudtreebanks-LAS-F1', 'LAS-F1', \@pudtbk, \@results);
-}
-elsif ($metric eq 'surtreebanks-LAS-F1')
-{
-    print('Macro-average LAS of the ', scalar(@surtbk), ' surprise language treebanks: ', join(', ', @surtbk), "\n");
-    add_average('surtreebanks-LAS-F1', 'LAS-F1', \@surtbk, \@results);
-}
 # Print the results.
-if ($metric eq 'pertreebank-LAS-F1')
+# Print them in MarkDown if the long, per-treebank breakdown is requested.
+if ($metric =~ m/^pertreebank-(LAS-F1|UAS-F1)$/)
 {
-    print("## Per treebank LAS\n\n\n\n");
+    my $coremetric = $1;
+    add_average("alltreebanks-$coremetric", $coremetric, \@alltbk, \@results);
+    add_average("bigtreebanks-$coremetric", $coremetric, \@bigtbk, \@results);
+    add_average("smalltreebanks-$coremetric", $coremetric, \@smltbk, \@results);
+    add_average("pudtreebanks-$coremetric", $coremetric, \@pudtbk, \@results);
+    add_average("surtreebanks-$coremetric", $coremetric, \@surtbk, \@results);
+    my $bigexpl = "Macro-average $coremetric of the ".scalar(@alltbk)." big treebanks: ".join(', ', @alltbk).'. '.
+        "These are the treebanks that have development data available, hence these results should be comparable ".
+        "to the performance of the systems on the development data.";
+    my $pudexpl = "Macro-average $coremetric of the ".scalar(@pudtbk)." PUD treebanks (additional parallel test sets): ".join(', ', @pudtbk).'. '.
+        "These are languages for which there exists at least one big training treebank. ".
+        "However, these test sets have been produced separately and their domain may differ.";
+    my @smallexpl = "Macro-average $coremetric of the ".scalar(@smltbk)." small treebanks: ".join(', ', @smltbk).'. '.
+        "These treebanks lack development data and some of them have very little training data (especially Uyghur and Kazakh).";
+    my @surexpl = "Macro-average $coremetric of the ".scalar(@surtbk)." surprise language treebanks: ".join(', ', @surtbk).'.';
+    print_table_markdown("## All treebanks", "alltreebanks-$coremetric", @results);
+    print_table_markdown("## Big treebanks only\n\n$bigexpl", "$bigtreebanks-$coremetric", @results);
+    print_table_markdown("## PUD treebanks only\n\n$pudexpl", "$pudtreebanks-$coremetric", @results);
+    print_table_markdown("## Small treebanks only\n\n$smallexpl", "smalltreebanks-$coremetric", @results);
+    print_table_markdown("## Surprise languages only\n\n$surexpl", "$surtreebanks-$coremetric", @results);
+    print("## Per treebank $coremetric\n\n\n\n");
     foreach my $treebank (sort(@alltbk))
     {
-        print("### $treebank\n\n");
-        print("<pre>\n");
-        print_table("$treebank-LAS-F1", @results);
-        print("</pre>\n\n\n\n");
+        print_table_markdown("### $treebank", "$treebank-$coremetric", @results);
     }
 }
 else
 {
+    # Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
+    if ($metric eq 'alltreebanks-LAS-F1')
+    {
+        print('Macro-average LAS of all ', scalar(@alltbk), ' treebanks: ', join(', ', @alltbk), "\n");
+        add_average('alltreebanks-LAS-F1', 'LAS-F1', \@alltbk, \@results);
+    }
+    elsif ($metric eq 'bigtreebanks-LAS-F1')
+    {
+        print('Macro-average LAS of the ', scalar(@bigtbk), ' big treebanks: ', join(', ', @bigtbk), "\n");
+        add_average('bigtreebanks-LAS-F1', 'LAS-F1', \@bigtbk, \@results);
+    }
+    elsif ($metric eq 'smalltreebanks-LAS-F1')
+    {
+        print('Macro-average LAS of the ', scalar(@smltbk), ' small treebanks: ', join(', ', @smltbk), "\n");
+        add_average('smalltreebanks-LAS-F1', 'LAS-F1', \@smltbk, \@results);
+    }
+    elsif ($metric eq 'pudtreebanks-LAS-F1')
+    {
+        print('Macro-average LAS of the ', scalar(@pudtbk), ' PUD treebanks (additional parallel test sets): ', join(', ', @pudtbk), "\n");
+        add_average('pudtreebanks-LAS-F1', 'LAS-F1', \@pudtbk, \@results);
+    }
+    elsif ($metric eq 'surtreebanks-LAS-F1')
+    {
+        print('Macro-average LAS of the ', scalar(@surtbk), ' surprise language treebanks: ', join(', ', @surtbk), "\n");
+        add_average('surtreebanks-LAS-F1', 'LAS-F1', \@surtbk, \@results);
+    }
     print_table($metric, @results);
 }
 
@@ -458,6 +476,22 @@ sub add_average
         }
         $run->{$tgtname} = $sum/$n;
     }
+}
+
+
+
+#------------------------------------------------------------------------------
+# A wrapper that prints a table + its heading in MarkDown.
+#------------------------------------------------------------------------------
+sub print_table_markdown
+{
+    my $heading = shift; # including the level indication, e.g. "## Big treebanks"
+    my $metric = shift;
+    my @results = @_;
+    print("$heading\n\n");
+    print("<pre>\n");
+    print_table($metric, @results);
+    print("</pre>\n\n\n\n");
 }
 
 
