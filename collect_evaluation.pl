@@ -465,14 +465,8 @@ sub copy_erun_files
     {
         my $srcrunpath = "$srcpath/$erun->{team}/$erun->{erun}";
         my $tgtrunpath = "$tgtpath/$erun->{team}/$erun->{erun}";
-        if (!-d $tgtrunpath)
-        {
-            mkdir($tgtrunpath) or die("Cannot create $tgtrunpath: $!");
-        }
-        if (!-d "$tgtrunpath/output")
-        {
-            mkdir("$tgtrunpath/output") or die("Cannot create $tgtrunpath/output: $!");
-        }
+        system("mkdir -p $tgtrunpath/output");
+        die("Cannot create $tgtrunpath/output") if (!-d "$tgtrunpath/output");
         system("cp $srcrunpath/run.prototext $tgtrunpath");
         system("cp $srcrunpath/output/evaluation.prototext $tgtrunpath/output");
     }
