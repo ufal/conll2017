@@ -472,12 +472,22 @@ sub print_table
     my @results = sort {$b->{$metric} <=> $a->{$metric}} (@_);
     my %teammap;
     my $i = 0;
+    my $last_value;
+    my $last_rank;
     foreach my $result (@results)
     {
         my $uniqueteam = $result->{team};
         $uniqueteam = $secondary{$uniqueteam} if (exists($secondary{$uniqueteam}));
         next if (!$allresults && exists($teammap{$uniqueteam}));
         $i++;
+        # Hide rank if it should be same as the previous system.
+        my $rank = '';
+        if (!defined($last_value) || $result->{$metric} != $last_value)
+        {
+            $last_value = $result->{$metric};
+            $last_rank = $i;
+            $rank = $i.'.';
+        }
         $teammap{$uniqueteam}++;
         my $name = exists($teams{$uniqueteam}{printname}) ? $teams{$uniqueteam}{printname} : $uniqueteam;
         $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
@@ -515,6 +525,6 @@ sub print_table
         my $runs = "$result->{srun} => $result->{erun}";
         # Truncate long lists of combined runs.
         $runs = $final.substr($runs, 0, 50).'...' if (length($runs) > 50); ###!!! currently not shown in the table!
-        printf("%2d. %s\t%s\t%5.2f%s\n", $i, $name, $result->{software}, $result->{$metric}, $tag);
+        printf("%3s %s\t%s\t%5.2f%s\n", $rank, $name, $result->{software}, $result->{$metric}, $tag);
     }
 }
