@@ -147,7 +147,7 @@ my %secondary =
 my $testpath_tira = '/media/conll17-ud-test-2017-05-09';
 my $testpath_ufal = '/net/work/people/zeman/unidep/conll2017-test-runs/conll17-ud-test-2017-05-09';
 my $testpath_dan  = 'C:/Users/Dan/Documents/Lingvistika/Projekty/universal-dependencies/conll2017-test-runs/filtered-eruns';
-my $testpath = (-d $tespath_tira) ? $testpath_tira : (-d $testpath_ufal) ? $testpath_ufal : $testpath_dan;
+my $testpath = (-d $testpath_tira) ? $testpath_tira : (-d $testpath_ufal) ? $testpath_ufal : $testpath_dan;
 my @results = read_runs($testpath);
 # Create a map from system run ids to corresponding evaluation runs.
 my %srun2erun;
