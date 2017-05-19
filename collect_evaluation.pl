@@ -14,11 +14,13 @@ use dzsys; # Dan's library for file system operations
 
 
 my $metric = 'total-LAS-F1';
+my $bestresults = 0; # display best result of each team regardless whether it is the final run of the primary system
 my $allresults = 0; # display multiple results per team
 my $copy_filtered_eruns = 0;
 GetOptions
 (
     'metric=s' => \$metric,
+    'bestresults' => \$bestresults,
     'allresults' => \$allresults,
     'copy' => \$copy_filtered_eruns
 );
@@ -163,13 +165,16 @@ foreach my $team (keys(%teams))
 {
     if (exists($teams{$team}{takeruns}) && scalar(@{$teams{$team}{takeruns}}) > 1)
     {
-        my $combination = combine_runs($teams{$team}{takeruns}, \%srun2erun);
+        my $combination = combine_runs($teams{$team}{takeruns}, \%srun2erun, \@alltbk);
         push(@results, $combination);
     }
 }
 # If we know what is the primary system of a team, remove results of other systems.
 # If we know what is the single final run of a team, remove results of other runs.
-@results = remove_secondary_runs(@results);
+unless ($allresults || $bestresults)
+{
+    @results = remove_secondary_runs(@results);
+}
 if ($copy_filtered_eruns)
 {
     copy_erun_files($testpath, '/net/work/people/zeman/unidep/conll2017-test-runs/filtered-eruns', @results);
@@ -345,6 +350,7 @@ sub combine_runs
 {
     my $srunids = shift; # ref to list of system run ids
     my $srun2erun = shift; # ref to hash of system-run-to-evaluation-run mapping
+    my $alltbk = shift; # ref to list of all test treebanks
     if (scalar(@{$srunids}) < 2)
     {
         print STDERR ("Warning: Attempting to combine less than 2 runs. Will do nothing.\n");
@@ -385,7 +391,8 @@ sub combine_runs
     foreach my $erun (@eruns)
     {
         my @keys = sort(keys(%{$erun}));
-        my @sets = map {my $x = $_; $x =~ s/-LAS-F1$//; $x} (grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (@keys));
+        #my @sets = map {my $x = $_; $x =~ s/-LAS-F1$//; $x} (grep {m/^(.+)-LAS-F1$/ && $1 ne 'total'} (@keys));
+        my @sets = @{$alltbk};
         my %from_here = ('erun' => $erun->{erun}, 'sets' => []);
         push(@what_from_where, \%from_here);
         foreach my $set (@sets)
@@ -589,7 +596,16 @@ sub print_table
         }
         $teammap{$uniqueteam}++;
         my $name = exists($teams{$uniqueteam}{printname}) ? $teams{$uniqueteam}{printname} : $uniqueteam;
-        $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x40), 0, 40);
+        $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x38), 0, 40);
+        my $software = ' ' x 9;
+        if (exists($result->{software}))
+        {
+            $software = $result->{software};
+            if ($result->{software} eq $teams{$uniqueteam}{primary})
+            {
+                $software .= '-P';
+            }
+        }
         # If we are showing the total metric, also report whether all partial numbers are non-zero.
         my $tag = '';
         if ($metric eq 'total-LAS-F1')
@@ -617,13 +633,22 @@ sub print_table
             }
         }
         my $final = '     ';
-        if (exists($teams{$result->{team}}{takeruns}) && scalar(@{$teams{$result->{team}}{takeruns}})==1 && $result->{srun} eq $teams{$result->{team}}{takeruns}[0])
+        if (exists($teams{$uniqueteam}{takeruns}))
         {
-            $final = 'Fin: ';
+            ###!!! Assume that a combined run is always final (i.e. there is at most one combined run per team).
+            if(scalar(@{$teams{$uniqueteam}{takeruns}})==1 && $result->{srun} eq $teams{$uniqueteam}{takeruns}[0] ||
+               scalar(@{$teams{$uniqueteam}{takeruns}})>1 && $result->{srun} =~ m/\+/)
+            {
+                $final = 'Fin: ';
+            }
         }
-        my $runs = "$result->{srun} => $result->{erun}";
-        # Truncate long lists of combined runs.
-        $runs = $final.substr($runs, 0, 50).'...' if (length($runs) > 50); ###!!! currently not shown in the table!
-        printf("%3s %s\t%s\t%5.2f%s\n", $rank, $name, $result->{software}, $result->{$metric}, $tag);
+        my $runs = '';
+        if ($allresults || $bestresults)
+        {
+            $runs = "\t$final$result->{srun} => $result->{erun}";
+            # Truncate long lists of combined runs.
+            $runs = substr($runs, 0, 50).'...' if (length($runs) > 50);
+        }
+        printf("%3s %s\t%s\t%5.2f%s%s\n", $rank, $name, $software, $result->{$metric}, $tag, $runs);
     }
 }
