@@ -649,6 +649,6 @@ sub print_table
             # Truncate long lists of combined runs.
             $runs = substr($runs, 0, 50).'...' if (length($runs) > 50);
         }
-        printf("%3s %s\t%s\t%5.2f%s%s\n", $rank, $name, $software, $result->{$metric}, $tag, $runs);
+        printf("%4s %s\t%s\t%5.2f%s%s\n", $rank, $name, $software, $result->{$metric}, $tag, $runs);
     }
 }
