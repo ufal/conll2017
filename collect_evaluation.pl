@@ -224,7 +224,7 @@ elsif ($metric eq 'ranktreebanks')
         $tbk .= ' ' x (13-length($tbk));
         my $team = $treebanks->{$key}{'teammax-LAS-F1'};
         $team .= ' ' x (8-length($team));
-        printf("%2d.   %s   %5.2f   %s   %5.2f\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $treebanks->{$key}{'teammax-LAS-F1'}, $treebanks->{$key}{'avg-LAS-F1'});
+        printf("%2d.   %s   %5.2f   %s   %5.2f\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $team, $treebanks->{$key}{'avg-LAS-F1'});
     }
 }
 else
