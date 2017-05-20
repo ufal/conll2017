@@ -216,7 +216,7 @@ elsif ($metric eq 'ranktreebanks')
     my $treebanks = rank_treebanks(\@alltbk, \@results, 'LAS-F1');
     my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
     my $i = 0;
-    print("                      max     maxteam    avg\n");
+    print("                      max     maxteam    avg     var\n");
     foreach my $key (@keys)
     {
         $i++;
@@ -224,7 +224,7 @@ elsif ($metric eq 'ranktreebanks')
         $tbk .= ' ' x (13-length($tbk));
         my $team = $treebanks->{$key}{'teammax-LAS-F1'};
         $team .= ' ' x (8-length($team));
-        printf("%2d.   %s   %5.2f   %s   %5.2f\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $team, $treebanks->{$key}{'avg-LAS-F1'});
+        printf("%2d.   %s   %5.2f   %s   %5.2f\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $team, $treebanks->{$key}{'avg-LAS-F1'}, $treebanks->{$key}{'var-LAS-F1'});
     }
 }
 else
@@ -606,6 +606,20 @@ sub rank_treebanks
     foreach my $treebank (keys(%treebanks))
     {
         $treebanks{$treebank}{"avg-$metric"} = $treebanks{$treebank}{"sum-$metric"} / $nruns;
+    }
+    # Compute variance.
+    foreach my $run (@{$runs})
+    {
+        my @keys = keys(%{$run});
+        foreach my $key (@keys)
+        {
+            if ($key =~ m/^([^-]+)-(.+)$/ && exists($treebanks{$1}) && $2 eq $metric)
+            {
+                my $treebank = $1;
+                my $sigma2 = ($run->{$key} - $treebanks{$treebank}{"avg-$metric"}) ** 2;
+                $treebanks{$treebank}{"var-$metric"} += ($sigma2 / $nruns);
+            }
+        }
     }
     return \%treebanks;
 }
