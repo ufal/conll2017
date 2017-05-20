@@ -216,7 +216,7 @@ elsif ($metric eq 'ranktreebanks')
     my $treebanks = rank_treebanks(\@alltbk, \@results, 'LAS-F1');
     my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
     my $i = 0;
-    print("                      max     maxteam    avg     var\n");
+    print("                      max     maxteam    avg     stdev\n");
     foreach my $key (@keys)
     {
         $i++;
