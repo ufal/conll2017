@@ -216,12 +216,15 @@ elsif ($metric eq 'ranktreebanks')
     my $treebanks = rank_treebanks(\@alltbk, \@results, 'LAS-F1');
     my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
     my $i = 0;
+    print("                      max     maxteam    avg\n");
     foreach my $key (@keys)
     {
         $i++;
         my $tbk = $key;
         $tbk .= ' ' x (13-length($tbk));
-        printf("%2d.   %s   %5.2f   %s\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $treebanks->{$key}{'teammax-LAS-F1'});
+        my $team = $treebanks->{$key}{'teammax-LAS-F1'};
+        $team .= ' ' x (8-length($tbk));
+        printf("%2d.   %s   %5.2f   %s   %5.2f\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $treebanks->{$key}{'teammax-LAS-F1'}, $treebanks->{$key}{'avg-LAS-F1'});
     }
 }
 else
@@ -594,8 +597,15 @@ sub rank_treebanks
                     $treebanks{$treebank}{"max-$metric"} = $run->{$key};
                     $treebanks{$treebank}{"teammax-$metric"} = $run->{team};
                 }
+                $treebanks{$treebank}{"sum-$metric"} += $run->{$key};
             }
         }
+    }
+    # Compute average score for each treebank.
+    my $ntbk = scalar(@{$treebanks});
+    foreach my $treebank (keys(%treebanks))
+    {
+        $treebanks{$treebank}{"avg-$metric"} = $treebanks{$treebank}{"sum-$metric"} / $ntbk;
     }
     return \%treebanks;
 }
