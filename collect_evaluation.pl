@@ -211,6 +211,19 @@ if ($metric =~ m/^pertreebank-(CLAS-F1|LAS-F1|UAS-F1|UPOS-F1|XPOS-F1|Feats-F1|Al
         print_table_markdown("### $treebank", "$treebank-$coremetric", @results);
     }
 }
+elsif ($metric eq 'ranktreebanks')
+{
+    my $treebanks = rank_treebanks(\@alltbk, \@results, 'LAS-F1');
+    my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
+    my $i = 0;
+    foreach my $key (@keys)
+    {
+        $i++;
+        my $tbk = $key;
+        $tbk .= ' ' if (length($tbk)==2);
+        printf("%2d.   %s   %5.2f   %s\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $treebanks->{$key}{'teammax-LAS-F1'});
+    }
+}
 else
 {
     # Sanity check: If we compute average LAS over all treebanks we should replicate the pre-existing total-LAS-F1 score.
@@ -548,6 +561,43 @@ sub add_average
         }
         $run->{$tgtname} = $sum/$n;
     }
+}
+
+
+
+#------------------------------------------------------------------------------
+# Considering a given set of runs, finds the best scores per test treebank.
+#------------------------------------------------------------------------------
+sub rank_treebanks
+{
+    my $treebanks = shift; # array reference;
+    my $runs = shift; # array reference
+    my $metric = shift; # e.g. 'LAS-F1'
+    $metric = 'LAS-F1' if (!defined($metric));
+    my %treebanks;
+    # Hash the treebank codes we want to rank.
+    foreach my $treebank (@{$treebanks})
+    {
+        $treebanks{$treebank}{code} = $treebank;
+    }
+    # Look for treebank-metric pairs in the run results.
+    foreach my $run (@{$runs})
+    {
+        my @keys = keys(%{$run});
+        foreach my $key (@keys)
+        {
+            if ($key =~ m/^([^-]+)-(.+)$/ && exists($treebanks{$1}) && $2 eq $metric)
+            {
+                my $treebank = $1;
+                if (!defined($treebanks{$treebank}{"max-$metric"}) || $run->{$key} > $treebanks{$treebank}{"max-$metric"})
+                {
+                    $treebanks{$treebank}{"max-$metric"} = $run->{$key};
+                    $treebanks{$treebank}{"teammax-$metric"} = $run->{team};
+                }
+            }
+        }
+    }
+    return \%treebanks;
 }
 
 
