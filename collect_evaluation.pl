@@ -220,7 +220,7 @@ elsif ($metric eq 'ranktreebanks')
     {
         $i++;
         my $tbk = $key;
-        $tbk .= ' ' if (length($tbk)==2);
+        $tbk .= ' ' x (13-length($tbk));
         printf("%2d.   %s   %5.2f   %s\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $treebanks->{$key}{'teammax-LAS-F1'});
     }
 }
