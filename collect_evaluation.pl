@@ -17,14 +17,14 @@ my $metric = 'total-LAS-F1';
 my $bestresults = 0; # display best result of each team regardless whether it is the final run of the primary system
 my $allresults = 0; # display multiple results per team
 my $copy_filtered_eruns = 0;
-my $list_conllu_files = 0;
+my $copy_conllu_files = 0;
 GetOptions
 (
     'metric=s' => \$metric,
     'bestresults' => \$bestresults,
     'allresults' => \$allresults,
     'copy' => \$copy_filtered_eruns,
-    'list' => \$list_conllu_files
+    'cocopy' => \$copy_conllu_files
 );
 
 
@@ -181,9 +181,9 @@ if ($copy_filtered_eruns)
 {
     copy_erun_files($testpath, '/net/work/people/zeman/unidep/conll2017-test-runs/filtered-eruns', @results);
 }
-if ($list_conllu_files)
+if ($copy_conllu_files)
 {
-    list_srun_files(@results);
+    copy_srun_files($testpath, '/net/work/people/zeman/unidep/conll2017-test-runs/filtered-conllu', @results);
 }
 # Adding averages should happen after combining runs because at present the combining code looks at all LAS-F1 entries that are not 'total-LAS-F1'
 # (in the future they should rather look into the @alltbk list).
@@ -548,10 +548,13 @@ sub copy_erun_files
 
 
 #------------------------------------------------------------------------------
-# Lists the paths to the system-output CoNLL-U files.
+# Copies the system-output CoNLL-U files to a new folder. Can be useful after
+# filtering and combining the runs that are really evaluated.
 #------------------------------------------------------------------------------
-sub list_srun_files
+sub copy_srun_files
 {
+    my $srcpath = shift;
+    my $tgtpath = shift;
     my @runs = @_;
     # Hash the paths in order to remove duplicates (multiple eruns per srun).
     my %paths;
@@ -566,10 +569,17 @@ sub list_srun_files
         }
     }
     my @paths = sort(keys(%paths));
-    foreach my $path (@paths)
+    foreach my $source (@paths)
     {
-        print("$path\n");
+        my $target = $source;
+        $target =~ s:^$srcpath:$tgtpath;
+        my $targetfolder = $target;
+        $targetfolder =~ s:/[^/]+$::;
+        system("mkdir -p $targetfolder");
+        die("Cannot create $targetfolder") if (!-d "$targetfolder");
+        system("cp $source $target");
     }
+    return @paths;
 }
 
 
