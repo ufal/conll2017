@@ -70,7 +70,7 @@ my %teams =
     'Orange-Deskin' => {'city' => 'Lannion', 'primary' => 'software1', 'takeruns' => ['2017-05-10-12-02-22'], 'printname' => 'Orange – Deskiñ'}, # evaluator run: 2017-05-10-15-33-39
     'ParisNLP'    => {'city' => 'Paris', 'primary' => 'software1', 'takeruns' => ['2017-05-15-02-05-49']}, # evaluator run: 2017-05-15-13-53-08
     'LATTICE'     => {'city' => 'Paris', 'primary' => 'software7', 'takeruns' => ['2017-05-15-11-18-08']}, # evaluator run: 2017-05-15-20-28-49
-    'LIMSI-LIPN'  => {'city' => 'Paris', 'primary' => 'software2', 'takeruns' => ['2017-05-13-16-28-36']}, # evaluator run: 2017-05-14-03-47-23
+    'LIMSI-LIPN'  => {'city' => 'Paris', 'primary' => 'software2', 'takeruns' => ['2017-05-13-16-28-36'], 'printname' => 'LIMSI'}, # evaluator run: 2017-05-14-03-47-23; 24.5.2017 Lauriane asked us to rename the team in the results to 'LIMSI'
     'CLCL'        => {'city' => 'Genève', 'primary' => 'software2', 'takeruns' => ['2017-05-15-17-08-20', '2017-05-15-12-58-58', '2017-05-15-12-41-38',
                                                                                    '2017-05-15-11-59-45', '2017-05-15-11-48-22', '2017-05-15-10-24-34',
                                                                                    '2017-05-15-00-29-33', '2017-05-14-23-18-36', '2017-05-14-12-15-56',
