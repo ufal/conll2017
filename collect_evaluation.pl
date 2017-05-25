@@ -572,7 +572,7 @@ sub copy_srun_files
     foreach my $source (@paths)
     {
         my $target = $source;
-        $target =~ s:^$srcpath:$tgtpath;
+        $target =~ s:^$srcpath:$tgtpath:;
         my $targetfolder = $target;
         $targetfolder =~ s:/[^/]+$::;
         system("mkdir -p $targetfolder");
