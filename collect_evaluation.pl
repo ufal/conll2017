@@ -17,12 +17,14 @@ my $metric = 'total-LAS-F1';
 my $bestresults = 0; # display best result of each team regardless whether it is the final run of the primary system
 my $allresults = 0; # display multiple results per team
 my $copy_filtered_eruns = 0;
+my $list_conllu_files = 0;
 GetOptions
 (
     'metric=s' => \$metric,
     'bestresults' => \$bestresults,
     'allresults' => \$allresults,
-    'copy' => \$copy_filtered_eruns
+    'copy' => \$copy_filtered_eruns,
+    'list' => \$list_conllu_files
 );
 
 
@@ -179,6 +181,10 @@ if ($copy_filtered_eruns)
 {
     copy_erun_files($testpath, '/net/work/people/zeman/unidep/conll2017-test-runs/filtered-eruns', @results);
 }
+if ($list_conllu_files)
+{
+    list_srun_files(@results);
+}
 # Adding averages should happen after combining runs because at present the combining code looks at all LAS-F1 entries that are not 'total-LAS-F1'
 # (in the future they should rather look into the @alltbk list).
 # Print the results.
@@ -313,6 +319,16 @@ sub read_runs
                         elsif (exists($teams{$team}{primary}))
                         {
                             $hash->{software} = $teams{$team}{primary};
+                        }
+                    }
+                    # For every test treebank with non-zero LAS remember the path to the system-output CoNLL-U file.
+                    # We may later combine files from different runs so we need to save the path per file, not per run.
+                    foreach my $treebank (@alltbk)
+                    {
+                        my $tbklaskey = "$treebank-LAS-F1";
+                        if (exists($hash->{$tbklaskey}) && $hash->{$tbklaskey} > 0)
+                        {
+                            $hash->{"$treebank-path"} = "$teampath/$hash->{srun}/output/$treebank.conllu";
                         }
                     }
                     push(@results, $hash);
@@ -526,6 +542,33 @@ sub copy_erun_files
             system("cp $srcrunpath/run.prototext $tgtrunpath");
             system("cp $srcrunpath/output/evaluation.prototext $tgtrunpath/output");
         }
+    }
+}
+
+
+
+#------------------------------------------------------------------------------
+# Lists the paths to the system-output CoNLL-U files.
+#------------------------------------------------------------------------------
+sub list_srun_files
+{
+    my @runs = @_;
+    # Hash the paths in order to remove duplicates (multiple eruns per srun).
+    my %paths;
+    foreach my $run (@results)
+    {
+        foreach my $treebank (@alltbk)
+        {
+            if (exists($run->{"$treebank-LAS-F1"}) && $run->{"$treebank-LAS-F1"} > 0 && defined($run->{"$treebank-path"}))
+            {
+                $paths{$run->{"$treebank-path"}}++;
+            }
+        }
+    }
+    my @paths = sort(keys(%paths));
+    foreach my $path (@paths)
+    {
+        print("$path\n");
     }
 }
 
