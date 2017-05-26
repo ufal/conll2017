@@ -277,7 +277,13 @@ sub read_runs
     my @results;
     foreach my $team (@teams)
     {
-        next if ($teams{$team}{withdraw});
+        # Merge multiple virtual machines of one team (reads global hash %secondary).
+        my $uniqueteam = $team;
+        if (exists($secondary{$team}))
+        {
+            $uniqueteam = $secondary{$team};
+        }
+        next if ($teams{$uniqueteam}{withdraw});
         my $teampath = "$testpath/$team";
         my @runs = dzsys::get_subfolders($teampath);
         foreach my $run (@runs)
@@ -288,7 +294,7 @@ sub read_runs
                 my $hash = read_prototext("$runpath/output/evaluation.prototext");
                 if ($hash->{'total-LAS-F1'} > 0)
                 {
-                    $hash->{team} = $team;
+                    $hash->{team} = $uniqueteam;
                     $hash->{erun} = $run;
                     # Get the identifier of the evaluated ("input") run.
                     my $irunline;
@@ -316,9 +322,9 @@ sub read_runs
                                 $hash->{software} = $1;
                             }
                         }
-                        elsif (exists($teams{$team}{primary}))
+                        elsif (exists($teams{$uniqueteam}{primary}))
                         {
-                            $hash->{software} = $teams{$team}{primary};
+                            $hash->{software} = $teams{$uniqueteam}{primary};
                         }
                     }
                     # For every test treebank with non-zero LAS remember the path to the system-output CoNLL-U file.
