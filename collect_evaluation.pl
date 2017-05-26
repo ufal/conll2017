@@ -579,6 +579,12 @@ sub copy_srun_files
     {
         my $target = $source;
         $target =~ s:^$srcpath:$tgtpath:;
+        # If the source files are from a secondary virtual machine of a team,
+        # copy them under the primary name of the team.
+        if ($target =~ m:^$tgtpath/([^/]+)/: && exists($secondary{$1}))
+        {
+            $target =~ s:^$tgtpath/([^/]+)/:$tgtpath/$secondary{$1}/:;
+        }
         my $targetfolder = $target;
         $targetfolder =~ s:/[^/]+$::;
         system("mkdir -p $targetfolder");
