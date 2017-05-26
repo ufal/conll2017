@@ -589,7 +589,7 @@ sub copy_srun_files
         $targetfolder =~ s:/[^/]+$::;
         system("mkdir -p $targetfolder");
         die("Cannot create $targetfolder") if (!-d "$targetfolder");
-        print STDERR ("cp $source $target\n");
+        #print STDERR ("cp $source $target\n");
         system("cp $source $target");
     }
     return @paths;
