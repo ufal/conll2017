@@ -758,7 +758,8 @@ sub print_table
 {
     ###!!! Reads the global hash %secondary (mapping between primary and secondary virtual machine of two teams).
     my $metric = shift;
-    my @results = sort {my $r = $b->{$metric} <=> $a->{$metric}; unless ($r) {$r = $a->{team} cmp $b->{team}} $r} (@_);
+    my @results = map {if (!exists($_->{printname})) {$_->{printname} = $_->{team}} $_} (@_);
+    @results = sort {my $r = $b->{$metric} <=> $a->{$metric}; unless ($r) {$r = $a->{printname} cmp $b->{printname}} $r} (@results);
     my %teammap;
     my $i = 0;
     my $last_value;
