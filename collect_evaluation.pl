@@ -147,9 +147,40 @@ my %secondary =
 
 # The output of the test runs is mounted in the master VM at this point:
 my $testpath_tira = '/media/conll17-ud-test-2017-05-09';
-my $testpath_ufal = '/net/work/people/zeman/unidep/conll2017-test-runs-v2/conll17-ud-test-2017-05-09';
+my $testpath_ufal1 = '/net/work/people/zeman/unidep/conll2017-test-runs-v1/conll17-ud-test-2017-05-09';
+my $testpath_ufal2 = '/net/work/people/zeman/unidep/conll2017-test-runs-v2/conll17-ud-test-2017-05-09';
 my $testpath_dan  = 'C:/Users/Dan/Documents/Lingvistika/Projekty/universal-dependencies/conll2017-test-runs/filtered-eruns';
-my $testpath = (-d $testpath_tira) ? $testpath_tira : (-d $testpath_ufal) ? $testpath_ufal : $testpath_dan;
+my $testpath;
+# Are we running on Dan's laptop?
+if (-d $testpath_dan)
+{
+    $testpath = $testpath_dan;
+}
+# Are we running in the master virtual machine on TIRA?
+elsif (-d $testpath_tira)
+{
+    $testpath = $testpath_tira;
+}
+# OK, we must be running on ÚFAL network then. There are multiple versions of the test runs from TIRA.
+else
+{
+    # Supposing all paths are reachable, prefer the one we are currently in.
+    my $pwd = `pwd`;
+    if (-d $testpath_ufal1 && $pwd =~ m/test-runs-v1/)
+    {
+        $testpath = $testpath_ufal1;
+    }
+    elsif (-d $testpath_ufal2 && $pwd =~ m/test-runs-v2/)
+    {
+        $testpath = $testpath_ufal2;
+    }
+    else
+    {
+        $testpath = $testpath_ufal2;
+    }
+}
+print STDERR ("Path with runs = $testpath\n");
+die if (! -d $testpath);
 my @results = read_runs($testpath);
 # Create a map from system run ids to corresponding evaluation runs.
 my %srun2erun;
