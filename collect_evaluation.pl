@@ -772,8 +772,7 @@ sub print_table
     my $last_rank;
     foreach my $result (@results)
     {
-        my $uniqueteam = $result->{team};
-        $uniqueteam = $secondary{$uniqueteam} if (exists($secondary{$uniqueteam}));
+        my $uniqueteam = $result->{uniqueteam};
         next if (!$allresults && exists($teammap{$uniqueteam}));
         $i++;
         # Hide rank if it should be same as the previous system.
@@ -785,7 +784,7 @@ sub print_table
             $rank = $i.'.';
         }
         $teammap{$uniqueteam}++;
-        my $name = exists($teams{$uniqueteam}{printname}) ? $teams{$uniqueteam}{printname} : $uniqueteam;
+        my $name = $result->{printname};
         $name = substr($name.' ('.$teams{$result->{team}}{city}.')'.(' 'x38), 0, 40);
         my $software = ' ' x 9;
         if (exists($result->{software}))
