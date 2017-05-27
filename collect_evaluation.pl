@@ -659,8 +659,20 @@ sub add_average
         {
             $sum += $run->{$key};
         }
-        $run->{$tgtname} = $sum/$n;
+        # Round all averages to hundredths of percent. We want results that look the same in the output to really be equal numerically.
+        $run->{$tgtname} = round($sum/$n);
     }
+}
+
+
+
+#------------------------------------------------------------------------------
+# Rounds a number to the second decimal digit.
+#------------------------------------------------------------------------------
+sub round
+{
+    my $x = shift;
+    return sprintf("%d", ($x*100)+0.5)/100;
 }
 
 
