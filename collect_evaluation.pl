@@ -896,6 +896,7 @@ sub print_table
         my $numbersize = $metric eq 'runtime' ? 6 : 5;
         if ($latex)
         {
+            $name =~ s/–/--/g;
             $name =~ s/ç/{\\c{c}}/g;
             $name =~ s/İ/{\\.{I}}/g;
             $name =~ s/Ú/{\\'{U}}/g; #'
