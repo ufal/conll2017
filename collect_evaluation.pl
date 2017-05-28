@@ -787,8 +787,8 @@ sub print_table_latex
     my @results = @_;
     print("\\begin{table}\n");
     print("\\begin{center}\n");
-    print("\\begin{tabular}{|r l l|r|}\n");
-    print("\\hline\\bf Rnk & \\bf Team & \\bf Software & \\bf LAS \\\\\\hline\n");
+    print("\\begin{tabular}{|r l|r c|}\n");
+    print("\\hline\\bf Rnk & \\bf Team & \\bf LAS & \\bf Files \\\\\\hline\n");
     $latex = 1; ###!!! global
     print_table($metric, @results);
     print("\\end{tabular}\n");
@@ -895,7 +895,7 @@ sub print_table
         my $numbersize = $metric eq 'runtime' ? 6 : 5;
         if ($latex)
         {
-            printf("%4s & %s & %s & %$numbersize.2f%s%s \\\\\hline\n", $rank, $name, $software, $result->{$metric}, $tag, $runs);
+            printf("%4s & %s & %$numbersize.2f%s &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag, $runs);
         }
         else
         {
