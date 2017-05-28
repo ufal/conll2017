@@ -793,6 +793,7 @@ sub print_table_latex
     print_table($metric, @results);
     print("\\end{tabular}\n");
     print("\\end{center}\n");
+    print("\\caption{\\label{tab:$metric}$metric}\n");
     print("\\end{table}\n");
 }
 
@@ -895,7 +896,7 @@ sub print_table
         my $numbersize = $metric eq 'runtime' ? 6 : 5;
         if ($latex)
         {
-            printf("%4s & %s & %$numbersize.2f%s &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag, $runs);
+            printf("%4s & %s & %$numbersize.2f &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag);
         }
         else
         {
