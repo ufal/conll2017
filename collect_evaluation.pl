@@ -839,6 +839,13 @@ sub print_table
                 }
             }
         }
+        elsif ($metric eq 'runtime')
+        {
+            if ($result->{srun} =~ m/\+/)
+            {
+                $tag = ' [combined]';
+            }
+        }
         my $final = '     ';
         if (exists($teams{$uniqueteam}{takeruns}))
         {
