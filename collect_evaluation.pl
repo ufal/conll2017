@@ -281,8 +281,8 @@ elsif ($metric eq 'ranktreebanks-CLAS')
         $tbk .= ' ' x (13-length($tbk));
         my $team = $treebanks->{$key}{'teammax-CLAS-F1'};
         $team .= ' ' x (8-length($team));
-        #printf("%2d.   %s   %5.2f   %s   %5.2f   ±%5.2f\n", $i, $tbk, $treebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-CLAS-F1'}, sqrt($treebanks->{$key}{'var-CLAS-F1'}));
-        printf("%2d. & %s & %5.2f & %s & %5.2f & ±%5.2f\\\\\\hline\n", $i, $tbk, $treebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-CLAS-F1'}, sqrt($treebanks->{$key}{'var-CLAS-F1'}));
+        printf("%2d.   %s   %5.2f   %s   %5.2f   ±%5.2f\n", $i, $tbk, $treebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-CLAS-F1'}, sqrt($treebanks->{$key}{'var-CLAS-F1'}));
+        #printf("%2d. & %s & %5.2f & %s & %5.2f & ±%5.2f\\\\\\hline\n", $i, $tbk, $treebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-CLAS-F1'}, sqrt($treebanks->{$key}{'var-CLAS-F1'}));
     }
 }
 else
