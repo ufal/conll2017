@@ -787,8 +787,18 @@ sub print_table_latex
     my @results = @_;
     print("\\begin{table}\n");
     print("\\begin{center}\n");
-    print("\\begin{tabular}{|r l|r c|}\n");
-    print("\\hline & \\bf Team & \\bf LAS & \\bf Files \\\\\\hline\n");
+    print("\\begin{tabular}{|r l|r");
+    if ($metric eq 'total-LAS-F1')
+    {
+        print(' c');
+    }
+    print("|}\n");
+    print("\\hline & \\bf Team & \\bf LAS F\$_1\$");
+    if ($metric eq 'total-LAS-F1')
+    {
+        print(" & \\bf Files ");
+    }
+    print("\\\\\\hline\n");
     $latex = 1; ###!!! global
     print_table($metric, @results);
     print("\\end{tabular}\n");
@@ -905,7 +915,14 @@ sub print_table
             $name =~ s/ș/{\\c{s}}/g;
             $name =~ s/è/{\\`{e}}/g; #`
             $name =~ s/de Compostela/d.C./;
-            printf("%4s & %s & %$numbersize.2f &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag);
+            if ($metric eq 'total-LAS-F1')
+            {
+                printf("%4s & %s & %$numbersize.2f &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag);
+            }
+            else
+            {
+                printf("%4s & %s & %$numbersize.2f \\\\\\hline\n", $rank, $name, $result->{$metric});
+            }
         }
         else
         {
