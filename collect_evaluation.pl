@@ -501,6 +501,7 @@ sub combine_runs
         }
         $from_here{nsets} = scalar(@{$from_here{sets}});
         $from_here{jsets} = join(', ', @{$from_here{sets}});
+        $combination{runtime} += $erun->{runtime};
     }
     print STDERR ("\tTaking ", join('; ', map {"$_->{nsets} files from $_->{erun} ($_->{jsets})"} (@what_from_where)), "\n\n");
     # Recompute the macro average scores.
