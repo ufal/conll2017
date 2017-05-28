@@ -354,6 +354,21 @@ sub read_runs
                             {
                                 $hash->{software} = $1;
                             }
+                            # Read information about system run time.
+                            my $rtline = `grep elapsed $teampath/$hash->{srun}/runtime.txt`;
+                            if ($rtline =~ m/ ([0-9:.]+)elapsed/)
+                            {
+                                my @parts = split(/:/, $1);
+                                unshift(@parts, 0) if (scalar(@parts) == 2);
+                                if (scalar(@parts) == 3)
+                                {
+                                    $hash->{runtime} = $parts[0] + $parts[1]/60 + $parts[2]/3600;
+                                }
+                                else
+                                {
+                                    die("Cannot parse runtime line '$rtline'");
+                                }
+                            }
                         }
                         elsif (exists($teams{$uniqueteam}{primary}))
                         {
