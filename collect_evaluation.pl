@@ -18,13 +18,15 @@ my $bestresults = 0; # display best result of each team regardless whether it is
 my $allresults = 0; # display multiple results per team
 my $copy_filtered_eruns = 0;
 my $copy_conllu_files = 0;
+my $latex = 0;
 GetOptions
 (
     'metric=s' => \$metric,
     'bestresults' => \$bestresults,
     'allresults' => \$allresults,
     'copy' => \$copy_filtered_eruns,
-    'cocopy' => \$copy_conllu_files
+    'cocopy' => \$copy_conllu_files,
+    'latex' => \$latex
 );
 
 
@@ -295,7 +297,14 @@ else
         print('Macro-average LAS of the ', scalar(@surtbk), ' surprise language treebanks: ', join(', ', @surtbk), "\n");
         add_average('surtreebanks-LAS-F1', 'LAS-F1', \@surtbk, \@results);
     }
-    print_table($metric, @results);
+    if ($latex)
+    {
+        print_table_latex($metric, @results);
+    }
+    else
+    {
+        print_table($metric, @results);
+    }
 }
 
 
@@ -770,6 +779,26 @@ sub print_table_markdown
 
 
 #------------------------------------------------------------------------------
+# A wrapper that prints a table in LaTeX.
+#------------------------------------------------------------------------------
+sub print_table_latex
+{
+    my $metric = shift;
+    my @results = @_;
+    print("\\begin{table}\n");
+    print("\\begin{center}\n");
+    print("\\begin{tabular}{|r l l|r|}\n");
+    print("\\hline\\bf Rnk & \\bf Team & \\bf Software & \\bf LAS \\\\\\hline\n");
+    local $latex = 1;
+    print_table($metric, @results);
+    print("\\end{tabular}\n");
+    print("\\end{center}\n");
+    print("\\end{table}\n");
+}
+
+
+
+#------------------------------------------------------------------------------
 # Prints the table of results of individual systems sorted by selected metric.
 #------------------------------------------------------------------------------
 sub print_table
@@ -864,6 +893,13 @@ sub print_table
             $runs = substr($runs, 0, 50).'...' if (length($runs) > 50);
         }
         my $numbersize = $metric eq 'runtime' ? 6 : 5;
-        printf("%4s %s\t%s\t%$numbersize.2f%s%s\n", $rank, $name, $software, $result->{$metric}, $tag, $runs);
+        if ($latex)
+        {
+            printf("%4s & %s & %s & %$numbersize.2f%s%s \\\\\hline\n", $rank, $name, $software, $result->{$metric}, $tag, $runs);
+        }
+        else
+        {
+            printf("%4s %s\t%s\t%$numbersize.2f%s%s\n", $rank, $name, $software, $result->{$metric}, $tag, $runs);
+        }
     }
 }
