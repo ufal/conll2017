@@ -789,7 +789,7 @@ sub print_table_latex
     print("\\begin{center}\n");
     print("\\begin{tabular}{|r l l|r|}\n");
     print("\\hline\\bf Rnk & \\bf Team & \\bf Software & \\bf LAS \\\\\\hline\n");
-    local $latex = 1;
+    $latex = 1; ###!!! global
     print_table($metric, @results);
     print("\\end{tabular}\n");
     print("\\end{center}\n");
