@@ -802,7 +802,7 @@ sub print_table_latex
 {
     my $metric = shift;
     my @results = @_;
-    print("\\begin{table}\n");
+    print("\\begin{table}[!ht]\n");
     print("\\begin{center}\n");
     print("\\begin{tabular}{|r l|r");
     if ($metric eq 'total-LAS-F1')
