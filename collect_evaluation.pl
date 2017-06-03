@@ -933,6 +933,8 @@ sub print_table
             $name =~ s/ș/{\\c{s}}/g;
             $name =~ s/è/{\\`{e}}/g; #`
             $name =~ s/de Compostela/d.C./;
+            $name =~ s/^(BASELINE.+)\(Praha\)/$1/;
+            $name = substr($name.(' 'x38), 0, 40);
             if ($metric eq 'total-LAS-F1')
             {
                 printf("%4s & %s & %$numbersize.2f &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag);
