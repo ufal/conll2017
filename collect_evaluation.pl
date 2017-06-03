@@ -292,11 +292,18 @@ elsif ($metric eq 'ranktreebanks-both' && $latex)
     my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
     my $i = 0;
     print("                      max     maxteam    avg     stdev\n");
+    print("\\begin{table}[!ht]\n");
+    print("\\begin{center}\n");
+    print("\\setlength\\tabcolsep{3pt} % default value: 6pt\n");
+    print("\\begin{tabular}{|r l|r|r|l");
+    print("|}\n");
+    print("\\hline & \\bf Treebank & \\bf LAS F\$_1\$ & \\bf CLAS F\$_1\$ \\\\\\hline\n");
     my $last_clas;
     foreach my $key (@keys)
     {
         $i++;
         my $tbk = $key;
+        $tbk =~ s/_/\\_/g;
         $tbk .= ' ' x (13-length($tbk));
         my $clas = $ctreebanks->{$key}{'max-CLAS-F1'};
         my $more = defined($last_clas) && $clas > $last_clas;
@@ -304,8 +311,12 @@ elsif ($metric eq 'ranktreebanks-both' && $latex)
         $clas = sprintf($more ? "\\textbf{%5.2f}" : "%5.2f", $clas);
         my $team = $treebanks->{$key}{'teammax-LAS-F1'};
         $team .= ' / '.$ctreebanks->{$key}{'teammax-CLAS-F1'} if ($ctreebanks->{$key}{'teammax-CLAS-F1'} ne $treebanks->{$key}{'teammax-LAS-F1'});
-        printf("%2d.   %s   %5.2f   %s   %s\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $clas, $team);
+        printf("%2d. & %s & %5.2f & %s & %s \\\\\\hline\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $clas, $team);
     }
+    print("\\end{tabular}\n");
+    print("\\end{center}\n");
+    print("\\caption{\\label{tab:ranktreebanks}Treebank ranking.}\n");
+    print("\\end{table}\n");
 }
 else
 {
