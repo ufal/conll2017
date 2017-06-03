@@ -804,6 +804,7 @@ sub print_table_latex
     my @results = @_;
     print("\\begin{table}[!ht]\n");
     print("\\begin{center}\n");
+    print("\\setlength\\tabcolsep{3pt} % default value: 6pt\n");
     print("\\begin{tabular}{|r l|r");
     if ($metric eq 'total-LAS-F1')
     {
