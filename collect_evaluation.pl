@@ -287,8 +287,8 @@ elsif ($metric eq 'ranktreebanks-CLAS')
 }
 elsif ($metric eq 'ranktreebanks-both' && $latex)
 {
-    rank_treebanks(\@alltbk, \@results, 'CLAS-F1');
     my $treebanks = rank_treebanks(\@alltbk, \@results, 'LAS-F1');
+    my $ctreebanks = rank_treebanks(\@alltbk, \@results, 'CLAS-F1');
     my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
     my $i = 0;
     print("                      max     maxteam    avg     stdev\n");
@@ -299,7 +299,7 @@ elsif ($metric eq 'ranktreebanks-both' && $latex)
         $tbk .= ' ' x (13-length($tbk));
         my $team = $treebanks->{$key}{'teammax-LAS-F1'};
         $team .= ' ' x (8-length($team));
-        printf("%2d.   %s   %5.2f   %5.2f   %s   %5.2f   ±%5.2f\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $treebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-LAS-F1'}, sqrt($treebanks->{$key}{'var-LAS-F1'}));
+        printf("%2d.   %s   %5.2f   %5.2f   %s   %5.2f   ±%5.2f\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $ctreebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-LAS-F1'}, sqrt($treebanks->{$key}{'var-LAS-F1'}));
     }
 }
 else
