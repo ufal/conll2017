@@ -292,14 +292,19 @@ elsif ($metric eq 'ranktreebanks-both' && $latex)
     my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
     my $i = 0;
     print("                      max     maxteam    avg     stdev\n");
+    my $last_clas;
     foreach my $key (@keys)
     {
         $i++;
         my $tbk = $key;
         $tbk .= ' ' x (13-length($tbk));
+        my $clas = $ctreebanks->{$key}{'max-CLAS-F1'};
+        my $more = defined($last_clas) && $clas > $last_clas;
+        $last_clas = $clas;
+        $clas = sprintf($more ? "\\textbf{%5.2f}" : "%5.2f", $clas);
         my $team = $treebanks->{$key}{'teammax-LAS-F1'};
         $team .= ' / '.$ctreebanks->{$key}{'teammax-CLAS-F1'} if ($ctreebanks->{$key}{'teammax-CLAS-F1'} ne $treebanks->{$key}{'teammax-LAS-F1'});
-        printf("%2d.   %s   %5.2f   %5.2f   %s\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $ctreebanks->{$key}{'max-CLAS-F1'}, $team);
+        printf("%2d.   %s   %5.2f   %s   %s\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $clas, $team);
     }
 }
 else
