@@ -994,7 +994,7 @@ sub print_table
                 my $lemmas = $result->{'total-Lemmas-F1'};
                 my $upos = $result->{'total-UPOS-F1'};
                 my $xpos = $result->{'total-XPOS-F1'};
-                my $feat = $result->{'total-Features-F1'};
+                my $feat = $result->{'total-Feats-F1'};
                 my $alltags = $result->{'total-AllTags-F1'};
                 printf("%4s & %s & %5.2f & %5.2f & %5.2f & %5.2f & %5.2f \\\\\\hline\n", $rank, $name, $lemmas, $upos, $xpos, $feat, $alltags);
             }
