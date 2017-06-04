@@ -981,6 +981,12 @@ sub print_table
             {
                 printf("%4s & %s & %$numbersize.2f &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag);
             }
+            elsif ($metric eq 'total-Words-F1')
+            {
+                $name =~ s/\(.+?\)//;
+                $name = substr($name.(' 'x30), 0, 40);
+                printf("%4s & %s & %$numbersize.2f & %$numbersize.2f \\\\\\hline\n", $rank, $name, $result->{'total-Tokens-F1'}, $result->{$metric});
+            }
             else
             {
                 printf("%4s & %s & %$numbersize.2f \\\\\\hline\n", $rank, $name, $result->{$metric});
