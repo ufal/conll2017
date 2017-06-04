@@ -984,8 +984,19 @@ sub print_table
             elsif ($metric eq 'total-Words-F1')
             {
                 $name =~ s/\(.+?\)//;
-                $name = substr($name.(' 'x30), 0, 40);
+                $name = substr($name.(' 'x38), 0, 30);
                 printf("%4s & %s & %$numbersize.2f & %$numbersize.2f & %$numbersize.2f \\\\\\hline\n", $rank, $name, $result->{'total-Tokens-F1'}, $result->{$metric}, $result->{'total-Sentences-F1'});
+            }
+            elsif ($metric eq 'total-UPOS-F1')
+            {
+                $name =~ s/\(.+?\)//;
+                $name = substr($name.(' 'x38), 0, 30);
+                my $lemmas = $result->{'total-Lemmas-F1'};
+                my $upos = $result->{'total-UPOS-F1'};
+                my $xpos = $result->{'total-XPOS-F1'};
+                my $feat = $result->{'total-Features-F1'};
+                my $alltags = $result->{'total-AllTags-F1'};
+                printf("%4s & %s & %5.2f & %5.2f & %5.2f & %5.2f & %5.2f \\\\\\hline\n", $rank, $name, $lemmas, $upos, $xpos, $feat, $alltags);
             }
             else
             {
