@@ -292,7 +292,14 @@ elsif ($metric eq 'ranktreebanks-both' && $latex)
     my $wtreebanks = rank_treebanks(\@alltbk, \@results, 'Words-F1');
     my $streebanks = rank_treebanks(\@alltbk, \@results, 'Sentences-F1');
     my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
+    my @ckeys = sort {$ctreebanks->{$b}{'max-CLAS-F1'} <=> $ctreebanks->{$a}{'max-CLAS-F1'}} (keys(%{$ctreebanks}));
     my $i = 0;
+    foreach my $key (@ckeys)
+    {
+        $i++;
+        $ctreebanks->{$key}{crank} = $i;
+    }
+    $i = 0;
     print("                      max     maxteam    avg     stdev\n");
     print("\\begin{table}[!ht]\n");
     print("\\begin{center}\n");
@@ -310,7 +317,7 @@ elsif ($metric eq 'ranktreebanks-both' && $latex)
         my $clas = $ctreebanks->{$key}{'max-CLAS-F1'};
         my $more = defined($last_clas) && $clas > $last_clas;
         $last_clas = $clas;
-        $clas = sprintf($more ? "\\textbf{%5.2f}" : "%5.2f", $clas);
+        $clas = sprintf($more ? "\\textbf{%2d. %5.2f}" : "%2d. %5.2f", $ctreebanks->{$key}{crank}, $clas);
         my $team = $treebanks->{$key}{'teammax-LAS-F1'};
         $team .= ' / '.$ctreebanks->{$key}{'teammax-CLAS-F1'} if ($ctreebanks->{$key}{'teammax-CLAS-F1'} ne $treebanks->{$key}{'teammax-LAS-F1'});
         printf("%2d. & %s & %5.2f & %s & %s & %5.2f & %5.2f \\\\\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $clas, $team, $wtreebanks->{$key}{'max-Words-F1'}, $streebanks->{$key}{'max-Sentences-F1'});
