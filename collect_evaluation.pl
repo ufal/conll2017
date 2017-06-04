@@ -311,7 +311,7 @@ elsif ($metric eq 'ranktreebanks-both' && $latex)
         $clas = sprintf($more ? "\\textbf{%5.2f}" : "%5.2f", $clas);
         my $team = $treebanks->{$key}{'teammax-LAS-F1'};
         $team .= ' / '.$ctreebanks->{$key}{'teammax-CLAS-F1'} if ($ctreebanks->{$key}{'teammax-CLAS-F1'} ne $treebanks->{$key}{'teammax-LAS-F1'});
-        printf("%2d. & %s & %5.2f & %s & %s \\\\\\hline\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $clas, $team);
+        printf("%2d. & %s & %5.2f & %s & %s \\\\\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $clas, $team);
     }
     print("\\end{tabular}\n");
     print("\\end{center}\n");
