@@ -958,7 +958,7 @@ sub print_table
             }
         }
         # Mark out-of-TIRA runs in the unofficial results.
-        if (exists($teams{$uniqueteam}{ootruns}) && grep {$result->{srun}} (@{$teams{$uniqueteam}{ootruns}}))
+        if (exists($teams{$uniqueteam}{ootruns}) && grep {$_ eq $result->{srun}} (@{$teams{$uniqueteam}{ootruns}}))
         {
             $final = 'OOT: ';
         }
