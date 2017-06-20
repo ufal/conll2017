@@ -112,7 +112,8 @@ my %teams =
     'darc'        => {'city' => 'Tübingen', 'primary' => 'software1', 'takeruns' => ['2017-05-09-19-56-24']}, # evaluator run: 2017-05-09-21-54-48
     'conll17-baseline' => {'city' => 'Praha', 'primary' => 'software2', 'takeruns' => ['2017-05-15-09-35-05'], 'printname' => 'BASELINE UDPipe 1.1'}, # evaluator run: 2017-05-15-10-42-39
     'UFAL-UDPipe-1-2'  => {'city' => 'Praha', 'primary' => 'software1', 'takeruns' => ['2017-05-15-09-58-56'], 'printname' => 'ÚFAL – UDPipe 1.2'}, # evaluator run: 2017-05-15-12-16-30
-    'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28']}, # evaluator run: 2017-05-15-07-22-05
+    'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28'],
+                      'ootruns' => ['2017-05-21-22-25-52', '2017-05-31-16-47-25', '2017-06-07-16-57-58']}, # evaluator run: 2017-05-15-07-22-05
     'TurkuNLP'    => {'city' => 'Turku',   'primary' => 'software1', 'takeruns' => ['2017-05-14-02-33-45']}, # evaluator run: 2017-05-14-08-32-00
     'UT'          => {'city' => 'Tartu',   'primary' => 'software1', 'takeruns' => ['2017-05-15-01-44-30', '2017-05-14-17-15-26', '2017-05-12-14-58-40']},
         # 2017-05-15-01-44-30 => 2017-05-15-11-24-20: 20 files (en_lines, en_pud, gl, got, grc, hi_pud, hi, hr, hu, id, ja_pud, ja, ko, la_ittb, la, lv, nl_lassysmall, nl, ro, ru_pud)
@@ -955,6 +956,11 @@ sub print_table
             {
                 $final = 'Fin: ';
             }
+        }
+        # Mark out-of-TIRA runs in the unofficial results.
+        if (exists($teams{$uniqueteam}{ootruns}) && grep {$result->{srun}} (@{$teams{$uniqueteam}{ootruns}}))
+        {
+            $final = 'OOT: ';
         }
         my $runs = '';
         if ($allresults || $bestresults)
