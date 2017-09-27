@@ -112,7 +112,8 @@ my %teams =
     'darc'        => {'city' => 'Tübingen', 'primary' => 'software1', 'takeruns' => ['2017-05-09-19-56-24']}, # evaluator run: 2017-05-09-21-54-48
     'conll17-baseline' => {'city' => 'Praha', 'primary' => 'software2', 'takeruns' => ['2017-05-15-09-35-05'], 'printname' => 'BASELINE UDPipe 1.1'}, # evaluator run: 2017-05-15-10-42-39
     'UFAL-UDPipe-1-2'  => {'city' => 'Praha', 'primary' => 'software1', 'takeruns' => ['2017-05-15-09-58-56'], 'printname' => 'ÚFAL – UDPipe 1.2'}, # evaluator run: 2017-05-15-12-16-30
-    'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28']}, # evaluator run: 2017-05-15-07-22-05
+    'Uppsala'     => {'city' => 'Uppsala', 'primary' => 'software1', 'takeruns' => ['2017-05-14-17-46-28'],
+                      'ootruns' => ['2017-05-21-22-25-52', '2017-05-31-16-47-25', '2017-06-07-16-57-58']}, # evaluator run: 2017-05-15-07-22-05
     'TurkuNLP'    => {'city' => 'Turku',   'primary' => 'software1', 'takeruns' => ['2017-05-14-02-33-45']}, # evaluator run: 2017-05-14-08-32-00
     'UT'          => {'city' => 'Tartu',   'primary' => 'software1', 'takeruns' => ['2017-05-15-01-44-30', '2017-05-14-17-15-26', '2017-05-12-14-58-40']},
         # 2017-05-15-01-44-30 => 2017-05-15-11-24-20: 20 files (en_lines, en_pud, gl, got, grc, hi_pud, hi, hr, hu, id, ja_pud, ja, ko, la_ittb, la, lv, nl_lassysmall, nl, ro, ru_pud)
@@ -284,6 +285,48 @@ elsif ($metric eq 'ranktreebanks-CLAS')
         printf("%2d.   %s   %5.2f   %s   %5.2f   ±%5.2f\n", $i, $tbk, $treebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-CLAS-F1'}, sqrt($treebanks->{$key}{'var-CLAS-F1'}));
         #printf("%2d. & %s & %5.2f & %s & %5.2f & ±%5.2f\\\\\\hline\n", $i, $tbk, $treebanks->{$key}{'max-CLAS-F1'}, $team, $treebanks->{$key}{'avg-CLAS-F1'}, sqrt($treebanks->{$key}{'var-CLAS-F1'}));
     }
+}
+elsif ($metric eq 'ranktreebanks-both' && $latex)
+{
+    my $treebanks = rank_treebanks(\@alltbk, \@results, 'LAS-F1');
+    my $ctreebanks = rank_treebanks(\@alltbk, \@results, 'CLAS-F1');
+    my $wtreebanks = rank_treebanks(\@alltbk, \@results, 'Words-F1');
+    my $streebanks = rank_treebanks(\@alltbk, \@results, 'Sentences-F1');
+    my @keys = sort {$treebanks->{$b}{'max-LAS-F1'} <=> $treebanks->{$a}{'max-LAS-F1'}} (keys(%{$treebanks}));
+    my @ckeys = sort {$ctreebanks->{$b}{'max-CLAS-F1'} <=> $ctreebanks->{$a}{'max-CLAS-F1'}} (keys(%{$ctreebanks}));
+    my $i = 0;
+    foreach my $key (@ckeys)
+    {
+        $i++;
+        $ctreebanks->{$key}{crank} = $i;
+    }
+    $i = 0;
+    print("                      max     maxteam    avg     stdev\n");
+    print("\\begin{table}[!ht]\n");
+    print("\\begin{center}\n");
+    print("\\setlength\\tabcolsep{3pt} % default value: 6pt\n");
+    print("\\begin{tabular}{|r l|r|r|l");
+    print("|}\n");
+    print("\\hline & \\bf Treebank & \\bf LAS F\$_1\$ & \\bf CLAS F\$_1\$ & \\bf Best system & \\bf Words & \\bf Sent \\\\\\hline\n");
+    my $last_clas;
+    foreach my $key (@keys)
+    {
+        $i++;
+        my $tbk = $key;
+        $tbk =~ s/_/\\_/g;
+        $tbk .= ' ' x (13-length($tbk));
+        my $clas = $ctreebanks->{$key}{'max-CLAS-F1'};
+        my $more = defined($last_clas) && $clas > $last_clas;
+        $last_clas = $clas;
+        $clas = sprintf($more ? "\\textbf{%2d. %5.2f}" : "%2d. %5.2f", $ctreebanks->{$key}{crank}, $clas);
+        my $team = $treebanks->{$key}{'teammax-LAS-F1'};
+        $team .= ' / '.$ctreebanks->{$key}{'teammax-CLAS-F1'} if ($ctreebanks->{$key}{'teammax-CLAS-F1'} ne $treebanks->{$key}{'teammax-LAS-F1'});
+        printf("%2d. & %s & %5.2f & %s & %s & %5.2f & %5.2f \\\\\n", $i, $tbk, $treebanks->{$key}{'max-LAS-F1'}, $clas, $team, $wtreebanks->{$key}{'max-Words-F1'}, $streebanks->{$key}{'max-Sentences-F1'});
+    }
+    print("\\end{tabular}\n");
+    print("\\end{center}\n");
+    print("\\caption{\\label{tab:ranktreebanks}Treebank ranking.}\n");
+    print("\\end{table}\n");
 }
 else
 {
@@ -802,8 +845,9 @@ sub print_table_latex
 {
     my $metric = shift;
     my @results = @_;
-    print("\\begin{table}\n");
+    print("\\begin{table}[!ht]\n");
     print("\\begin{center}\n");
+    print("\\setlength\\tabcolsep{3pt} % default value: 6pt\n");
     print("\\begin{tabular}{|r l|r");
     if ($metric eq 'total-LAS-F1')
     {
@@ -913,6 +957,11 @@ sub print_table
                 $final = 'Fin: ';
             }
         }
+        # Mark out-of-TIRA runs in the unofficial results.
+        if (exists($teams{$uniqueteam}{ootruns}) && grep {$_ eq $result->{srun}} (@{$teams{$uniqueteam}{ootruns}}))
+        {
+            $final = 'OOT: ';
+        }
         my $runs = '';
         if ($allresults || $bestresults)
         {
@@ -932,9 +981,28 @@ sub print_table
             $name =~ s/ș/{\\c{s}}/g;
             $name =~ s/è/{\\`{e}}/g; #`
             $name =~ s/de Compostela/d.C./;
+            $name =~ s/^(BASELINE.+)\(Praha\)/$1/;
+            $name = substr($name.(' 'x38), 0, 40);
             if ($metric eq 'total-LAS-F1')
             {
                 printf("%4s & %s & %$numbersize.2f &%s \\\\\\hline\n", $rank, $name, $result->{$metric}, $tag);
+            }
+            elsif ($metric eq 'total-Words-F1')
+            {
+                $name =~ s/\(.+?\)//;
+                $name = substr($name.(' 'x38), 0, 30);
+                printf("%4s & %s & %$numbersize.2f & %$numbersize.2f & %$numbersize.2f \\\\\\hline\n", $rank, $name, $result->{'total-Tokens-F1'}, $result->{$metric}, $result->{'total-Sentences-F1'});
+            }
+            elsif ($metric eq 'total-UPOS-F1')
+            {
+                $name =~ s/\(.+?\)//;
+                $name = substr($name.(' 'x38), 0, 30);
+                my $lemmas = $result->{'total-Lemmas-F1'};
+                my $upos = $result->{'total-UPOS-F1'};
+                my $xpos = $result->{'total-XPOS-F1'};
+                my $feat = $result->{'total-Feats-F1'};
+                my $alltags = $result->{'total-AllTags-F1'}; # Includes XPOS, which many systems ignore. I don't know if it includes lemmas.
+                printf("%4s & %s & %5.2f & %5.2f & %5.2f \\\\\\hline\n", $rank, $name, $upos, $feat, $lemmas);
             }
             else
             {
