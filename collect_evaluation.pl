@@ -154,6 +154,7 @@ my %secondary =
 my $testpath_tira = '/media/conll17-ud-test-2017-05-09';
 my $testpath_ufal1 = '/net/work/people/zeman/unidep/conll2017-test-runs-v1/conll17-ud-test-2017-05-09';
 my $testpath_ufal2 = '/net/work/people/zeman/unidep/conll2017-test-runs-v2/conll17-ud-test-2017-05-09';
+my $testpath_ufal3 = '/net/work/people/zeman/unidep/conll2017-test-runs-v3/conll17-ud-test-2017-05-09';
 my $testpath_dan  = 'C:/Users/Dan/Documents/Lingvistika/Projekty/universal-dependencies/conll2017-test-runs/filtered-eruns';
 my $testpath;
 # Are we running on Dan's laptop?
@@ -179,9 +180,13 @@ else
     {
         $testpath = $testpath_ufal2;
     }
+    elsif (-d $testpath_ufal3 && $pwd =~ m/test-runs-v3/)
+    {
+        $testpath = $testpath_ufal3;
+    }
     else
     {
-        $testpath = $testpath_ufal2;
+        $testpath = $testpath_ufal3;
     }
 }
 print STDERR ("Path with runs = $testpath\n");
