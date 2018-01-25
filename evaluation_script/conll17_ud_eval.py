@@ -5,8 +5,12 @@
 # Compatible with Python 2.7 and 3.2+, can be used either as a module
 # or a standalone executable.
 #
-# Copyright 2017 Institute of Formal and Applied Linguistics (UFAL),
+# Copyright 2017, 2018 Institute of Formal and Applied Linguistics (UFAL),
 # Faculty of Mathematics and Physics, Charles University, Czech Republic.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Changelog:
 # - [02 Jan 2017] Version 0.9: Initial release
@@ -21,6 +25,7 @@
 # - [11 May 2017] Version 1.2: Do not throw an exception if system file
 #                              characters are a strict prefix of gold
 #                              file characters.
+# - [25 Jan 2018] Version 1.3: Explicitly add MPL 2.0 license.
 
 # Command line usage
 # ------------------
