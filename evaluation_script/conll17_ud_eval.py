@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# CoNLL 2017 UD Parsing evaluation script.
-#
 # Compatible with Python 2.7 and 3.2+, can be used either as a module
 # or a standalone executable.
 #
@@ -17,7 +15,7 @@
 # - [25 Jan 2017] Version 0.9.1: Fix bug in LCS alignment computation
 # - [10 Mar 2017] Version 1.0: Add documentation and test
 #                              Compare HEADs correctly using aligned words
-#                              Allow evaluation with errorneous spaces in forms
+#                              Allow evaluation with erroneous spaces in forms
 #                              Compare forms in LCS case insensitively
 #                              Detect cycles and multiple root nodes
 #                              Compute AlignedAccuracy
@@ -55,12 +53,12 @@
 # ---------
 # - load_conllu(file)
 #   - loads CoNLL-U file from given file object to an internal representation
-#   - the file object should return str on both Python 2 and Python 3
+#   - the file object should return str in both Python 2 and Python 3
 #   - raises UDError exception if the given file cannot be loaded
 # - evaluate(gold_ud, system_ud)
 #   - evaluate the given gold and system CoNLL-U files (loaded with load_conllu)
 #   - raises UDError if the concatenated tokens of gold and system file do not match
-#   - returns a dictionary with the metrics described above, each metrics having
+#   - returns a dictionary with the metrics described above, each metric having
 #     three fields: precision, recall and f1
 
 # Description of token matching
@@ -201,7 +199,7 @@ def load_conllu(file):
         if "." in columns[ID]:
             continue
 
-        # Delete spaces from FORM  so gold.characters == system.characters
+        # Delete spaces from FORM, so gold.characters == system.characters
         # even if one of them tokenizes the space.
         columns[FORM] = columns[FORM].replace(" ", "")
         if not columns[FORM]:
@@ -273,9 +271,10 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
             self.matched_words_map[system_word] = gold_word
         def fill_parents(self):
             # We represent root parents in both gold and system data by '0'.
-            # For gold data, we represent non-root parent by corresponding gold word.
-            # For system data, we represent non-root parent by either gold word aligned
-            # to parent system nodes, or by None if no gold words is aligned to the parent.
+            # For gold data, we represent a non-root parent by the corresponding gold word.
+            # For system data, we represent a non-root parent either by the gold word aligned
+            # to the system node's parent, or by None if no gold word is aligned to the parent.
+            # The goal is that we can easily check if w.gold_parent == w.system_parent_gold_aligned.
             for words in self.matched_words:
                 words.gold_parent = words.gold_word.parent if words.gold_word.parent is not None else 0
                 words.system_parent_gold_aligned = self.matched_words_map.get(words.system_word.parent, None) \
@@ -409,7 +408,7 @@ def evaluate(gold_ud, system_ud, deprel_weights=None):
 
         return alignment
 
-    # Check that underlying character sequences do match
+    # Check that the underlying character sequences do match.
     if gold_ud.characters != system_ud.characters:
         index = 0
         while index < len(gold_ud.characters) and index < len(system_ud.characters) and \
